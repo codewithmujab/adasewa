@@ -1,0 +1,26 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "adasewa",
+	"compatibility_date": "2026-01-01",
+	// nodejs_compat diaktifkan agar dependensi internal Better Auth (mis. AsyncLocalStorage)
+	// tetap kompatibel di Cloudflare Workers, sementara seluruh kode src/ kita murni Web Standard API.
+	"compatibility_flags": ["nodejs_compat"],
+	"assets": {
+		"binding": "ASSETS"
+	},
+	"r2_buckets": [
+		{
+			"binding": "MEDIA_BUCKET",
+			"bucket_name": "adasewa-media",
+			"preview_bucket_name": "adasewa-media-preview"
+		}
+	],
+	"vars": {
+		// Secret seperti DATABASE_URL dan BETTER_AUTH_SECRET JANGAN ditaruh di sini.
+		// Simpan di .dev.vars (lokal) dan `wrangler secret put <KEY>` (production).
+		"ALLOW_ADMIN_SIGNUP": "false"
+	},
+	"observability": {
+		"enabled": true
+	}
+}
