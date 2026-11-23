@@ -35,6 +35,7 @@ npm run dev
 
 Buka `http://localhost:5173`.
 Login Admin default (hasil `npm run db:seed`):
+
 - **URL:** `http://localhost:5173/login`
 - **Email:** `admin@adasewa.id`
 - **Password:** `Admin1234!`
@@ -57,4 +58,5 @@ Login Admin default (hasil `npm run db:seed`):
    ```bash
    npm run db:migrate
    npm run deploy
+   npm run db:seed
    ```
