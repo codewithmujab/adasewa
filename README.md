@@ -33,7 +33,7 @@ npm run db:seed
 npm run dev
 ```
 
-Buka `http://localhost:5173`.
+Buka `http://localhost:5173`..
 Login Admin default (hasil `npm run db:seed`):
 
 - **URL:** `http://localhost:5173/login`
