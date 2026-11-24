@@ -4,7 +4,11 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { count, eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-http';
+import { ADASEWA_CATEGORIES, ADASEWA_ITEMS } from '../src/lib/data/adasewa-catalog-seed.ts';
 import * as schema from '../src/lib/server/db/schema.ts';
+
+const ADASEWA_GOOGLE_FORM_URL =
+	'https://docs.google.com/forms/d/e/1FAIpQLSc7oXCUZVUNH3gUMrlcaI2MhvNbJiPGnSFFPGNWTLK6wdETRg/viewform';
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
@@ -25,82 +29,143 @@ const sql = neon(databaseUrl);
 const db = drizzle(sql, { schema });
 
 async function seed(): Promise<void> {
-	console.log('Memulai proses seeding database AdaSewa...');
+	console.log('Memulai proses seeding database Adasewa.id...');
 
-	// 1. Seed Company Settings
+	// 1. Seed Company Settings (Adasewa.id)
 	await db
 		.insert(schema.companySettings)
 		.values({
 			id: 'default',
-			companyName: 'AdaSewa',
-			tagline: 'Solusi sewa modern yang mudah, transparan, dan terpercaya.',
+			companyName: 'Adasewa.id',
+			tagline: 'Pusat Sewa Barang Terlengkap untuk Acara, Bisnis & Kebutuhan Harian.',
 			aboutShort:
-				'AdaSewa menghadirkan layanan penyewaan terintegrasi dengan pengelolaan modern, proses cepat, serta dukungan pelanggan responsif untuk kebutuhan personal maupun bisnis.',
+				'Lebih dari 135 jenis barang siap sewa — mulai dari proyektor, sound system, kamera, laptop ROG, genset, kendaraan, hingga perlengkapan bayi & toga wisuda. Melayani delivery DKI Jakarta, Jawa Barat, Jawa Tengah & DIY atau ambil langsung di kios.',
 			aboutFull:
-				'AdaSewa dibangun untuk menyederhanakan pengalaman penyewaan secara menyeluruh — mulai dari pencarian unit atau layanan, transparansi informasi, hingga dukungan operasional yang andal.\n\nDengan infrastruktur web modern berbasis Cloudflare Edge dan manajemen konten terpusat, kami memastikan setiap informasi layanan dan portofolio selalu akurat dan mudah diakses dari mana saja.',
+				'Adasewa.id adalah pusat penyewaan barang terlengkap yang hadir untuk mempermudah kebutuhan acara, operasional bisnis, produksi kreatif, perjalanan, hingga keperluan keluarga tanpa harus membeli aset mahal.\n\nKami menyediakan lebih dari 135 jenis unit terawat lintas 10 kategori utama — mulai dari proyektor 2.600 hingga 10.000 lumens, TV LED hingga 85 inch, videotron, sound system hingga 20.000 watt, paket live streaming multi-kamera, gadget flagship iPhone & Laptop ROG, genset & lighting panggung, alat musik, kendaraan, perlengkapan bayi, alat camping, hingga toga wisuda.\n\nSeluruh unit dicek fungsinya sebelum serah terima. Anda dapat memilih layanan antar-jemput (delivery) ke wilayah DKI Jakarta, Jawa Barat, Jawa Tengah, dan D.I. Yogyakarta, atau ambil langsung di kios kami dengan proses pemesanan yang cepat dan transparan.',
 			vision:
-				'Menjadi platform penyewaan paling tepercaya di Indonesia dengan standar layanan prima dan teknologi yang ramah pengguna.',
+				'Menjadi pusat penyewaan barang paling lengkap, mudah diakses, dan tepercaya bagi individu, kampus, EO, maupun perusahaan di Indonesia.',
 			mission:
-				'Menyediakan pilihan layanan sewa berkualitas, proses pemesanan yang ringkas, serta dukungan mitra yang profesional dan transparan.',
+				'Menyediakan ragam unit berkualitas yang selalu siap pakai, transparansi informasi spesifikasi dan kelengkapan barang, serta layanan delivery cepat lintas DKI, Jabar, Jateng, dan DIY.',
 			email: 'halo@adasewa.id',
-			phone: '+62 21 5088 2410',
-			address: 'Jakarta Selatan, Indonesia',
+			phone: '+62 857-7713-9748',
+			address:
+				'Layanan Delivery DKI Jakarta, Jawa Barat, Jawa Tengah & D.I. Yogyakarta · Tersedia Ambil di Kios',
 			socialLinks: {
-				instagram: 'https://instagram.com/adasewa.id',
-				linkedin: 'https://linkedin.com/company/adasewa'
+				instagram: 'https://www.instagram.com/adasewa.id/',
+				whatsapp: 'https://wa.me/6285777139748',
+				bookingForm: ADASEWA_GOOGLE_FORM_URL
 			},
-			metaTitle: 'AdaSewa — Solusi Sewa Modern & Terpercaya',
+			metaTitle: 'Adasewa.id — Pusat Sewa Barang Terlengkap | Delivery DKI, Jabar, Jateng & DIY',
 			metaDescription:
-				'Platform dan layanan penyewaan modern untuk kebutuhan bisnis maupun personal dengan proses cepat dan transparan.'
+				'Pusat sewa 135+ jenis barang: proyektor, sound system, TV LED, kamera, streaming, iPhone, laptop ROG, genset, mobil, motor, mainan anak, camping & toga wisuda. Delivery DKI–Jabar–Jateng–DIY.'
 		})
 		.onConflictDoNothing({ target: schema.companySettings.id });
 
-	// 2. Seed Services
+	// 2. Seed 10 Kategori Katalog Sewa
+	await db
+		.insert(schema.rentalCategories)
+		.values(
+			ADASEWA_CATEGORIES.map((cat) => ({
+				name: cat.name,
+				slug: cat.slug,
+				description: cat.description,
+				icon: cat.icon,
+				accent: cat.accent,
+				sortOrder: cat.sortOrder,
+				isPublished: true
+			}))
+		)
+		.onConflictDoNothing({ target: schema.rentalCategories.slug });
+
+	const allCategories = await db.select().from(schema.rentalCategories);
+	const categoryIdBySlug = new Map<string, string>(
+		allCategories.map((cat) => [cat.slug, cat.id])
+	);
+
+	// 3. Seed 135 Barang Sewa Adasewa.id (batched)
+	const itemValues = ADASEWA_ITEMS.map((item) => {
+		const categoryId = categoryIdBySlug.get(item.categorySlug);
+		if (!categoryId) {
+			throw new Error(`Kategori dengan slug "${item.categorySlug}" tidak ditemukan.`);
+		}
+		return {
+			categoryId,
+			name: item.name,
+			slug: item.slug,
+			shortDescription: item.shortDescription,
+			description: item.description,
+			specs: item.specs,
+			includes: item.includes,
+			variants: item.variants,
+			pricePerDay: item.pricePerDay,
+			unitLabel: item.unitLabel,
+			minDurationDays: item.minDurationDays,
+			stockQty: item.stockQty,
+			requiresDeposit: item.requiresDeposit,
+			deliveryAvailable: true,
+			pickupAvailable: true,
+			isFeatured: item.isFeatured,
+			isPublished: true,
+			sortOrder: item.sortOrder
+		};
+	});
+
+	const BATCH_SIZE = 35;
+	for (let i = 0; i < itemValues.length; i += BATCH_SIZE) {
+		const chunk = itemValues.slice(i, i + BATCH_SIZE);
+		await db
+			.insert(schema.rentalItems)
+			.values(chunk)
+			.onConflictDoNothing({ target: schema.rentalItems.slug });
+	}
+	console.log(`Katalog tersinkron: ${ADASEWA_CATEGORIES.length} kategori & ${itemValues.length} barang.`);
+
+	// 4. Seed Layanan Unggulan Adasewa.id
 	const seedServices = [
 		{
-			title: 'Rekayasa Aplikasi Web & Platform',
-			slug: 'rekayasa-aplikasi-web-platform',
+			title: 'Sewa Perlengkapan Event, Panggung & Multimedia',
+			slug: 'event-panggung-multimedia',
 			shortDescription:
-				'Pengembangan aplikasi web full-stack berkecepatan tinggi dengan SvelteKit, TypeScript strict, dan API modern.',
+				'Paket lengkap proyektor 2.600–10.000 lumens, TV LED hingga 85 inch, videotron, sound system hingga 20.000W, lighting, panggung & genset.',
 			description:
-				'Kami merancang dan membangun aplikasi web kelas produksi mulai dari company profile dengan CMS kustom, portal pelanggan, hingga sistem internal enterprise.\n\nSetiap baris kode ditulis dengan standar TypeScript strict, validasi data menyeluruh, pengujian terstruktur, serta optimasi Core Web Vitals agar bisnis Anda siap bertumbuh tanpa utang teknis.',
-			icon: 'Engineering',
+				'Mendukung kelancaran seminar, konferensi, peluncuran produk, pernikahan, pensi kampus, hingga konser outdoor dengan perangkat multimedia dan panggung berstandar profesional.\n\nSeluruh unit dapat disesuaikan dengan kapasitas ruangan dan jumlah audiens, lengkap dengan opsi pengiriman ke lokasi serta dukungan instalasi.',
+			icon: 'Event & AV',
 			isFeatured: true,
 			isPublished: true,
 			sortOrder: 1
 		},
 		{
-			title: 'Desain Produk & Sistem Antarmuka',
-			slug: 'desain-produk-sistem-antarmuka',
+			title: 'Produksi Live Streaming, Kamera & Booth Interaktif',
+			slug: 'live-streaming-kamera-booth',
 			shortDescription:
-				'Pendekatan desain minimalis berbasis riset pengguna, tipografi presisi, dan design system yang konsisten.',
+				'Paket streaming 2–5 kamera, kamera mirrorless & DSLR Nikon, Sony NX100, drone, photobooth, mirror booth, hingga video booth 360°.',
 			description:
-				'Antarmuka yang baik menghilangkan gesekan antara pengguna dan tujuan bisnis. Kami menyusun arsitektur informasi, prototipe interaktif, serta pustaka komponen UI yang responsif di seluruh ukuran layar.\n\nHasil akhirnya adalah pengalaman digital yang bersih, mudah dipahami, dan memperkuat citra profesional merek Anda.',
-			icon: 'Design',
+				'Solusi lengkap bagi penyelenggara acara hybrid, wisuda, webinar nasional, dan resepsi yang membutuhkan dokumentasi tajam serta siaran langsung stabil.\n\nTersedia pula wahana hiburan tamu modern seperti Photobooth cetak instan, Mirror Booth, dan Video Booth 360°.',
+			icon: 'Produksi',
 			isFeatured: true,
 			isPublished: true,
 			sortOrder: 2
 		},
 		{
-			title: 'Arsitektur Cloud Edge & Serverless',
-			slug: 'arsitektur-cloud-edge-serverless',
+			title: 'Sewa Gadget Flagship, Laptop ROG & Kendaraan',
+			slug: 'gadget-laptop-kendaraan',
 			shortDescription:
-				'Migrasi dan optimasi infrastruktur di Cloudflare Workers, R2 Object Storage, dan Neon Serverless PostgreSQL.',
+				'iPhone 12–17 Pro Max, laptop gaming/editing ASUS ROG, PlayStation 3–5, hingga armada Hiace Premio, mobil keluarga & motor matic.',
 			description:
-				'Dengan menjalankan aplikasi di tepi jaringan global (Edge), latensi turun drastis dan skalabilitas berjalan otomatis tanpa beban pemeliharaan server konvensional.\n\nKami membantu tim Anda menerapkan caching strategis, keamanan API, penyimpanan media R2 tanpa biaya egress, serta observabilitas menyeluruh.',
-			icon: 'Cloud',
+				'Fleksibel untuk kebutuhan konten kreator, konser, turnamen esports, dinas luar kota, maupun liburan keluarga tanpa perlu membeli aset baru.\n\nSetiap unit diperiksa kondisinya secara menyeluruh sebelum serah terima di kios maupun pengiriman ke alamat Anda.',
+			icon: 'Lifestyle & Mobilitas',
 			isFeatured: true,
 			isPublished: true,
 			sortOrder: 3
 		},
 		{
-			title: 'Integrasi API & Transformasi Digital',
-			slug: 'integrasi-api-transformasi-digital',
+			title: 'Perlengkapan Anak, Camping & Wisuda',
+			slug: 'keluarga-camping-wisuda',
 			shortDescription:
-				'Menghubungkan sistem ERP, pembayaran, analitik, dan alur kerja internal melalui RESTful API yang aman.',
+				'Stroller, car seat, mainan anak higienis, tenda & carrier pendakian, serta set toga wisuda S1/S2/S3 siap pakai.',
 			description:
-				'Kami menyederhanakan proses operasional yang terfragmentasi menjadi satu ekosistem data yang sinkron. Setiap endpoint dirancang dengan kontrak tipe data jelas, autentikasi berbasis sesi modern, dan dokumentasi yang mudah dipelihara tim internal Anda.',
-			icon: 'Strategy',
+				'Memenuhi kebutuhan musiman dan keluarga secara ekonomis — mulai dari perlengkapan bayi yang disanitasi sebelum kirim, perlengkapan mendaki gunung lengkap, hingga toga wisuda bersih untuk individu maupun rombongan fakultas.',
+			icon: 'Keluarga & Kampus',
 			isFeatured: false,
 			isPublished: true,
 			sortOrder: 4
@@ -114,73 +179,51 @@ async function seed(): Promise<void> {
 			.onConflictDoNothing({ target: schema.services.slug });
 	}
 
-	const [webService] = await db
+	const [eventService] = await db
 		.select({ id: schema.services.id })
 		.from(schema.services)
-		.where(eq(schema.services.slug, 'rekayasa-aplikasi-web-platform'))
+		.where(eq(schema.services.slug, 'event-panggung-multimedia'))
 		.limit(1);
 
-	const [cloudService] = await db
+	const [streamService] = await db
 		.select({ id: schema.services.id })
 		.from(schema.services)
-		.where(eq(schema.services.slug, 'arsitektur-cloud-edge-serverless'))
+		.where(eq(schema.services.slug, 'live-streaming-kamera-booth'))
 		.limit(1);
 
-	const [designService] = await db
-		.select({ id: schema.services.id })
-		.from(schema.services)
-		.where(eq(schema.services.slug, 'desain-produk-sistem-antarmuka'))
-		.limit(1);
-
-	// 3. Seed Portfolios
+	// 5. Seed Dokumentasi / Portofolio Acara Adasewa.id
 	const seedPortfolios = [
 		{
-			title: 'Platform Manajemen Aset & Portal Investor Nusantara',
-			slug: 'portal-investor-nusantara',
-			clientName: 'PT Nusantara Energi Terbarukan',
-			category: 'Enterprise Web',
+			title: 'Dukungan Audio, Proyektor 5500 Lumens & Live Streaming 3 Kamera',
+			slug: 'dukungan-seminar-hybrid-jakarta',
+			clientName: 'Acara Seminar & Konferensi Korporat',
+			category: 'Event & Multimedia',
 			summary:
-				'Modernisasi portal pelaporan kinerja operasional dan dokumentasi investor dengan waktu muat sub-100ms di jaringan edge.',
+				'Pengadaan terpadu proyektor 5500 lumens, screen 94 inch, sound system 5000 watt, dan paket streaming 3 kamera untuk peserta hybrid.',
 			content:
-				'PT Nusantara Energi Terbarukan membutuhkan portal korporat sekaligus sistem publikasi laporan berkala yang mampu melayani ribuan pemangku kepentingan secara simultan.\n\nKami membangun ulang keseluruhan arsitektur menggunakan SvelteKit SSR di Cloudflare Workers, menyimpan dokumen dan aset visual di Cloudflare R2, serta memusatkan manajemen konten pada CMS internal yang intuitif bagi tim komunikasi perusahaan.',
-			projectUrl: 'https://nusantara-energi.example.id',
-			completedAt: new Date('2026-08-15T00:00:00Z'),
-			serviceId: webService?.id ?? null,
+				'Kebutuhan acara seminar hybrid memerlukan kejelasan visual di dalam aula sekaligus kualitas siaran yang jernih bagi peserta daring.\n\nTim Adasewa.id menyiapkan proyektor 5500 lumens, layar proyektor, sound system 5000 watt, mikrofon wireless, serta paket live streaming 3 kamera dengan pengujian pra-acara agar seluruh sesi berjalan mulus tanpa kendala teknis.',
+			projectUrl: null,
+			completedAt: new Date('2026-09-12T00:00:00Z'),
+			serviceId: eventService?.id ?? null,
 			isFeatured: true,
 			isPublished: true,
 			sortOrder: 1
 		},
 		{
-			title: 'Sistem Pemesanan & Katalog Omnichannel Aruna',
-			slug: 'katalog-omnichannel-aruna',
-			clientName: 'Aruna Retail Group',
-			category: 'Commerce',
+			title: 'Paket Video Booth 360°, Lighting Pro Set & Genset Acara Outdoor',
+			slug: 'paket-wedding-booth-lighting-bandung',
+			clientName: 'Resepsi & Gathering Outdoor',
+			category: 'Wedding & Booth',
 			summary:
-				'Integrasi katalog produk real-time untuk 45 gerai dengan pengalaman belanja minimalis dan responsif.',
+				'Kombinasi tata cahaya panggung Lighting Pro Set, Misty Fan Krisbow, Genset 10.000W, dan Video Booth 360° dalam satu pengantaran.',
 			content:
-				'Aruna Retail Group menghadapi tantangan sinkronisasi stok dan performa situs katalog saat kampanye musiman.\n\nMelalui pendekatan arsitektur serverless PostgreSQL dan edge caching terkendali, kami menurunkan biaya infrastruktur sebesar 52% sembari meningkatkan konversi kunjungan mobile sebesar 34%.',
-			projectUrl: 'https://aruna-retail.example.id',
-			completedAt: new Date('2026-05-20T00:00:00Z'),
-			serviceId: cloudService?.id ?? null,
+				'Menyewa seluruh perlengkapan acara dari satu penyedia memudahkan koordinasi pengiriman dan pemasangan di venue outdoor.\n\nAdasewa.id mengantarkan paket lengkap mulai dari genset cadangan, kipas embun penyejuk area tamu, lighting panggung, hingga Video Booth 360° yang menjadi favorit para tamu.',
+			projectUrl: null,
+			completedAt: new Date('2026-08-20T00:00:00Z'),
+			serviceId: streamService?.id ?? null,
 			isFeatured: true,
 			isPublished: true,
 			sortOrder: 2
-		},
-		{
-			title: 'Design System & Aplikasi Klinik Digital Medika',
-			slug: 'design-system-klinik-medika',
-			clientName: 'Medika Prima Healthcare',
-			category: 'Product Design',
-			summary:
-				'Perancangan ulang pengalaman pendaftaran pasien, rekam medis ringkas, dan sistem desain lintas produk.',
-			content:
-				'Fokus utama proyek ini adalah kejelasan informasi dan aksesibilitas bagi pasien lintas usia.\n\nTim desain kami menyusun sistem tipografi, komponen formulir, serta alur janji temu yang memangkas rata-rata waktu pendaftaran dari 6 menit menjadi kurang dari 90 detik.',
-			projectUrl: null,
-			completedAt: new Date('2026-02-10T00:00:00Z'),
-			serviceId: designService?.id ?? null,
-			isFeatured: true,
-			isPublished: true,
-			sortOrder: 3
 		}
 	];
 
@@ -191,7 +234,57 @@ async function seed(): Promise<void> {
 			.onConflictDoNothing({ target: schema.portfolios.slug });
 	}
 
-	// 4. Seed default local admin account (jika belum ada satupun user)
+	// 5b. Seed Promo & Voucher Diskon Awal
+	const seedPromos = [
+		{
+			code: 'SEWABARU10',
+			title: 'Diskon 10% Semua Barang',
+			description:
+				'Berlaku untuk seluruh kategori barang sewa Adasewa.id dengan potongan maksimal Rp 150.000.',
+			discountType: 'percentage',
+			discountValue: 10,
+			maxDiscountAmount: 150000,
+			minOrderAmount: 100000,
+			usageLimit: 100,
+			isActive: true,
+			showOnLanding: true
+		},
+		{
+			code: 'EVENT100K',
+			title: 'Potongan Langsung Rp 100.000 Paket Event',
+			description:
+				'Hemat Rp 100.000 untuk penyewaan perlengkapan seminar, sound system, proyektor, genset & booth minimal Rp 500.000.',
+			discountType: 'fixed',
+			discountValue: 100000,
+			maxDiscountAmount: null,
+			minOrderAmount: 500000,
+			usageLimit: 50,
+			isActive: true,
+			showOnLanding: true
+		},
+		{
+			code: 'WISUDA15',
+			title: 'Promo Wisuda & Kampus 15%',
+			description:
+				'Potongan 15% hingga Rp 100.000 untuk toga wisuda, kamera, iPhone, dan perlengkapan acara kampus.',
+			discountType: 'percentage',
+			discountValue: 15,
+			maxDiscountAmount: 100000,
+			minOrderAmount: 150000,
+			usageLimit: 100,
+			isActive: true,
+			showOnLanding: true
+		}
+	];
+
+	for (const promo of seedPromos) {
+		await db
+			.insert(schema.promoCodes)
+			.values(promo)
+			.onConflictDoNothing({ target: schema.promoCodes.code });
+	}
+
+	// 6. Seed default admin account (jika belum ada satupun user)
 	const [existingUsers] = await db.select({ total: count() }).from(schema.user);
 	if (Number(existingUsers?.total ?? 0) === 0) {
 		const secret =
@@ -229,18 +322,23 @@ async function seed(): Promise<void> {
 
 		await auth.api.signUpEmail({
 			body: {
-				name: 'Admin AdaSewa',
+				name: 'Admin Adasewa.id',
 				email: 'admin@adasewa.id',
 				password: 'Admin1234!'
 			}
 		});
+
+		await db
+			.update(schema.user)
+			.set({ role: 'admin' })
+			.where(eq(schema.user.email, 'admin@adasewa.id'));
 
 		console.log('Akun admin awal berhasil dibuat: admin@adasewa.id / Admin1234!');
 	} else {
 		console.log('Akun admin sudah ada, melewati pembuatan akun awal.');
 	}
 
-	console.log('Seeding selesai!');
+	console.log('Seeding Adasewa.id selesai!');
 }
 
 seed().catch((err) => {

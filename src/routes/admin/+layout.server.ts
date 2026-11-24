@@ -10,6 +10,10 @@ export const load: LayoutServerLoad = async ({ locals, setHeaders, url }) => {
 		redirect(303, `/login?redirectTo=${redirectTo}`);
 	}
 
+	if (locals.user.role !== 'admin') {
+		redirect(303, '/akun');
+	}
+
 	const settings = await getCompanySettings(locals.db);
 
 	return {

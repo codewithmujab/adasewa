@@ -26,11 +26,13 @@
 	let imageKey = $state<string | null>(null);
 	let imageUrl = $state<string | null>(null);
 	let instagram = $state('');
+	let tiktok = $state('');
 	let linkedin = $state('');
 	let x = $state('');
 	let youtube = $state('');
 	let github = $state('');
 	let whatsapp = $state('');
+	let bookingForm = $state('');
 	let metaTitle = $state('');
 	let metaDescription = $state('');
 
@@ -55,11 +57,13 @@
 		imageKey = s.imageKey;
 		imageUrl = s.imageUrl;
 		instagram = s.socialLinks.instagram ?? '';
+		tiktok = s.socialLinks.tiktok ?? '';
 		linkedin = s.socialLinks.linkedin ?? '';
 		x = s.socialLinks.x ?? '';
 		youtube = s.socialLinks.youtube ?? '';
 		github = s.socialLinks.github ?? '';
 		whatsapp = s.socialLinks.whatsapp ?? '';
+		bookingForm = s.socialLinks.bookingForm ?? '';
 		metaTitle = s.metaTitle ?? '';
 		metaDescription = s.metaDescription ?? '';
 	});
@@ -85,11 +89,13 @@
 			imageUrl,
 			socialLinks: {
 				instagram: instagram.trim(),
+				tiktok: tiktok.trim(),
 				linkedin: linkedin.trim(),
 				x: x.trim(),
 				youtube: youtube.trim(),
 				github: github.trim(),
-				whatsapp: whatsapp.trim()
+				whatsapp: whatsapp.trim(),
+				bookingForm: bookingForm.trim()
 			},
 			metaTitle: metaTitle.trim() || null,
 			metaDescription: metaDescription.trim() || null
@@ -364,6 +370,28 @@
 					type="url"
 					bind:value={whatsapp}
 					placeholder="https://wa.me/62..."
+					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2 text-sm focus:border-neutral-950 focus:outline-none"
+				/>
+			</div>
+			<div>
+				<label for="st-tiktok" class="block text-xs font-medium text-neutral-700">TikTok URL</label>
+				<input
+					id="st-tiktok"
+					type="url"
+					bind:value={tiktok}
+					placeholder="https://tiktok.com/@..."
+					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2 text-sm focus:border-neutral-950 focus:outline-none"
+				/>
+			</div>
+			<div class="sm:col-span-2">
+				<label for="st-form" class="block text-xs font-medium text-neutral-700">
+					Link Form Pemesanan (Google Form / Checkout)
+				</label>
+				<input
+					id="st-form"
+					type="url"
+					bind:value={bookingForm}
+					placeholder="https://docs.google.com/forms/..."
 					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2 text-sm focus:border-neutral-950 focus:outline-none"
 				/>
 			</div>

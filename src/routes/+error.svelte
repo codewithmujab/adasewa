@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>{status} — Company Profile</title>
+	<title>{status} — Adasewa.id</title>
 </svelte:head>
 
 <main class="flex min-h-screen flex-col items-center justify-center bg-white px-6 py-24 text-center">
@@ -34,10 +34,10 @@
 			Kembali ke Beranda
 		</a>
 		<a
-			href="/services"
+			href="/katalog"
 			class="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-6 py-2.5 text-sm font-medium text-neutral-800 transition hover:border-neutral-300 hover:bg-neutral-50"
 		>
-			Lihat Layanan
+			Lihat Katalog
 		</a>
 	</div>
 </main>

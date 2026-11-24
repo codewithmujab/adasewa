@@ -42,13 +42,32 @@ export function apiError(
 	});
 }
 
-export function requireAdmin(
+export function requireAuth(
 	locals: App.Locals,
-	message = 'Unauthorized. Anda harus login untuk melakukan aksi ini.'
+	message = 'Silakan masuk terlebih dahulu untuk melanjutkan.'
 ): Response | null {
 	if (!locals.user || !locals.session) {
 		return apiError(message, {
 			status: 401,
+			headers: { 'Cache-Control': 'private, no-store' }
+		});
+	}
+	return null;
+}
+
+export function requireAdmin(
+	locals: App.Locals,
+	message = 'Unauthorized. Anda harus login sebagai admin untuk melakukan aksi ini.'
+): Response | null {
+	if (!locals.user || !locals.session) {
+		return apiError(message, {
+			status: 401,
+			headers: { 'Cache-Control': 'private, no-store' }
+		});
+	}
+	if (locals.user.role !== 'admin') {
+		return apiError('Akses ditolak. Fitur ini khusus untuk administrator.', {
+			status: 403,
 			headers: { 'Cache-Control': 'private, no-store' }
 		});
 	}

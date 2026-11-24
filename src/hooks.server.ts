@@ -16,6 +16,10 @@ function isProtectedAdminPath(pathname: string): boolean {
 	return pathname === '/admin' || pathname.startsWith('/admin/');
 }
 
+function isProtectedCustomerPath(pathname: string): boolean {
+	return pathname === '/akun' || pathname.startsWith('/akun/');
+}
+
 function isBetterAuthPath(pathname: string): boolean {
 	return pathname === '/api/auth' || pathname.startsWith('/api/auth/');
 }
@@ -72,15 +76,31 @@ export const handle: Handle = async ({ event, resolve }) => {
 			const redirectTo = encodeURIComponent(`${pathname}${event.url.search}`);
 			redirect(303, `/login?redirectTo=${redirectTo}`);
 		}
+		if (event.locals.user.role !== 'admin') {
+			redirect(303, '/akun');
+		}
+	}
+
+	if (isProtectedCustomerPath(pathname)) {
+		if (!event.locals.session || !event.locals.user) {
+			const redirectTo = encodeURIComponent(`${pathname}${event.url.search}`);
+			redirect(303, `/login?redirectTo=${redirectTo}`);
+		}
 	}
 
 	if (pathname === '/login' && event.locals.session && event.locals.user) {
-		redirect(303, '/admin');
+		const target = event.locals.user.role === 'admin' ? '/admin' : '/akun';
+		redirect(303, target);
 	}
 
 	const response = await svelteKitHandler({ event, resolve, auth, building });
 
-	if (isProtectedAdminPath(pathname) || pathname === '/login') {
+	if (
+		isProtectedAdminPath(pathname) ||
+		isProtectedCustomerPath(pathname) ||
+		pathname === '/login' ||
+		pathname === '/checkout'
+	) {
 		response.headers.set('Cache-Control', 'private, no-store');
 	}
 

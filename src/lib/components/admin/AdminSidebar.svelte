@@ -15,8 +15,12 @@
 
   const links = [
     { href: "/admin", label: "Ringkasan", exact: true },
-    { href: "/admin/services", label: "Layanan", exact: false },
-    { href: "/admin/portfolios", label: "Portofolio", exact: false },
+    { href: "/admin/orders", label: "Transaksi & Pengembalian", exact: false },
+    { href: "/admin/points", label: "Rekening Poin", exact: false },
+    { href: "/admin/promos", label: "Promo & Diskon", exact: false },
+    { href: "/admin/catalog", label: "Katalog Barang", exact: false },
+    { href: "/admin/services", label: "Paket Layanan", exact: false },
+    { href: "/admin/portfolios", label: "Dokumentasi Acara", exact: false },
     { href: "/admin/settings", label: "Pengaturan Perusahaan", exact: false },
   ] as const;
 

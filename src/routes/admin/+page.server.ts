@@ -1,45 +1,59 @@
-import { count, desc, eq } from 'drizzle-orm';
-import { portfolios, services } from '#lib/server/db/schema';
+import { count, desc, eq, inArray } from 'drizzle-orm';
+import {
+	portfolios,
+	rentalCategories,
+	rentalItems,
+	rentalOrders,
+	services
+} from '#lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const [
+		totalOrdersRes,
+		activeOrdersRes,
+		returnReqRes,
+		totalCatalogRes,
+		publishedCatalogRes,
+		totalCategoriesRes,
 		totalServicesRes,
-		publishedServicesRes,
 		totalPortfoliosRes,
-		publishedPortfoliosRes,
-		recentServices,
-		recentPortfolios
+		recentOrders,
+		recentCatalogItems
 	] = await Promise.all([
+		locals.db.select({ total: count() }).from(rentalOrders),
+		locals.db
+			.select({ total: count() })
+			.from(rentalOrders)
+			.where(inArray(rentalOrders.orderStatus, ['confirmed', 'active_rental'])),
+		locals.db
+			.select({ total: count() })
+			.from(rentalOrders)
+			.where(eq(rentalOrders.orderStatus, 'return_requested')),
+		locals.db.select({ total: count() }).from(rentalItems),
+		locals.db
+			.select({ total: count() })
+			.from(rentalItems)
+			.where(eq(rentalItems.isPublished, true)),
+		locals.db.select({ total: count() }).from(rentalCategories),
 		locals.db.select({ total: count() }).from(services),
-		locals.db
-			.select({ total: count() })
-			.from(services)
-			.where(eq(services.isPublished, true)),
 		locals.db.select({ total: count() }).from(portfolios),
-		locals.db
-			.select({ total: count() })
-			.from(portfolios)
-			.where(eq(portfolios.isPublished, true)),
-		locals.db.select().from(services).orderBy(desc(services.updatedAt)).limit(5),
-		locals.db.select().from(portfolios).orderBy(desc(portfolios.updatedAt)).limit(5)
+		locals.db.select().from(rentalOrders).orderBy(desc(rentalOrders.createdAt)).limit(6),
+		locals.db.select().from(rentalItems).orderBy(desc(rentalItems.updatedAt)).limit(6)
 	]);
-
-	const totalServices = Number(totalServicesRes[0]?.total ?? 0);
-	const publishedServices = Number(publishedServicesRes[0]?.total ?? 0);
-	const totalPortfolios = Number(totalPortfoliosRes[0]?.total ?? 0);
-	const publishedPortfolios = Number(publishedPortfoliosRes[0]?.total ?? 0);
 
 	return {
 		stats: {
-			totalServices,
-			publishedServices,
-			draftServices: totalServices - publishedServices,
-			totalPortfolios,
-			publishedPortfolios,
-			draftPortfolios: totalPortfolios - publishedPortfolios
+			totalOrders: Number(totalOrdersRes[0]?.total ?? 0),
+			activeOrders: Number(activeOrdersRes[0]?.total ?? 0),
+			returnRequestedOrders: Number(returnReqRes[0]?.total ?? 0),
+			totalCatalog: Number(totalCatalogRes[0]?.total ?? 0),
+			publishedCatalog: Number(publishedCatalogRes[0]?.total ?? 0),
+			totalCategories: Number(totalCategoriesRes[0]?.total ?? 0),
+			totalServices: Number(totalServicesRes[0]?.total ?? 0),
+			totalPortfolios: Number(totalPortfoliosRes[0]?.total ?? 0)
 		},
-		recentServices,
-		recentPortfolios
+		recentOrders,
+		recentCatalogItems
 	};
 };

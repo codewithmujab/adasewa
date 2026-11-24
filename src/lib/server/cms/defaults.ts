@@ -4,33 +4,37 @@ import { companySettings, type CompanySettings } from '#lib/server/db/schema';
 
 export const DEFAULT_COMPANY_SETTINGS_ID = 'default';
 
+export const ADASEWA_GOOGLE_FORM_URL =
+	'https://docs.google.com/forms/d/e/1FAIpQLSc7oXCUZVUNH3gUMrlcaI2MhvNbJiPGnSFFPGNWTLK6wdETRg/viewform';
+
 export function getFallbackCompanySettings(): CompanySettings {
 	return {
 		id: DEFAULT_COMPANY_SETTINGS_ID,
-		companyName: 'AdaSewa',
-		tagline: 'Solusi sewa modern yang mudah, transparan, dan terpercaya.',
+		companyName: 'Adasewa.id',
+		tagline: 'Pusat Sewa Barang Terlengkap untuk Acara, Bisnis & Kebutuhan Harian.',
 		aboutShort:
-			'AdaSewa menghadirkan layanan penyewaan terintegrasi dengan pengelolaan modern, proses cepat, serta dukungan pelanggan responsif untuk kebutuhan personal maupun bisnis.',
+			'Lebih dari 135 jenis barang siap sewa — mulai dari proyektor, sound system, kamera, laptop ROG, genset, kendaraan, hingga perlengkapan bayi & toga wisuda. Melayani delivery DKI Jakarta, Jawa Barat, Jawa Tengah & DIY atau ambil langsung di kios.',
 		aboutFull:
-			'AdaSewa dibangun untuk menyederhanakan pengalaman penyewaan secara menyeluruh — mulai dari pencarian unit atau layanan, transparansi informasi, hingga dukungan operasional yang andal.\n\nDengan infrastruktur web modern berbasis Cloudflare Edge dan manajemen konten terpusat, kami memastikan setiap informasi layanan dan portofolio selalu akurat dan mudah diakses dari mana saja.',
+			'Adasewa.id adalah pusat penyewaan barang terlengkap yang hadir untuk mempermudah kebutuhan acara, operasional bisnis, produksi kreatif, perjalanan, hingga keperluan keluarga tanpa harus membeli aset mahal.\n\nKami menyediakan lebih dari 135 jenis unit terawat lintas 10 kategori utama — mulai dari proyektor 2.600 hingga 10.000 lumens, TV LED hingga 85 inch, videotron, sound system hingga 20.000 watt, paket live streaming multi-kamera, gadget flagship iPhone & Laptop ROG, genset & lighting panggung, alat musik, kendaraan, perlengkapan bayi, alat camping, hingga toga wisuda.\n\nSeluruh unit dicek fungsinya sebelum serah terima. Anda dapat memilih layanan antar-jemput (delivery) ke wilayah DKI Jakarta, Jawa Barat, Jawa Tengah, dan D.I. Yogyakarta, atau ambil langsung di kios kami dengan proses pemesanan yang cepat dan transparan.',
 		vision:
-			'Menjadi platform penyewaan paling tepercaya di Indonesia dengan standar layanan prima dan teknologi yang ramah pengguna.',
+			'Menjadi pusat penyewaan barang paling lengkap, mudah diakses, dan tepercaya bagi individu, kampus, EO, maupun perusahaan di Indonesia.',
 		mission:
-			'Menyediakan pilihan layanan sewa berkualitas, proses pemesanan yang ringkas, serta dukungan mitra yang profesional dan transparan.',
+			'Menyediakan ragam unit berkualitas yang selalu siap pakai, transparansi informasi spesifikasi dan kelengkapan barang, serta layanan delivery cepat lintas DKI, Jabar, Jateng, dan DIY.',
 		email: 'halo@adasewa.id',
-		phone: '+62 21 5088 2410',
-		address: 'Jakarta Selatan, Indonesia',
+		phone: '+62 857-7713-9748',
+		address: 'Layanan Delivery DKI Jakarta, Jawa Barat, Jawa Tengah & D.I. Yogyakarta · Tersedia Ambil di Kios',
 		logoKey: null,
 		logoUrl: null,
 		imageKey: null,
 		imageUrl: null,
 		socialLinks: {
-			instagram: 'https://instagram.com/adasewa.id',
-			linkedin: 'https://linkedin.com/company/adasewa'
+			instagram: 'https://www.instagram.com/adasewa.id/',
+			whatsapp: 'https://wa.me/6285777139748',
+			bookingForm: ADASEWA_GOOGLE_FORM_URL
 		},
-		metaTitle: 'AdaSewa — Solusi Sewa Modern & Terpercaya',
+		metaTitle: 'Adasewa.id — Pusat Sewa Barang Terlengkap | Delivery DKI, Jabar, Jateng & DIY',
 		metaDescription:
-			'Platform dan layanan penyewaan modern untuk kebutuhan bisnis maupun personal dengan proses cepat dan transparan.',
+			'Pusat sewa 135+ jenis barang: proyektor, sound system, TV LED, kamera, streaming, iPhone, laptop ROG, genset, mobil, motor, mainan anak, camping & toga wisuda. Delivery DKI–Jabar–Jateng–DIY.',
 		updatedAt: new Date(0)
 	};
 }

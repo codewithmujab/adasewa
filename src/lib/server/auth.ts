@@ -51,14 +51,14 @@ export function createAuth(db: Database, env: AuthEnv) {
 			minPasswordLength: 8,
 			maxPasswordLength: 128,
 			autoSignIn: true,
-			disableSignUp: env.ALLOW_ADMIN_SIGNUP !== 'true'
+			disableSignUp: false
 		},
 		user: {
 			additionalFields: {
 				role: {
 					type: 'string',
 					required: false,
-					defaultValue: 'admin',
+					defaultValue: 'customer',
 					input: false
 				}
 			}

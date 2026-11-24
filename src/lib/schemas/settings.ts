@@ -18,28 +18,34 @@ const optionalNullableText = (max: number, label: string) =>
 export const companySocialLinksSchema = z
 	.object({
 		instagram: optionalSocialUrlSchema,
+		tiktok: optionalSocialUrlSchema,
 		linkedin: optionalSocialUrlSchema,
 		x: optionalSocialUrlSchema,
 		youtube: optionalSocialUrlSchema,
 		github: optionalSocialUrlSchema,
-		whatsapp: optionalSocialUrlSchema
+		whatsapp: optionalSocialUrlSchema,
+		bookingForm: optionalSocialUrlSchema
 	})
 	.transform((links) => {
 		const cleaned: {
 			instagram?: string;
+			tiktok?: string;
 			linkedin?: string;
 			x?: string;
 			youtube?: string;
 			github?: string;
 			whatsapp?: string;
+			bookingForm?: string;
 		} = {};
 
 		if (links.instagram) cleaned.instagram = links.instagram;
+		if (links.tiktok) cleaned.tiktok = links.tiktok;
 		if (links.linkedin) cleaned.linkedin = links.linkedin;
 		if (links.x) cleaned.x = links.x;
 		if (links.youtube) cleaned.youtube = links.youtube;
 		if (links.github) cleaned.github = links.github;
 		if (links.whatsapp) cleaned.whatsapp = links.whatsapp;
+		if (links.bookingForm) cleaned.bookingForm = links.bookingForm;
 
 		return cleaned;
 	});

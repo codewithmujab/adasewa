@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const MEDIA_FOLDERS = ['services', 'portfolios', 'settings'] as const;
+export const MEDIA_FOLDERS = ['catalog', 'services', 'portfolios', 'settings'] as const;
 export type MediaFolder = (typeof MEDIA_FOLDERS)[number];
 
 export const ALLOWED_IMAGE_MIME_TYPES = [
