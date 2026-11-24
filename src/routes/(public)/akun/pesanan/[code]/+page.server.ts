@@ -15,7 +15,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		.where(eq(rentalOrders.orderCode, params.code))
 		.limit(1);
 
-	if (!order || (order.userId !== locals.user.id && locals.user.role !== 'admin')) {
+	const isSuperAdmin = locals.user.role === 'admin';
+	const isOwnBranchAdmin =
+		locals.user.role === 'branch_admin' &&
+		Boolean(locals.user.branchId) &&
+		order?.branchId === locals.user.branchId;
+
+	if (!order || (order.userId !== locals.user.id && !isSuperAdmin && !isOwnBranchAdmin)) {
 		throw error(404, 'Transaksi pesanan tidak ditemukan.');
 	}
 
@@ -27,6 +33,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	return {
 		order,
 		items,
-		isAdmin: locals.user.role === 'admin'
+		isAdmin: isSuperAdmin || isOwnBranchAdmin
 	};
 };

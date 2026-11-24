@@ -2,7 +2,7 @@
 	import CategoryIcon from '#lib/components/public/CategoryIcon.svelte';
 	import RentalItemCard from '#lib/components/public/RentalItemCard.svelte';
 	import { rentalCart } from '#lib/stores/cart.svelte';
-	import { buildWhatsAppUrl } from '#lib/utils/catalog';
+	import { buildBranchWhatsAppUrl } from '#lib/utils/catalog';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -74,12 +74,17 @@
 		searchQuery.trim().length > 0 || selectedCategory !== 'all' || onlyFeatured
 	);
 
+	let activeBranch = $derived(
+		data.branches.find((b) => b.id === rentalCart.branchId) ?? data.branches[0] ?? null
+	);
+
 	let whatsappAskUrl = $derived(
-		buildWhatsAppUrl(
+		buildBranchWhatsAppUrl(
+			activeBranch,
 			data.settings,
 			searchQuery.trim()
-				? `Halo Adasewa.id, saya sedang mencari sewa "${searchQuery.trim()}". Apakah unitnya tersedia?`
-				: 'Halo Adasewa.id, saya ingin menanyakan ketersediaan dan informasi sewa barang.'
+				? `Halo ${data.settings.companyName}${activeBranch ? ` (${activeBranch.name})` : ''}, saya sedang mencari sewa "${searchQuery.trim()}". Apakah unitnya tersedia?`
+				: `Halo ${data.settings.companyName}${activeBranch ? ` (${activeBranch.name})` : ''}, saya ingin menanyakan ketersediaan dan informasi sewa barang.`
 		)
 	);
 
@@ -146,6 +151,38 @@
 				</a>
 			</div>
 		</div>
+
+		<!-- Cabang Penyewaan Switcher -->
+		{#if data.branches.length > 0}
+			<div
+				class="mt-6 flex flex-col justify-between gap-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-4 sm:flex-row sm:items-center"
+			>
+				<div class="min-w-0">
+					<p class="text-[11px] font-bold tracking-wider text-emerald-800 uppercase">
+						📍 Tarif &amp; Stok Aktif: {activeBranch?.name ?? 'Semua Cabang'}
+					</p>
+					{#if activeBranch}
+						<p class="mt-0.5 text-xs text-neutral-600">
+							Kios: {activeBranch.address} · WA CS: <strong>{activeBranch.phone}</strong>
+						</p>
+					{/if}
+				</div>
+				<div class="flex flex-wrap items-center gap-2">
+					{#each data.branches as branch (branch.id)}
+						<button
+							type="button"
+							onclick={() => rentalCart.selectBranch(branch)}
+							class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition {activeBranch?.id ===
+							branch.id
+								? 'bg-neutral-950 text-white'
+								: 'border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950'}"
+						>
+							{branch.name}
+						</button>
+					{/each}
+				</div>
+			</div>
+		{/if}
 
 		<!-- Search & Filter Controls -->
 		<div class="mt-8 space-y-4">

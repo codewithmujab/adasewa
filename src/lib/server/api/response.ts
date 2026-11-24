@@ -42,6 +42,14 @@ export function apiError(
 	});
 }
 
+export function isStaffRole(role: string | null | undefined): boolean {
+	return role === 'admin' || role === 'branch_admin';
+}
+
+export function isSuperAdminRole(role: string | null | undefined): boolean {
+	return role === 'admin';
+}
+
 export function requireAuth(
 	locals: App.Locals,
 	message = 'Silakan masuk terlebih dahulu untuk melanjutkan.'
@@ -65,8 +73,27 @@ export function requireAdmin(
 			headers: { 'Cache-Control': 'private, no-store' }
 		});
 	}
-	if (locals.user.role !== 'admin') {
-		return apiError('Akses ditolak. Fitur ini khusus untuk administrator.', {
+	if (!isStaffRole(locals.user.role)) {
+		return apiError('Akses ditolak. Fitur ini khusus untuk pengelola / admin.', {
+			status: 403,
+			headers: { 'Cache-Control': 'private, no-store' }
+		});
+	}
+	return null;
+}
+
+export function requireSuperAdmin(
+	locals: App.Locals,
+	message = 'Akses ditolak. Fitur ini khusus untuk Owner / Super Admin.'
+): Response | null {
+	if (!locals.user || !locals.session) {
+		return apiError('Unauthorized. Silakan login terlebih dahulu.', {
+			status: 401,
+			headers: { 'Cache-Control': 'private, no-store' }
+		});
+	}
+	if (!isSuperAdminRole(locals.user.role)) {
+		return apiError(message, {
 			status: 403,
 			headers: { 'Cache-Control': 'private, no-store' }
 		});

@@ -1,3 +1,4 @@
+import { getActiveBranches } from '#lib/server/branches';
 import { getCompanySettings } from '#lib/server/cms/defaults';
 import { getUserPointBalance } from '#lib/server/points';
 import type { LayoutServerLoad } from './$types';
@@ -17,13 +18,15 @@ export const load: LayoutServerLoad = async ({ locals, setHeaders, url }) => {
 				: 'public, max-age=60, s-maxage=300, stale-while-revalidate=600'
 	});
 
-	const [settings, pointBalance] = await Promise.all([
+	const [settings, activeBranches, pointBalance] = await Promise.all([
 		getCompanySettings(locals.db),
+		getActiveBranches(locals.db),
 		locals.user ? getUserPointBalance(locals.db, locals.user.id) : Promise.resolve(0)
 	]);
 
 	return {
 		settings,
+		branches: activeBranches,
 		isAuthenticated,
 		currentUser: locals.user
 			? {
@@ -31,6 +34,7 @@ export const load: LayoutServerLoad = async ({ locals, setHeaders, url }) => {
 					name: locals.user.name,
 					email: locals.user.email,
 					role: locals.user.role ?? 'customer',
+					branchId: locals.user.branchId ?? null,
 					pointBalance
 				}
 			: null

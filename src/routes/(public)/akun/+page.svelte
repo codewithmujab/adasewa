@@ -96,7 +96,7 @@
 				>
 					+ Sewa Barang Baru
 				</a>
-				{#if data.user.role === 'admin'}
+				{#if data.user.role === 'admin' || data.user.role === 'branch_admin'}
 					<a
 						href="/admin/orders"
 						class="rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-800 transition hover:border-neutral-950"
@@ -311,7 +311,14 @@
 							<div>
 								<p class="text-sm font-bold text-neutral-950">
 									{activeOrder.orderCode}
-									<span class="ml-2 font-normal text-neutral-500">
+									{#if activeOrder.branchName}
+										<span
+											class="ml-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700"
+										>
+											📍 {activeOrder.branchName}
+										</span>
+									{/if}
+									<span class="ml-1.5 font-normal text-neutral-500">
 										({activeOrder.items.length} jenis barang)
 									</span>
 								</p>
@@ -382,6 +389,13 @@
 										<span class="font-mono text-sm font-bold text-neutral-950">
 											{order.orderCode}
 										</span>
+										{#if order.branchName}
+											<span
+												class="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800"
+											>
+												📍 {order.branchName}
+											</span>
+										{/if}
 										<span
 											class="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold {orderMeta.badgeClass}"
 										>

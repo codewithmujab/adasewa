@@ -1,4 +1,4 @@
-import { desc, eq, inArray } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray } from 'drizzle-orm';
 import {
 	apiError,
 	apiSuccess,
@@ -7,11 +7,15 @@ import {
 	requireAuth
 } from '#lib/server/api/response';
 import {
+	branchItemStocks,
+	branches,
 	pointTransactions,
 	rentalCategories,
 	rentalItems,
 	rentalOrderItems,
 	rentalOrders,
+	type Branch,
+	type BranchItemStock,
 	type RentalCategory,
 	type RentalItem,
 	type RentalOrder,
@@ -20,20 +24,21 @@ import {
 import { createOrderSchema } from '#lib/schemas/order';
 import { getUserPointBalance, recordPointMovement } from '#lib/server/points';
 import { incrementPromoUsage, validatePromoForSubtotal } from '#lib/server/promo';
-import { calculateDurationDays, getDeliveryFee } from '#lib/utils/orders';
+import { calculateDurationDays } from '#lib/utils/orders';
 import {
 	calculateMaxRedeemablePoints,
 	calculatePointDiscountIdr
 } from '#lib/utils/points';
 import type { RequestHandler } from './$types';
 
-function generateOrderCode(): string {
+function generateOrderCode(branchCode: string): string {
 	const now = new Date();
 	const y = now.getFullYear();
 	const m = String(now.getMonth() + 1).padStart(2, '0');
 	const d = String(now.getDate()).padStart(2, '0');
 	const rand = Math.floor(1000 + Math.random() * 9000);
-	return `ASW-${y}${m}${d}-${rand}`;
+	const cleanCode = branchCode.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 4) || 'ASW';
+	return `ASW-${cleanCode}-${y}${m}${d}-${rand}`;
 }
 
 export const GET: RequestHandler = async ({ url, locals }) => {
@@ -42,17 +47,39 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
 	const currentUser = locals.user!;
 	const wantsAll = url.searchParams.get('scope') === 'all';
-	const isAdmin = currentUser.role === 'admin';
+	const filterBranchId = url.searchParams.get('branchId');
+	const isSuperAdmin = currentUser.role === 'admin';
+	const isBranchAdmin = currentUser.role === 'branch_admin';
 
-	const orders: RentalOrder[] =
-		wantsAll && isAdmin
-			? await locals.db.select().from(rentalOrders).orderBy(desc(rentalOrders.createdAt)).limit(100)
+	let orders: RentalOrder[];
+	if (wantsAll && isSuperAdmin) {
+		orders = filterBranchId
+			? await locals.db
+					.select()
+					.from(rentalOrders)
+					.where(eq(rentalOrders.branchId, filterBranchId))
+					.orderBy(desc(rentalOrders.createdAt))
+					.limit(100)
 			: await locals.db
 					.select()
 					.from(rentalOrders)
-					.where(eq(rentalOrders.userId, currentUser.id))
 					.orderBy(desc(rentalOrders.createdAt))
 					.limit(100);
+	} else if (wantsAll && isBranchAdmin && currentUser.branchId) {
+		orders = await locals.db
+			.select()
+			.from(rentalOrders)
+			.where(eq(rentalOrders.branchId, currentUser.branchId))
+			.orderBy(desc(rentalOrders.createdAt))
+			.limit(100);
+	} else {
+		orders = await locals.db
+			.select()
+			.from(rentalOrders)
+			.where(eq(rentalOrders.userId, currentUser.id))
+			.orderBy(desc(rentalOrders.createdAt))
+			.limit(100);
+	}
 
 	if (orders.length === 0) {
 		return apiSuccess([], {
@@ -110,13 +137,46 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const input = validation.data;
 	const uniqueItemIds = Array.from(new Set(input.items.map((i) => i.itemId)));
 
-	const [dbItems, dbCategories] = await Promise.all([
+	// Resolusi cabang penyewaan (Bogor / Depok / cabang aktif lainnya)
+	let selectedBranch: Branch | undefined;
+	if (input.branchId) {
+		const [foundBranch] = await locals.db
+			.select()
+			.from(branches)
+			.where(and(eq(branches.id, input.branchId), eq(branches.isActive, true)))
+			.limit(1);
+		selectedBranch = foundBranch;
+	} else {
+		const [firstActive] = await locals.db
+			.select()
+			.from(branches)
+			.where(eq(branches.isActive, true))
+			.orderBy(asc(branches.sortOrder))
+			.limit(1);
+		selectedBranch = firstActive;
+	}
+
+	if (!selectedBranch) {
+		return apiError('Cabang penyewaan tidak ditemukan atau sedang tidak aktif.', { status: 422 });
+	}
+
+	const [dbItems, dbCategories, branchStocks] = await Promise.all([
 		locals.db.select().from(rentalItems).where(inArray(rentalItems.id, uniqueItemIds)),
-		locals.db.select().from(rentalCategories)
+		locals.db.select().from(rentalCategories),
+		locals.db
+			.select()
+			.from(branchItemStocks)
+			.where(
+				and(
+					eq(branchItemStocks.branchId, selectedBranch.id),
+					inArray(branchItemStocks.rentalItemId, uniqueItemIds)
+				)
+			)
 	]);
 
 	const itemMap = new Map<string, RentalItem>(dbItems.map((i) => [i.id, i]));
 	const categoryMap = new Map<string, RentalCategory>(dbCategories.map((c) => [c.id, c]));
+	const stockMap = new Map<string, BranchItemStock>(branchStocks.map((s) => [s.rentalItemId, s]));
 
 	const durationDays = calculateDurationDays(input.startDate, input.endDate);
 
@@ -143,8 +203,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			});
 		}
 
+		const branchStock = stockMap.get(dbItem.id);
+		if (branchStock && (!branchStock.isAvailable || branchStock.stockQty <= 0)) {
+			return apiError(
+				`Barang "${dbItem.name}" sedang tidak tersedia di ${selectedBranch.name}.`,
+				{ status: 400 }
+			);
+		}
+
 		const categoryName = categoryMap.get(dbItem.categoryId)?.name ?? 'Lainnya';
-		const unitPrice = dbItem.pricePerDay ?? 0;
+		// Gunakan harga otoritatif khusus cabang ini dari branch_item_stocks!
+		const unitPrice = branchStock ? branchStock.pricePerDay : (dbItem.pricePerDay ?? 0);
 		const lineTotal = unitPrice * reqItem.quantity * durationDays;
 		subtotalAmount += lineTotal;
 
@@ -162,15 +231,21 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		});
 	}
 
-	const deliveryFee = getDeliveryFee(input.deliveryMethod, input.deliveryRegion);
+	const deliveryFee =
+		input.deliveryMethod === 'pickup' ? 0 : selectedBranch.deliveryFeeDefault;
 
-	// 1. Validasi & hitung Promo Diskon secara otoritatif di server
+	// 1. Validasi & hitung Promo Diskon secara otoritatif di server (termasuk cek cabang!)
 	let appliedPromoId: string | null = null;
 	let appliedPromoCode: string | null = null;
 	let promoDiscountAmount = 0;
 
 	if (input.promoCode && input.promoCode.trim().length > 0) {
-		const promoCheck = await validatePromoForSubtotal(locals.db, input.promoCode, subtotalAmount);
+		const promoCheck = await validatePromoForSubtotal(
+			locals.db,
+			input.promoCode,
+			subtotalAmount,
+			selectedBranch.id
+		);
 		if (!promoCheck.ok) {
 			return apiError(promoCheck.message, { status: 422 });
 		}
@@ -200,7 +275,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		0,
 		subtotalAmount + deliveryFee - promoDiscountAmount - pointsDiscountAmount
 	);
-	const orderCode = generateOrderCode();
+	const orderCode = generateOrderCode(selectedBranch.code);
 	const paymentReference = `PAY-${orderCode}`;
 
 	try {
@@ -236,6 +311,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			.insert(rentalOrders)
 			.values({
 				orderCode,
+				branchId: selectedBranch.id,
+				branchName: selectedBranch.name,
+				branchAddress: selectedBranch.address,
+				branchWhatsapp: selectedBranch.whatsapp,
 				userId: currentUser.id,
 				customerName: input.customerName,
 				customerEmail: currentUser.email,
@@ -243,7 +322,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				emergencyPhone: input.emergencyPhone?.trim() || null,
 				deliveryMethod: input.deliveryMethod,
 				deliveryRegion:
-					input.deliveryMethod === 'delivery' ? (input.deliveryRegion ?? null) : 'Ambil di Kios',
+					input.deliveryMethod === 'delivery'
+						? (input.deliveryRegion ?? selectedBranch.city)
+						: `Ambil di Kios ${selectedBranch.name}`,
 				deliveryAddress:
 					input.deliveryMethod === 'delivery' ? (input.deliveryAddress?.trim() ?? null) : null,
 				infoSource: input.infoSource?.trim() || null,

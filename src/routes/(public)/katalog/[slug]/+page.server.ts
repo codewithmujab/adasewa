@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
-import { and, asc, desc, eq, ne } from 'drizzle-orm';
-import { rentalCategories, rentalItems } from '#lib/server/db/schema';
-import type { RentalItemWithCategory } from '#lib/utils/catalog';
+import { and, asc, desc, eq, inArray, ne } from 'drizzle-orm';
+import { branchItemStocks, rentalCategories, rentalItems } from '#lib/server/db/schema';
+import type { BranchStockSnapshot, RentalItemWithCategory } from '#lib/utils/catalog';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -40,13 +40,38 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw error(404, 'Kategori barang tidak ditemukan.');
 	}
 
+	const targetIds = [item.id, ...relatedRows.map((r) => r.id)];
+	const stockRows = await locals.db
+		.select()
+		.from(branchItemStocks)
+		.where(inArray(branchItemStocks.rentalItemId, targetIds));
+
+	const stocksByItem = new Map<string, Record<string, BranchStockSnapshot>>();
+	for (const row of stockRows) {
+		let entry = stocksByItem.get(row.rentalItemId);
+		if (!entry) {
+			entry = {};
+			stocksByItem.set(row.rentalItemId, entry);
+		}
+		entry[row.branchId] = {
+			pricePerDay: row.pricePerDay,
+			stockQty: row.stockQty,
+			isAvailable: row.isAvailable
+		};
+	}
+
 	const relatedItems: RentalItemWithCategory[] = relatedRows.map((row) => ({
 		...row,
-		category
+		category,
+		branchStocks: stocksByItem.get(row.id)
 	}));
 
 	return {
-		item: { ...item, category } as RentalItemWithCategory,
+		item: {
+			...item,
+			category,
+			branchStocks: stocksByItem.get(item.id)
+		} as RentalItemWithCategory,
 		relatedItems
 	};
 };

@@ -37,7 +37,13 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
 		.limit(1);
 
 	const currentUser = locals.user!;
-	if (!existing || (existing.userId !== currentUser.id && currentUser.role !== 'admin')) {
+	const isSuperAdmin = currentUser.role === 'admin';
+	const isOwnBranchAdmin =
+		currentUser.role === 'branch_admin' &&
+		Boolean(currentUser.branchId) &&
+		existing?.branchId === currentUser.branchId;
+
+	if (!existing || (existing.userId !== currentUser.id && !isSuperAdmin && !isOwnBranchAdmin)) {
 		return apiError('Pesanan tidak ditemukan.', { status: 404 });
 	}
 

@@ -11,6 +11,10 @@
 	let { data }: Props = $props();
 	const today = getTodayIsoDate();
 
+	let activeBranch = $derived(
+		data.branches.find((b) => b.id === rentalCart.branchId) ?? data.branches[0] ?? null
+	);
+
 	function applyQuickDays(days: number): void {
 		const start = rentalCart.startDate || addDaysIsoDate(today, 1);
 		const end = addDaysIsoDate(start, days - 1);
@@ -45,6 +49,40 @@
 				+ Tambah Barang Lainnya
 			</a>
 		</div>
+
+		{#if data.branches.length > 0}
+			<div
+				class="mt-6 flex flex-col justify-between gap-4 rounded-3xl border border-emerald-200/80 bg-white p-5 sm:flex-row sm:items-center"
+			>
+				<div>
+					<p class="text-[11px] font-bold tracking-wider text-emerald-700 uppercase">
+						📍 Cabang Penyewaan Aktif
+					</p>
+					<p class="mt-0.5 text-sm font-bold text-neutral-950">
+						{activeBranch?.name ?? 'Belum dipilih'}
+					</p>
+					{#if activeBranch}
+						<p class="mt-0.5 text-xs text-neutral-500">
+							{activeBranch.address} · WA CS: {activeBranch.phone}
+						</p>
+					{/if}
+				</div>
+				<div class="flex flex-wrap gap-2">
+					{#each data.branches as branch (branch.id)}
+						<button
+							type="button"
+							onclick={() => rentalCart.selectBranch(branch)}
+							class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition {activeBranch?.id ===
+							branch.id
+								? 'bg-neutral-950 text-white'
+								: 'border border-neutral-200 bg-surface text-neutral-700 hover:border-neutral-950'}"
+						>
+							{branch.name}
+						</button>
+					{/each}
+				</div>
+			</div>
+		{/if}
 
 		{#if rentalCart.items.length > 0}
 			<div class="mt-8 grid gap-8 lg:grid-cols-12">
@@ -204,6 +242,12 @@
 						<h2 class="text-base font-bold text-neutral-950">Ringkasan Estimasi Biaya</h2>
 
 						<dl class="mt-5 space-y-3 text-sm">
+							{#if activeBranch}
+								<div class="flex justify-between text-neutral-600">
+									<dt>Cabang Kios</dt>
+									<dd class="font-semibold text-emerald-700">{activeBranch.name}</dd>
+								</div>
+							{/if}
 							<div class="flex justify-between text-neutral-600">
 								<dt>Periode Sewa</dt>
 								<dd class="font-medium text-neutral-950">

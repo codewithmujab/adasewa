@@ -35,6 +35,9 @@
 						Keranjang Sewa ({rentalCart.totalUnits} unit)
 					</h2>
 					<p class="text-xs text-neutral-500">
+						{#if rentalCart.branchName}
+							<strong class="text-emerald-700">{rentalCart.branchName}</strong> ·
+						{/if}
 						Cek estimasi biaya sebelum lanjut pembayaran
 					</p>
 				</div>

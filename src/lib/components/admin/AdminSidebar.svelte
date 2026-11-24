@@ -7,22 +7,50 @@
     companyName: string;
     userName: string;
     userEmail: string;
+    isSuperAdmin?: boolean;
+    branchName?: string | null;
     onNavigate?: () => void;
   }
 
-  let { companyName, userName, userEmail, onNavigate }: Props = $props();
+  let {
+    companyName,
+    userName,
+    userEmail,
+    isSuperAdmin = true,
+    branchName = null,
+    onNavigate,
+  }: Props = $props();
   let signingOut = $state(false);
 
-  const links = [
-    { href: "/admin", label: "Ringkasan", exact: true },
-    { href: "/admin/orders", label: "Transaksi & Pengembalian", exact: false },
-    { href: "/admin/points", label: "Rekening Poin", exact: false },
-    { href: "/admin/promos", label: "Promo & Diskon", exact: false },
-    { href: "/admin/catalog", label: "Katalog Barang", exact: false },
-    { href: "/admin/services", label: "Paket Layanan", exact: false },
-    { href: "/admin/portfolios", label: "Dokumentasi Acara", exact: false },
-    { href: "/admin/settings", label: "Pengaturan Perusahaan", exact: false },
-  ] as const;
+  let links = $derived.by(() => {
+    const base = [
+      { href: "/admin", label: "Ringkasan", exact: true },
+      { href: "/admin/orders", label: "Transaksi & Pengembalian", exact: false },
+      {
+        href: "/admin/catalog",
+        label: isSuperAdmin ? "Katalog & Harga Cabang" : "Harga & Stok Cabang",
+        exact: false,
+      },
+      { href: "/admin/promos", label: "Promo & Diskon", exact: false },
+      {
+        href: "/admin/branches",
+        label: isSuperAdmin ? "Cabang & Kios" : "Info Cabang & Kios",
+        exact: false,
+      },
+    ];
+
+    if (isSuperAdmin) {
+      return [
+        ...base,
+        { href: "/admin/points", label: "Rekening Poin", exact: false },
+        { href: "/admin/services", label: "Paket Layanan", exact: false },
+        { href: "/admin/portfolios", label: "Dokumentasi Acara", exact: false },
+        { href: "/admin/settings", label: "Pengaturan Perusahaan", exact: false },
+      ];
+    }
+
+    return base;
+  });
 
   let pathname = $derived(page.url.pathname);
 
@@ -58,7 +86,9 @@
         <p class="truncate text-sm font-semibold text-neutral-950">
           {companyName}
         </p>
-        <p class="text-[11px] font-normal text-neutral-400">CMS Admin</p>
+        <p class="truncate text-[11px] font-medium {isSuperAdmin ? 'text-neutral-500' : 'text-emerald-700'}">
+          {isSuperAdmin ? "Owner · Semua Cabang" : `📍 ${branchName ?? "Admin Cabang"}`}
+        </p>
       </div>
     </a>
 

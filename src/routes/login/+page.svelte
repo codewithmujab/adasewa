@@ -49,7 +49,8 @@
 				}
 
 				const userRole = (result.data?.user as { role?: string } | undefined)?.role;
-				const defaultTarget = userRole === 'admin' ? '/admin' : '/akun';
+				const defaultTarget =
+					userRole === 'admin' || userRole === 'branch_admin' ? '/admin' : '/akun';
 				await goto(data.redirectTo ?? defaultTarget, { refreshAll: true });
 			}
 		} catch {

@@ -1,12 +1,46 @@
-import type { CompanySettings, RentalCategory, RentalItem } from '#lib/server/db/schema';
+import type { Branch, CompanySettings, RentalCategory, RentalItem } from '#lib/server/db/schema';
 
 export const DEFAULT_BOOKING_FORM_URL =
 	'https://docs.google.com/forms/d/e/1FAIpQLSc7oXCUZVUNH3gUMrlcaI2MhvNbJiPGnSFFPGNWTLK6wdETRg/viewform';
 
 export const DEFAULT_WHATSAPP_NUMBER = '6285777139748';
 
+export interface BranchStockSnapshot {
+	pricePerDay: number;
+	stockQty: number;
+	isAvailable: boolean;
+}
+
 export interface RentalItemWithCategory extends RentalItem {
 	category: RentalCategory;
+	branchStocks?: Record<string, BranchStockSnapshot>;
+}
+
+export function resolveItemBranchPricing(
+	item: RentalItemWithCategory,
+	branchId: string | null | undefined
+): BranchStockSnapshot {
+	if (branchId && item.branchStocks && item.branchStocks[branchId]) {
+		return item.branchStocks[branchId]!;
+	}
+	return {
+		pricePerDay: item.pricePerDay ?? 0,
+		stockQty: item.stockQty,
+		isAvailable: item.isPublished
+	};
+}
+
+export function buildBranchWhatsAppUrl(
+	branch: Pick<Branch, 'whatsapp'> | null | undefined,
+	settings: CompanySettings,
+	message: string
+): string {
+	const rawWa = branch?.whatsapp?.replace(/\D/g, '');
+	if (rawWa && rawWa.length >= 9) {
+		const normalized = rawWa.startsWith('0') ? `62${rawWa.slice(1)}` : rawWa;
+		return `https://wa.me/${normalized}?text=${encodeURIComponent(message)}`;
+	}
+	return buildWhatsAppUrl(settings, message);
 }
 
 export interface CategorySummary extends RentalCategory {

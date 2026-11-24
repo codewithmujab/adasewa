@@ -22,6 +22,7 @@
 	let busyId = $state<string | null>(null);
 
 	// Form state
+	let branchIdInput = $state<string>('');
 	let code = $state('');
 	let title = $state('');
 	let description = $state('');
@@ -43,6 +44,15 @@
 	$effect(() => {
 		promos = data.promos;
 	});
+
+	let branchNameById = $derived(
+		new Map<string, string>(data.branches.map((b) => [b.id, b.name]))
+	);
+
+	function canManagePromo(promo: PromoCode): boolean {
+		if (data.isSuperAdmin) return true;
+		return Boolean(data.user.branchId) && promo.branchId === data.user.branchId;
+	}
 
 	let filteredPromos = $derived.by(() => {
 		const q = search.trim().toLowerCase();
@@ -75,6 +85,7 @@
 
 	function openCreate(): void {
 		editingPromo = null;
+		branchIdInput = data.isSuperAdmin ? '' : (data.user.branchId ?? '');
 		code = '';
 		title = '';
 		description = '';
@@ -93,6 +104,7 @@
 
 	function openEdit(promo: PromoCode): void {
 		editingPromo = promo;
+		branchIdInput = promo.branchId ?? '';
 		code = promo.code;
 		title = promo.title;
 		description = promo.description;
@@ -122,6 +134,7 @@
 			usageLimitInput.trim().length > 0 ? Math.max(1, Math.trunc(Number(usageLimitInput))) : null;
 
 		const payload = {
+			branchId: data.isSuperAdmin ? (branchIdInput || null) : (data.user.branchId ?? null),
 			code: normalizePromoCode(code),
 			title: title.trim(),
 			description: description.trim(),
@@ -280,11 +293,21 @@
 					</thead>
 					<tbody class="divide-y divide-neutral-100">
 						{#each filteredPromos as promo (promo.id)}
+							{@const editable = canManagePromo(promo)}
 							<tr class="transition hover:bg-neutral-50/60">
 								<td class="px-5 py-4">
-									<div class="flex items-center gap-2">
+									<div class="flex flex-wrap items-center gap-1.5">
 										<span class="rounded-lg bg-rose-50 px-2.5 py-1 font-mono text-xs font-bold text-rose-700">
 											{promo.code}
+										</span>
+										<span
+											class="rounded-full px-2 py-0.5 text-[10px] font-semibold {promo.branchId
+												? 'bg-emerald-50 text-emerald-700'
+												: 'bg-neutral-100 text-neutral-600'}"
+										>
+											{promo.branchId
+												? `📍 ${branchNameById.get(promo.branchId) ?? 'Cabang'}`
+												: 'Semua Cabang'}
 										</span>
 										{#if promo.showOnLanding}
 											<span class="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-neutral-500">
@@ -316,9 +339,9 @@
 								<td class="px-4 py-4">
 									<button
 										type="button"
-										disabled={busyId === promo.id}
+										disabled={!editable || busyId === promo.id}
 										onclick={() => toggleActive(promo)}
-										class="rounded-full px-3 py-1 text-xs font-medium transition {promo.isActive
+										class="rounded-full px-3 py-1 text-xs font-medium transition disabled:cursor-default disabled:opacity-70 {promo.isActive
 											? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
 											: 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}"
 									>
@@ -326,22 +349,26 @@
 									</button>
 								</td>
 								<td class="px-5 py-4 text-right">
-									<div class="inline-flex items-center gap-2">
-										<button
-											type="button"
-											onclick={() => openEdit(promo)}
-											class="rounded-full border border-neutral-200 px-3.5 py-1.5 text-xs font-medium text-neutral-700 hover:border-neutral-950 hover:text-neutral-950"
-										>
-											Edit
-										</button>
-										<button
-											type="button"
-											onclick={() => (deletingPromo = promo)}
-											class="rounded-full border border-red-200 px-3.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
-										>
-											Hapus
-										</button>
-									</div>
+									{#if editable}
+										<div class="inline-flex items-center gap-2">
+											<button
+												type="button"
+												onclick={() => openEdit(promo)}
+												class="rounded-full border border-neutral-200 px-3.5 py-1.5 text-xs font-medium text-neutral-700 hover:border-neutral-950 hover:text-neutral-950"
+											>
+												Edit
+											</button>
+											<button
+												type="button"
+												onclick={() => (deletingPromo = promo)}
+												class="rounded-full border border-red-200 px-3.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+											>
+												Hapus
+											</button>
+										</div>
+									{:else}
+										<span class="text-[11px] font-medium text-neutral-400">Promo Pusat</span>
+									{/if}
 								</td>
 							</tr>
 						{/each}
@@ -371,6 +398,29 @@
 				{formError}
 			</div>
 		{/if}
+
+		<div>
+			{#if data.isSuperAdmin}
+				<label for="pr-branch" class="block text-xs font-semibold text-neutral-700">
+					Berlaku Untuk Cabang
+				</label>
+				<select
+					id="pr-branch"
+					bind:value={branchIdInput}
+					class="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				>
+					<option value="">Semua Cabang (Promo Global)</option>
+					{#each data.branches as br (br.id)}
+						<option value={br.id}>{br.name} ({br.code})</option>
+					{/each}
+				</select>
+			{:else}
+				<p class="block text-xs font-semibold text-neutral-700">Berlaku Untuk Cabang</p>
+				<p class="mt-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-xs font-semibold text-emerald-800">
+					📍 Khusus {data.assignedBranch?.name ?? 'Cabang Anda'}
+				</p>
+			{/if}
+		</div>
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div>

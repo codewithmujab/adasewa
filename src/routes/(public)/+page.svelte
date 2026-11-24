@@ -3,7 +3,12 @@
 	import HeroSection from '#lib/components/public/HeroSection.svelte';
 	import PortfolioCard from '#lib/components/public/PortfolioCard.svelte';
 	import RentalItemCard from '#lib/components/public/RentalItemCard.svelte';
-	import { buildWhatsAppUrl, getCategoryTheme } from '#lib/utils/catalog';
+	import { rentalCart } from '#lib/stores/cart.svelte';
+	import {
+		buildBranchWhatsAppUrl,
+		formatRupiah,
+		getCategoryTheme
+	} from '#lib/utils/catalog';
 	import { formatPromoBadge, formatPromoDetail } from '#lib/utils/promo';
 	import type { PageData } from './$types';
 
@@ -33,10 +38,15 @@
 		data.settings.metaTitle || `${data.settings.companyName} — ${data.settings.tagline}`
 	);
 	let pageDescription = $derived(data.settings.metaDescription || data.settings.aboutShort);
+	let activeBranch = $derived(
+		data.branches.find((b) => b.id === rentalCart.branchId) ?? data.branches[0] ?? null
+	);
+
 	let whatsappUrl = $derived(
-		buildWhatsAppUrl(
+		buildBranchWhatsAppUrl(
+			activeBranch,
 			data.settings,
-			'Halo Adasewa.id, saya ingin menanyakan informasi penyewaan barang.'
+			`Halo ${data.settings.companyName}${activeBranch ? ` (${activeBranch.name})` : ''}, saya ingin menanyakan informasi penyewaan barang.`
 		)
 	);
 
@@ -394,37 +404,93 @@
 <section id="area-layanan" class="scroll-mt-20 bg-white py-20 sm:py-28">
 	<div class="mx-auto max-w-6xl px-6">
 		<div class="grid gap-6 lg:grid-cols-12">
-			<!-- Area Delivery -->
+			<!-- Cabang Kios & Jangkauan Pengiriman -->
 			<div class="rounded-3xl border border-neutral-200/80 bg-surface p-7 sm:p-10 lg:col-span-7">
 				<p class="text-xs font-semibold tracking-widest text-emerald-700 uppercase">
-					Jangkauan Pengiriman
+					Lokasi Cabang Kios &amp; Area Layanan
 				</p>
 				<h2 class="mt-3 text-2xl font-bold tracking-tight text-neutral-950 sm:text-3xl">
-					Delivery DKI, Jawa Barat, Jawa Tengah &amp; DIY.
+					Cabang Penyewaan Resmi Adasewa.id
 				</h2>
 				<p class="mt-3 text-sm leading-relaxed text-neutral-500">
-					Tidak sempat mengambil unit sendiri? Tim kami siap mengantar dan menjemput kembali barang
-					sewaan langsung ke rumah, kantor, kampus, maupun venue acara Anda.
+					Setiap cabang memiliki stok, daftar tarif sewa, alamat kios, dan nomor WhatsApp CS
+					tersendiri. Pembayaran dilakukan melalui <strong>rekening pusat Adasewa.id</strong>.
 				</p>
 
-				<div class="mt-7 grid gap-3 sm:grid-cols-2">
-					{#each deliveryAreas as area (area.region)}
-						<div class="rounded-2xl border border-neutral-200/70 bg-white p-4">
-							<div class="flex items-center gap-2">
-								<span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-								<p class="text-sm font-semibold text-neutral-950">{area.region}</p>
+				{#if data.branches.length > 0}
+					<div class="mt-6 grid gap-4 sm:grid-cols-2">
+						{#each data.branches as branch (branch.id)}
+							{@const isSelected = activeBranch?.id === branch.id}
+							<div
+								class="flex flex-col justify-between rounded-2xl border p-4 transition {isSelected
+									? 'border-neutral-950 bg-white shadow-sm'
+									: 'border-neutral-200/80 bg-white/80 hover:border-neutral-400'}"
+							>
+								<div>
+									<div class="flex items-center justify-between gap-2">
+										<div class="flex items-center gap-2">
+											<span
+												class="h-2.5 w-2.5 rounded-full {isSelected
+													? 'bg-emerald-500'
+													: 'bg-neutral-300'}"
+											></span>
+											<p class="text-sm font-bold text-neutral-950">{branch.name}</p>
+										</div>
+										<span
+											class="rounded-full bg-surface px-2 py-0.5 font-mono text-[10px] font-bold text-neutral-600"
+										>
+											{branch.code}
+										</span>
+									</div>
+									<p class="mt-2 text-xs leading-relaxed text-neutral-600">
+										📍 {branch.address}
+									</p>
+									<p class="mt-1.5 text-[11px] text-neutral-500">
+										🕒 {branch.operatingHours}
+									</p>
+									<p class="mt-1 text-[11px] text-neutral-500">
+										🚚 Ongkir dasar: <strong class="text-neutral-800">{formatRupiah(branch.deliveryFeeDefault)}</strong>
+									</p>
+									<p class="mt-1 text-[11px] text-neutral-500">
+										📞 WA CS: <strong class="text-neutral-800">{branch.phone}</strong>
+									</p>
+								</div>
+
+								<div class="mt-4 flex flex-wrap gap-2 border-t border-neutral-100 pt-3">
+									<button
+										type="button"
+										onclick={() => rentalCart.selectBranch(branch)}
+										class="flex-1 rounded-full px-3 py-1.5 text-[11px] font-semibold transition {isSelected
+											? 'bg-emerald-600 text-white'
+											: 'bg-neutral-950 text-white hover:bg-neutral-800'}"
+									>
+										{isSelected ? '✓ Cabang Aktif' : 'Pilih Cabang Ini'}
+									</button>
+									<a
+										href={buildBranchWhatsAppUrl(
+											branch,
+											data.settings,
+											`Halo ${branch.name} Adasewa.id, saya ingin menanyakan ketersediaan barang sewa.`
+										)}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-neutral-700 hover:border-neutral-950"
+									>
+										WA Cabang
+									</a>
+								</div>
 							</div>
-							<p class="mt-1.5 text-xs leading-relaxed text-neutral-500">{area.areas}</p>
+						{/each}
+					</div>
+				{/if}
+
+				<div class="mt-5 grid gap-2.5 sm:grid-cols-2">
+					{#each deliveryAreas as area (area.region)}
+						<div class="rounded-2xl border border-neutral-200/70 bg-white/70 px-3.5 py-2.5">
+							<p class="text-xs font-semibold text-neutral-900">{area.region}</p>
+							<p class="mt-0.5 text-[11px] leading-relaxed text-neutral-500">{area.areas}</p>
 						</div>
 					{/each}
-				</div>
-
-				<div class="mt-5 rounded-2xl border border-dashed border-neutral-300 bg-white/80 p-4">
-					<p class="text-xs font-semibold text-neutral-900">Tersedia Opsi Ambil di Kios</p>
-					<p class="mt-1 text-xs leading-relaxed text-neutral-500">
-						Ingin lebih hemat ongkos kirim? Anda bisa mengambil dan mengembalikan unit langsung di
-						kios sesuai jadwal yang sudah dikonfirmasi bersama CS.
-					</p>
 				</div>
 			</div>
 

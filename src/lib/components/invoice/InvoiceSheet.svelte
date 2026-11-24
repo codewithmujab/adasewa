@@ -47,15 +47,17 @@
 				</span>
 			{/if}
 			<div>
-				<p class="text-base font-bold tracking-tight text-neutral-950">{settings.companyName}</p>
-				<p class="text-[11px] text-neutral-500">
-					Pusat Sewa Barang Terlengkap · Delivery DKI, Jabar, Jateng &amp; DIY
+				<p class="text-base font-bold tracking-tight text-neutral-950">
+					{settings.companyName}{#if order.branchName} — {order.branchName}{/if}
+				</p>
+				<p class="text-[11px] text-neutral-600">
+					{order.branchAddress || settings.address || 'Pusat Sewa Barang Terlengkap'}
 				</p>
 				<p class="mt-0.5 text-[11px] text-neutral-500">
-					{settings.email}
-					{#if settings.phone}
-						· {settings.phone}
-					{/if}
+					WA CS {order.branchName ?? 'Pusat'}: {order.branchWhatsapp
+						? `+${order.branchWhatsapp}`
+						: settings.phone || '-'}
+					· {settings.email}
 				</p>
 			</div>
 		</div>
@@ -111,6 +113,12 @@
 				Detail Sewa &amp; Pembayaran
 			</p>
 			<dl class="mt-1 space-y-1">
+				{#if order.branchName}
+					<div class="flex justify-between gap-2">
+						<dt class="text-neutral-500">Cabang Kios</dt>
+						<dd class="font-semibold text-neutral-950">{order.branchName}</dd>
+					</div>
+				{/if}
 				<div class="flex justify-between gap-2">
 					<dt class="text-neutral-500">Tanggal Terbit</dt>
 					<dd class="font-medium text-neutral-950">{formatDateTimeId(order.createdAt)}</dd>
@@ -202,11 +210,13 @@
 				<div class="mt-1 space-y-1 text-neutral-600">
 					{#if order.paidAt}
 						<p>
-							• Pembayaran terverifikasi lunas pada
+							• Pembayaran terverifikasi lunas ke rekening pusat {settings.companyName} pada
 							<strong class="text-neutral-900">{formatDateTimeId(order.paidAt)}</strong>.
 						</p>
 					{:else}
-						<p>• {payMethod.instruction}</p>
+						<p>
+							• <strong class="text-neutral-900">Rekening Pusat:</strong> {payMethod.instruction}
+						</p>
 					{/if}
 
 					{#if order.returnedAt}
@@ -293,9 +303,13 @@
 				<p class="mt-1 font-semibold text-neutral-900">{order.customerName}</p>
 			</div>
 			<div>
-				<p class="font-medium text-neutral-700">Hormat Kami, {settings.companyName}</p>
+				<p class="font-medium text-neutral-700">
+					Hormat Kami, {settings.companyName}
+				</p>
 				<div class="mx-auto mt-10 w-44 border-b border-neutral-400"></div>
-				<p class="mt-1 font-semibold text-neutral-900">Petugas / Admin {settings.companyName}</p>
+				<p class="mt-1 font-semibold text-neutral-900">
+					Petugas / Admin {order.branchName || settings.companyName}
+				</p>
 			</div>
 		</div>
 

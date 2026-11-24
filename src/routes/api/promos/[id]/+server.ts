@@ -43,9 +43,20 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 	}
 
 	const input = validation.data;
+	const currentUser = locals.user!;
+	if (currentUser.role === 'branch_admin' && existing.branchId !== currentUser.branchId) {
+		return apiError('Admin cabang hanya dapat mengubah promo milik cabangnya sendiri.', {
+			status: 403
+		});
+	}
+
 	const updatePayload: Partial<NewPromoCode> = {
 		updatedAt: new Date()
 	};
+
+	if (input.branchId !== undefined && currentUser.role === 'admin') {
+		updatePayload.branchId = input.branchId;
+	}
 
 	if (input.code !== undefined) {
 		const conflict = await locals.db
@@ -109,20 +120,30 @@ export const DELETE: RequestHandler = async ({ params, locals }) => {
 		return apiError('ID promo tidak valid.', { status: 400 });
 	}
 
-	const [deleted] = await locals.db
-		.delete(promoCodes)
+	const [existing] = await locals.db
+		.select({ id: promoCodes.id, code: promoCodes.code, branchId: promoCodes.branchId })
+		.from(promoCodes)
 		.where(eq(promoCodes.id, idCheck.data))
-		.returning({ id: promoCodes.id, code: promoCodes.code });
+		.limit(1);
 
-	if (!deleted) {
+	if (!existing) {
 		return apiError('Promo diskon tidak ditemukan.', { status: 404 });
 	}
 
+	const currentUser = locals.user!;
+	if (currentUser.role === 'branch_admin' && existing.branchId !== currentUser.branchId) {
+		return apiError('Admin cabang hanya dapat menghapus promo milik cabangnya sendiri.', {
+			status: 403
+		});
+	}
+
+	await locals.db.delete(promoCodes).where(eq(promoCodes.id, existing.id));
+
 	return apiSuccess(
-		{ id: deleted.id },
+		{ id: existing.id },
 		{
 			status: 200,
-			message: `Promo "${deleted.code}" berhasil dihapus.`,
+			message: `Promo "${existing.code}" berhasil dihapus.`,
 			headers: { 'Cache-Control': 'private, no-store' }
 		}
 	);

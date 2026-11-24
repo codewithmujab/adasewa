@@ -1,4 +1,4 @@
-import { desc, inArray } from 'drizzle-orm';
+import { desc, eq, inArray } from 'drizzle-orm';
 import {
 	rentalOrderItems,
 	rentalOrders,
@@ -12,11 +12,23 @@ export interface AdminOrderWithItems extends RentalOrder {
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const orders = await locals.db
-		.select()
-		.from(rentalOrders)
-		.orderBy(desc(rentalOrders.createdAt))
-		.limit(200);
+	const currentUser = locals.user!;
+	const isSuperAdmin = currentUser.role === 'admin';
+
+	const orders = isSuperAdmin
+		? await locals.db
+				.select()
+				.from(rentalOrders)
+				.orderBy(desc(rentalOrders.createdAt))
+				.limit(200)
+		: currentUser.branchId
+			? await locals.db
+					.select()
+					.from(rentalOrders)
+					.where(eq(rentalOrders.branchId, currentUser.branchId))
+					.orderBy(desc(rentalOrders.createdAt))
+					.limit(200)
+			: [];
 
 	const itemsByOrderId = new Map<string, RentalOrderItem[]>();
 	if (orders.length > 0) {

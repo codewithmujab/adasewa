@@ -22,7 +22,13 @@ export const load: PageServerLoad = async ({ params, locals, setHeaders }) => {
 	]);
 
 	const order = orderRows[0];
-	if (!order || (order.userId !== locals.user.id && locals.user.role !== 'admin')) {
+	const isSuperAdmin = locals.user.role === 'admin';
+	const isOwnBranchAdmin =
+		locals.user.role === 'branch_admin' &&
+		Boolean(locals.user.branchId) &&
+		order?.branchId === locals.user.branchId;
+
+	if (!order || (order.userId !== locals.user.id && !isSuperAdmin && !isOwnBranchAdmin)) {
 		throw error(404, 'Invoice transaksi tidak ditemukan.');
 	}
 
@@ -35,6 +41,7 @@ export const load: PageServerLoad = async ({ params, locals, setHeaders }) => {
 		settings,
 		order,
 		items,
-		backHref: locals.user.role === 'admin' ? '/admin/orders' : `/akun/pesanan/${order.orderCode}`
+		backHref:
+			isSuperAdmin || isOwnBranchAdmin ? '/admin/orders' : `/akun/pesanan/${order.orderCode}`
 	};
 };

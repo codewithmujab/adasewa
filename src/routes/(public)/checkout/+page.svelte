@@ -54,10 +54,27 @@
 		id: string;
 		code: string;
 		title: string;
+		branchId?: string | null;
 		discountType: string;
 		discountValue: number;
 		maxDiscountAmount: number | null;
 		minOrderAmount: number;
+	}
+
+	let activeBranch = $derived(
+		data.branches.find((b) => b.id === rentalCart.branchId) ?? data.branches[0] ?? null
+	);
+
+	let branchEligiblePromos = $derived(
+		data.activePromos.filter((p) => !p.branchId || p.branchId === activeBranch?.id)
+	);
+
+	function handleBranchSwitch(branch: (typeof data.branches)[number]): void {
+		rentalCart.selectBranch(branch);
+		if (appliedPromo && appliedPromo.branchId && appliedPromo.branchId !== branch.id) {
+			appliedPromo = null;
+			promoError = `Promo sebelumnya tidak berlaku untuk ${branch.name}.`;
+		}
 	}
 
 	let paymentMethod = $state<PaymentMethodId>('bank_transfer');
@@ -107,7 +124,11 @@
 		}
 	});
 
-	let deliveryFee = $derived(getDeliveryFee(deliveryMethod, deliveryRegion));
+	let deliveryFee = $derived(
+		deliveryMethod === 'pickup'
+			? 0
+			: (activeBranch?.deliveryFeeDefault ?? getDeliveryFee(deliveryMethod, deliveryRegion))
+	);
 	let promoDiscount = $derived(
 		appliedPromo ? calculatePromoDiscount(appliedPromo, rentalCart.estimatedSubtotal) : 0
 	);
@@ -141,7 +162,8 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					code: codeToCheck,
-					subtotalAmount: rentalCart.estimatedSubtotal
+					subtotalAmount: rentalCart.estimatedSubtotal,
+					branchId: activeBranch?.id ?? null
 				})
 			});
 
@@ -220,11 +242,15 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
+					branchId: activeBranch?.id ?? null,
 					customerName: customerName.trim(),
 					customerPhone: customerPhone.trim(),
 					emergencyPhone: emergencyPhone.trim() || null,
 					deliveryMethod,
-					deliveryRegion: deliveryMethod === 'delivery' ? deliveryRegion : 'Ambil di Kios',
+					deliveryRegion:
+						deliveryMethod === 'delivery'
+							? deliveryRegion
+							: `Ambil di Kios ${activeBranch?.name ?? ''}`.trim(),
 					deliveryAddress: deliveryMethod === 'delivery' ? deliveryAddress.trim() : null,
 					startDate: rentalCart.startDate,
 					endDate: rentalCart.endDate,
@@ -301,8 +327,46 @@
 			</div>
 		{:else}
 			<div class="mt-8 grid gap-8 lg:grid-cols-12">
-				<!-- Kiri: Gate Registrasi/Login ATAU Form Alamat & Pembayaran -->
+				<!-- Kiri: Cabang Aktif + Gate Registrasi/Login ATAU Form Alamat & Pembayaran -->
 				<div class="space-y-6 lg:col-span-7">
+					<!-- Cabang Penyewaan Aktif -->
+					{#if data.branches.length > 0}
+						<div class="rounded-3xl border border-emerald-200/80 bg-white p-5">
+							<div class="flex flex-wrap items-start justify-between gap-3">
+								<div>
+									<p class="text-[11px] font-bold tracking-wider text-emerald-700 uppercase">
+										📍 Cabang Penyewaan Dipilih
+									</p>
+									<p class="mt-0.5 text-base font-bold text-neutral-950">
+										{activeBranch?.name ?? 'Belum dipilih'}
+									</p>
+									{#if activeBranch}
+										<p class="mt-0.5 text-xs text-neutral-500">
+											Kios: {activeBranch.address}
+										</p>
+										<p class="mt-0.5 text-xs text-neutral-500">
+											WA CS Cabang: <strong>{activeBranch.phone}</strong> · Jam: {activeBranch.operatingHours}
+										</p>
+									{/if}
+								</div>
+								<div class="flex flex-wrap gap-1.5">
+									{#each data.branches as branch (branch.id)}
+										<button
+											type="button"
+											onclick={() => handleBranchSwitch(branch)}
+											class="rounded-full px-3 py-1.5 text-xs font-semibold transition {activeBranch?.id ===
+											branch.id
+												? 'bg-neutral-950 text-white'
+												: 'border border-neutral-200 bg-surface text-neutral-700 hover:border-neutral-950'}"
+										>
+											{branch.name}
+										</button>
+									{/each}
+								</div>
+							</div>
+						</div>
+					{/if}
+
 					{#if !data.isAuthenticated || !data.currentUser}
 						<div class="rounded-3xl border border-neutral-200/90 bg-white p-6 sm:p-8">
 							<div class="flex items-start justify-between gap-4">
@@ -556,7 +620,9 @@
 												? 'text-neutral-300'
 												: 'text-neutral-500'}"
 										>
-											Wilayah DKI Jakarta, Jabar, Jateng &amp; DIY
+											Tarif dasar {activeBranch?.name ?? 'cabang'}: {formatRupiah(
+												activeBranch?.deliveryFeeDefault ?? 25000
+											)}
 										</p>
 									</button>
 
@@ -567,13 +633,15 @@
 											? 'border-neutral-950 bg-neutral-950 text-white'
 											: 'border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400'}"
 									>
-										<p class="text-sm font-semibold">Ambil Langsung di Kios</p>
+										<p class="text-sm font-semibold">
+											Ambil di Kios {activeBranch?.name ?? ''}
+										</p>
 										<p
 											class="mt-1 text-xs {deliveryMethod === 'pickup'
 												? 'text-neutral-300'
 												: 'text-neutral-500'}"
 										>
-											Gratis ongkir (Rp 0) · Ambil &amp; kembali di kios
+											Gratis ongkir (Rp 0) · {activeBranch?.address ?? 'Ambil & kembali di kios'}
 										</p>
 									</button>
 								</div>
@@ -620,11 +688,16 @@
 							<!-- 4. Metode Pembayaran -->
 							<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
 								<div class="flex flex-wrap items-center justify-between gap-2">
-									<h2 class="text-base font-bold text-neutral-950">4. Metode Pembayaran</h2>
+									<div>
+										<h2 class="text-base font-bold text-neutral-950">4. Metode Pembayaran</h2>
+										<p class="mt-0.5 text-xs text-neutral-500">
+											Pembayaran seluruh cabang menggunakan <strong>Rekening Terpusat Adasewa.id</strong>.
+										</p>
+									</div>
 									<span
 										class="rounded-full bg-sky-50 px-2.5 py-0.5 text-[11px] font-semibold text-sky-700"
 									>
-										Siap Payment Gateway
+										Rekening Terpusat · Siap PG
 									</span>
 								</div>
 
@@ -698,9 +771,9 @@
 											<p class="mt-2 text-xs font-medium text-red-600">{promoError}</p>
 										{/if}
 
-										{#if data.activePromos.length > 0}
+										{#if branchEligiblePromos.length > 0}
 											<div class="mt-3 flex flex-wrap gap-1.5">
-												{#each data.activePromos as p (p.id)}
+												{#each branchEligiblePromos as p (p.id)}
 													<button
 														type="button"
 														onclick={() => applyPromoCode(p.code)}
@@ -826,7 +899,12 @@
 						<h2 class="text-base font-bold text-neutral-950">
 							Ringkasan Pesanan ({rentalCart.totalUnits} unit)
 						</h2>
-						<p class="mt-1 text-xs text-neutral-500">
+						{#if activeBranch}
+							<p class="mt-1 text-xs font-semibold text-emerald-700">
+								📍 {activeBranch.name} ({activeBranch.code})
+							</p>
+						{/if}
+						<p class="mt-0.5 text-xs text-neutral-500">
 							Jadwal: {formatDateId(rentalCart.startDate)} – {formatDateId(rentalCart.endDate)} ({rentalCart.durationDays}
 							hari)
 						</p>
@@ -861,8 +939,8 @@
 							<div class="flex justify-between text-neutral-600">
 								<dt>
 									{deliveryMethod === 'delivery'
-										? `Estimasi Ongkir (${deliveryRegion})`
-										: 'Ambil di Kios'}
+										? `Ongkir Delivery (${activeBranch?.name ?? deliveryRegion})`
+										: `Ambil di Kios (${activeBranch?.name ?? 'Kios'})`}
 								</dt>
 								<dd class="font-medium text-neutral-950">
 									{deliveryFee > 0 ? formatRupiah(deliveryFee) : 'Gratis (Rp 0)'}

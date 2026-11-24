@@ -23,7 +23,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const check = await validatePromoForSubtotal(
 		locals.db,
 		validation.data.code,
-		validation.data.subtotalAmount
+		validation.data.subtotalAmount,
+		validation.data.branchId ?? null
 	);
 
 	if (!check.ok) {

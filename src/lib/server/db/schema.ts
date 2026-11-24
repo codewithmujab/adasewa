@@ -7,6 +7,7 @@ import {
 	pgTable,
 	text,
 	timestamp,
+	uniqueIndex,
 	uuid,
 	varchar
 } from 'drizzle-orm/pg-core';
@@ -38,6 +39,36 @@ export interface RentalItemSpec {
 }
 
 // ============================================================================
+// Tabel Cabang Penyewaan (Multi-Branch: Bogor, Depok, dll.)
+// ============================================================================
+
+export const branches = pgTable(
+	'branches',
+	{
+		id: uuid('id').defaultRandom().primaryKey(),
+		code: varchar('code', { length: 16 }).notNull().unique(),
+		name: varchar('name', { length: 120 }).notNull(),
+		slug: varchar('slug', { length: 140 }).notNull().unique(),
+		city: varchar('city', { length: 80 }).notNull(),
+		address: text('address').notNull(),
+		phone: varchar('phone', { length: 40 }).notNull(),
+		whatsapp: varchar('whatsapp', { length: 64 }).notNull(),
+		deliveryFeeDefault: integer('delivery_fee_default').notNull().default(50000),
+		operatingHours: varchar('operating_hours', { length: 120 })
+			.notNull()
+			.default('Senin – Minggu, 08.00 – 21.00 WIB'),
+		isActive: boolean('is_active').notNull().default(true),
+		sortOrder: integer('sort_order').notNull().default(0),
+		createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+		updatedAt: timestamp('updated_at', { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => new Date())
+	},
+	(table) => [index('branches_active_order_idx').on(table.isActive, table.sortOrder)]
+);
+
+// ============================================================================
 // Tabel Autentikasi Better Auth (PostgreSQL)
 // ============================================================================
 
@@ -48,6 +79,7 @@ export const user = pgTable('user', {
 	emailVerified: boolean('email_verified').notNull().default(false),
 	image: text('image'),
 	role: text('role').notNull().default('customer'),
+	branchId: uuid('branch_id').references(() => branches.id, { onDelete: 'set null' }),
 	pointBalance: integer('point_balance').notNull().default(0),
 	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 	updatedAt: timestamp('updated_at', { withTimezone: true })
@@ -269,6 +301,31 @@ export const rentalItems = pgTable(
 	]
 );
 
+export const branchItemStocks = pgTable(
+	'branch_item_stocks',
+	{
+		id: uuid('id').defaultRandom().primaryKey(),
+		branchId: uuid('branch_id')
+			.notNull()
+			.references(() => branches.id, { onDelete: 'cascade' }),
+		rentalItemId: uuid('rental_item_id')
+			.notNull()
+			.references(() => rentalItems.id, { onDelete: 'cascade' }),
+		pricePerDay: integer('price_per_day').notNull().default(0),
+		stockQty: integer('stock_qty').notNull().default(0),
+		isAvailable: boolean('is_available').notNull().default(true),
+		updatedAt: timestamp('updated_at', { withTimezone: true })
+			.notNull()
+			.defaultNow()
+			.$onUpdate(() => new Date())
+	},
+	(table) => [
+		uniqueIndex('branch_item_stocks_branch_item_uidx').on(table.branchId, table.rentalItemId),
+		index('branch_item_stocks_branch_idx').on(table.branchId),
+		index('branch_item_stocks_item_idx').on(table.rentalItemId)
+	]
+);
+
 // ============================================================================
 // Tabel Promo & Voucher Diskon
 // ============================================================================
@@ -277,6 +334,7 @@ export const promoCodes = pgTable(
 	'promo_codes',
 	{
 		id: uuid('id').defaultRandom().primaryKey(),
+		branchId: uuid('branch_id').references(() => branches.id, { onDelete: 'set null' }),
 		code: varchar('code', { length: 40 }).notNull().unique(),
 		title: varchar('title', { length: 140 }).notNull(),
 		description: text('description').notNull(),
@@ -310,6 +368,10 @@ export const rentalOrders = pgTable(
 	{
 		id: uuid('id').defaultRandom().primaryKey(),
 		orderCode: varchar('order_code', { length: 32 }).notNull().unique(),
+		branchId: uuid('branch_id').references(() => branches.id, { onDelete: 'set null' }),
+		branchName: varchar('branch_name', { length: 120 }),
+		branchAddress: text('branch_address'),
+		branchWhatsapp: varchar('branch_whatsapp', { length: 64 }),
 		userId: text('user_id')
 			.notNull()
 			.references(() => user.id, { onDelete: 'restrict' }),
@@ -367,6 +429,7 @@ export const rentalOrders = pgTable(
 			.$onUpdate(() => new Date())
 	},
 	(table) => [
+		index('rental_orders_branch_id_idx').on(table.branchId),
 		index('rental_orders_user_id_idx').on(table.userId),
 		index('rental_orders_status_idx').on(table.orderStatus),
 		index('rental_orders_payment_status_idx').on(table.paymentStatus),
@@ -534,3 +597,9 @@ export type NewPointTransaction = typeof pointTransactions.$inferInsert;
 
 export type PromoCode = typeof promoCodes.$inferSelect;
 export type NewPromoCode = typeof promoCodes.$inferInsert;
+
+export type Branch = typeof branches.$inferSelect;
+export type NewBranch = typeof branches.$inferInsert;
+
+export type BranchItemStock = typeof branchItemStocks.$inferSelect;
+export type NewBranchItemStock = typeof branchItemStocks.$inferInsert;

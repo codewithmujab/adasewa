@@ -21,6 +21,8 @@
       companyName={data.companyName}
       userName={data.user.name}
       userEmail={data.user.email}
+      isSuperAdmin={data.isSuperAdmin}
+      branchName={data.assignedBranch?.name ?? null}
     />
   </aside>
 
@@ -69,6 +71,8 @@
           companyName={data.companyName}
           userName={data.user.name}
           userEmail={data.user.email}
+          isSuperAdmin={data.isSuperAdmin}
+          branchName={data.assignedBranch?.name ?? null}
           onNavigate={() => (mobileDrawerOpen = false)}
         />
       </div>

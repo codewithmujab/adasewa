@@ -61,6 +61,47 @@ async function seed(): Promise<void> {
 		})
 		.onConflictDoNothing({ target: schema.companySettings.id });
 
+	// 1b. Seed Cabang Penyewaan (Bogor & Depok — Alamat Kios & WA masing-masing, Rekening Pembayaran Terpusat)
+	const seedBranches = [
+		{
+			code: 'BGR',
+			name: 'Cabang Bogor',
+			slug: 'bogor',
+			city: 'Bogor',
+			address: 'Jl. Pajajaran No. 88, Bogor Tengah, Kota Bogor, Jawa Barat',
+			phone: '+62 857-7713-9748',
+			whatsapp: '6285777139748',
+			deliveryFeeDefault: 50000,
+			operatingHours: 'Senin – Minggu, 08.00 – 21.00 WIB',
+			isActive: true,
+			sortOrder: 1
+		},
+		{
+			code: 'DPK',
+			name: 'Cabang Depok',
+			slug: 'depok',
+			city: 'Depok',
+			address: 'Jl. Margonda Raya No. 245, Beji, Kota Depok, Jawa Barat',
+			phone: '+62 857-7713-9749',
+			whatsapp: '6285777139749',
+			deliveryFeeDefault: 40000,
+			operatingHours: 'Senin – Minggu, 08.00 – 21.00 WIB',
+			isActive: true,
+			sortOrder: 2
+		}
+	];
+
+	for (const br of seedBranches) {
+		await db
+			.insert(schema.branches)
+			.values(br)
+			.onConflictDoNothing({ target: schema.branches.slug });
+	}
+
+	const allBranches = await db.select().from(schema.branches);
+	const bogorBranch = allBranches.find((b) => b.slug === 'bogor');
+	const depokBranch = allBranches.find((b) => b.slug === 'depok');
+
 	// 2. Seed 10 Kategori Katalog Sewa
 	await db
 		.insert(schema.rentalCategories)
@@ -119,6 +160,73 @@ async function seed(): Promise<void> {
 			.onConflictDoNothing({ target: schema.rentalItems.slug });
 	}
 	console.log(`Katalog tersinkron: ${ADASEWA_CATEGORIES.length} kategori & ${itemValues.length} barang.`);
+
+	// 3b. Seed Harga & Stok per Cabang (Bogor & Depok punya harga & stok sendiri)
+	if (bogorBranch && depokBranch) {
+		const dbItems = await db
+			.select({
+				id: schema.rentalItems.id,
+				pricePerDay: schema.rentalItems.pricePerDay,
+				stockQty: schema.rentalItems.stockQty
+			})
+			.from(schema.rentalItems);
+
+		const roundTo5k = (val: number): number => Math.max(10000, Math.round(val / 5000) * 5000);
+
+		const branchStockRows: Array<{
+			branchId: string;
+			rentalItemId: string;
+			pricePerDay: number;
+			stockQty: number;
+			isAvailable: boolean;
+		}> = [];
+
+		for (const item of dbItems) {
+			const basePrice = item.pricePerDay ?? 100000;
+			// Harga Depok = tarif dasar; Harga Bogor = berbeda (contoh +Rp 5.000 s/d +10%, dapat diubah di Admin)
+			const depokPrice = basePrice;
+			const bogorPrice =
+				basePrice >= 100000 ? roundTo5k(basePrice * 1.08) : roundTo5k(basePrice + 5000);
+
+			branchStockRows.push(
+				{
+					branchId: bogorBranch.id,
+					rentalItemId: item.id,
+					pricePerDay: bogorPrice,
+					stockQty: Math.max(1, item.stockQty),
+					isAvailable: true
+				},
+				{
+					branchId: depokBranch.id,
+					rentalItemId: item.id,
+					pricePerDay: depokPrice,
+					stockQty: Math.max(1, item.stockQty + 1),
+					isAvailable: true
+				}
+			);
+		}
+
+		for (let i = 0; i < branchStockRows.length; i += 50) {
+			await db
+				.insert(schema.branchItemStocks)
+				.values(branchStockRows.slice(i, i + 50))
+				.onConflictDoNothing({
+					target: [schema.branchItemStocks.branchId, schema.branchItemStocks.rentalItemId]
+				});
+		}
+		console.log(`Stok & harga cabang tersinkron: ${branchStockRows.length} baris (Bogor & Depok).`);
+
+		// Backfill pesanan lama yang belum memiliki branchId ke Cabang Depok
+		await sql`
+			UPDATE rental_orders
+			SET
+				branch_id = ${depokBranch.id},
+				branch_name = ${depokBranch.name},
+				branch_address = ${depokBranch.address},
+				branch_whatsapp = ${depokBranch.whatsapp}
+			WHERE branch_id IS NULL
+		`;
+	}
 
 	// 4. Seed Layanan Unggulan Adasewa.id
 	const seedServices = [
@@ -284,59 +392,100 @@ async function seed(): Promise<void> {
 			.onConflictDoNothing({ target: schema.promoCodes.code });
 	}
 
-	// 6. Seed default admin account (jika belum ada satupun user)
-	const [existingUsers] = await db.select({ total: count() }).from(schema.user);
-	if (Number(existingUsers?.total ?? 0) === 0) {
-		const secret =
-			process.env.BETTER_AUTH_SECRET || 'local-dev-secret-key-minimal-32-chars-change-me';
-		const baseURL = process.env.BETTER_AUTH_URL || 'http://localhost:5173';
+	// 6. Seed default owner & branch admin accounts (idempoten per email)
+	const secret =
+		process.env.BETTER_AUTH_SECRET || 'local-dev-secret-key-minimal-32-chars-change-me';
+	const baseURL = process.env.BETTER_AUTH_URL || 'http://localhost:5173';
 
-		const auth = betterAuth({
-			baseURL,
-			secret,
-			database: drizzleAdapter(db, {
-				provider: 'pg',
-				schema: {
-					user: schema.user,
-					session: schema.session,
-					account: schema.account,
-					verification: schema.verification
+	const seedAuth = betterAuth({
+		baseURL,
+		secret,
+		database: drizzleAdapter(db, {
+			provider: 'pg',
+			schema: {
+				user: schema.user,
+				session: schema.session,
+				account: schema.account,
+				verification: schema.verification
+			}
+		}),
+		emailAndPassword: {
+			enabled: true,
+			minPasswordLength: 8,
+			disableSignUp: false
+		},
+		user: {
+			additionalFields: {
+				role: {
+					type: 'string',
+					required: false,
+					defaultValue: 'customer',
+					input: false
+				},
+				branchId: {
+					type: 'string',
+					required: false,
+					defaultValue: null,
+					input: false
 				}
-			}),
-			emailAndPassword: {
-				enabled: true,
-				minPasswordLength: 8,
-				disableSignUp: false
-			},
-			user: {
-				additionalFields: {
-					role: {
-						type: 'string',
-						required: false,
-						defaultValue: 'admin',
-						input: false
+			}
+		}
+	});
+
+	const staffAccounts = [
+		{
+			name: 'Owner Adasewa.id',
+			email: 'admin@adasewa.id',
+			role: 'admin',
+			branchId: null as string | null
+		},
+		...(bogorBranch
+			? [
+					{
+						name: 'Admin Cabang Bogor',
+						email: 'admin.bogor@adasewa.id',
+						role: 'branch_admin',
+						branchId: bogorBranch.id
 					}
+				]
+			: []),
+		...(depokBranch
+			? [
+					{
+						name: 'Admin Cabang Depok',
+						email: 'admin.depok@adasewa.id',
+						role: 'branch_admin',
+						branchId: depokBranch.id
+					}
+				]
+			: [])
+	];
+
+	for (const staff of staffAccounts) {
+		const [exists] = await db
+			.select({ id: schema.user.id })
+			.from(schema.user)
+			.where(eq(schema.user.email, staff.email))
+			.limit(1);
+
+		if (!exists) {
+			await seedAuth.api.signUpEmail({
+				body: {
+					name: staff.name,
+					email: staff.email,
+					password: 'Admin1234!'
 				}
-			}
-		});
-
-		await auth.api.signUpEmail({
-			body: {
-				name: 'Admin Adasewa.id',
-				email: 'admin@adasewa.id',
-				password: 'Admin1234!'
-			}
-		});
-
-		await db
-			.update(schema.user)
-			.set({ role: 'admin' })
-			.where(eq(schema.user.email, 'admin@adasewa.id'));
-
-		console.log('Akun admin awal berhasil dibuat: admin@adasewa.id / Admin1234!');
-	} else {
-		console.log('Akun admin sudah ada, melewati pembuatan akun awal.');
+			});
+			await db
+				.update(schema.user)
+				.set({ role: staff.role, branchId: staff.branchId })
+				.where(eq(schema.user.email, staff.email));
+			console.log(`Akun staf dibuat: ${staff.email} (${staff.role})`);
+		}
 	}
+
+	const [totalUserRow] = await db.select({ total: count() }).from(schema.user);
+	console.log(`Total user di DB: ${Number(totalUserRow?.total ?? 0)}`);
 
 	console.log('Seeding Adasewa.id selesai!');
 }

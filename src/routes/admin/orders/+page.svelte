@@ -22,6 +22,7 @@
 
 	let orders = $state<AdminOrderWithItems[]>([]);
 	let search = $state('');
+	let branchFilter = $state<string>('all');
 	let statusTab = $state<
 		'all' | 'pending_payment' | 'waiting_verification' | 'active_rental' | 'return_requested' | 'returned'
 	>('all');
@@ -52,18 +53,24 @@
 		orders = data.orders;
 	});
 
+	let branchScopedOrders = $derived(
+		branchFilter === 'all' ? orders : orders.filter((o) => o.branchId === branchFilter)
+	);
+
 	let counts = $derived({
-		all: orders.length,
-		waitingVerify: orders.filter((o) => o.paymentStatus === 'waiting_verification').length,
-		active: orders.filter((o) => o.orderStatus === 'active_rental' || o.orderStatus === 'confirmed')
+		all: branchScopedOrders.length,
+		waitingVerify: branchScopedOrders.filter((o) => o.paymentStatus === 'waiting_verification')
 			.length,
-		returnReq: orders.filter((o) => o.orderStatus === 'return_requested').length,
-		returned: orders.filter((o) => o.orderStatus === 'returned').length
+		active: branchScopedOrders.filter(
+			(o) => o.orderStatus === 'active_rental' || o.orderStatus === 'confirmed'
+		).length,
+		returnReq: branchScopedOrders.filter((o) => o.orderStatus === 'return_requested').length,
+		returned: branchScopedOrders.filter((o) => o.orderStatus === 'returned').length
 	});
 
 	let filteredOrders = $derived.by(() => {
 		const q = search.trim().toLowerCase();
-		return orders.filter((order) => {
+		return branchScopedOrders.filter((order) => {
 			if (statusTab === 'pending_payment' && order.orderStatus !== 'pending_payment') return false;
 			if (statusTab === 'waiting_verification' && order.paymentStatus !== 'waiting_verification')
 				return false;
@@ -181,15 +188,47 @@
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
 			<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
-				Operasional Sewa
+				{data.isSuperAdmin
+					? 'Operasional Sewa · Semua Cabang'
+					: `Operasional Sewa · ${data.assignedBranch?.name ?? 'Cabang'}`}
 			</p>
 			<h1 class="mt-1 text-3xl font-semibold tracking-tight text-neutral-950">
 				Transaksi &amp; Pengembalian
 			</h1>
 			<p class="mt-1 text-sm text-neutral-500">
-				Verifikasi pembayaran pemesan, pantau barang yang sedang disewa, dan catat pengembalian unit.
+				{#if data.isSuperAdmin}
+					Verifikasi pembayaran, pantau transaksi seluruh cabang, dan catat pengembalian unit.
+				{:else}
+					Khusus transaksi {data.assignedBranch?.name ?? 'cabang Anda'} — data cabang lain terpisah secara otomatis.
+				{/if}
 			</p>
 		</div>
+
+		{#if data.isSuperAdmin && data.branches.length > 0}
+			<div class="flex flex-wrap gap-1.5">
+				<button
+					type="button"
+					onclick={() => (branchFilter = 'all')}
+					class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition {branchFilter === 'all'
+						? 'bg-neutral-950 text-white'
+						: 'border border-neutral-200 bg-white text-neutral-600 hover:border-neutral-950'}"
+				>
+					Semua Cabang ({orders.length})
+				</button>
+				{#each data.branches as br (br.id)}
+					<button
+						type="button"
+						onclick={() => (branchFilter = br.id)}
+						class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition {branchFilter ===
+						br.id
+							? 'bg-emerald-700 text-white'
+							: 'border border-neutral-200 bg-white text-neutral-600 hover:border-neutral-950'}"
+					>
+						📍 {br.name} ({orders.filter((o) => o.branchId === br.id).length})
+					</button>
+				{/each}
+			</div>
+		{/if}
 	</header>
 
 	<!-- Stats -->
@@ -274,7 +313,14 @@
 							{@const payMeta = getPaymentStatusMeta(order.paymentStatus)}
 							<tr class="transition hover:bg-neutral-50/60">
 								<td class="px-5 py-4">
-									<p class="font-mono text-xs font-bold text-neutral-950">{order.orderCode}</p>
+									<div class="flex flex-wrap items-center gap-1.5">
+										<p class="font-mono text-xs font-bold text-neutral-950">{order.orderCode}</p>
+										{#if order.branchName}
+											<span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+												{order.branchName}
+											</span>
+										{/if}
+									</div>
 									<p class="mt-0.5 font-medium text-neutral-900">{order.customerName}</p>
 									<p class="text-xs text-neutral-500">
 										{order.customerPhone} · {order.items.length} jenis barang
@@ -369,6 +415,9 @@
 				</div>
 				<div>
 					<p class="text-neutral-400">Pengiriman &amp; Pembayaran</p>
+					{#if selectedOrder.branchName}
+						<p class="font-bold text-emerald-700">📍 {selectedOrder.branchName}</p>
+					{/if}
 					<p class="font-semibold text-neutral-950">
 						{selectedOrder.deliveryMethod === 'delivery'
 							? `Delivery (${selectedOrder.deliveryRegion ?? '-'})`

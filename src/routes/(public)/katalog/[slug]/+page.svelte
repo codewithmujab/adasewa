@@ -4,9 +4,10 @@
 	import RentalItemCard from '#lib/components/public/RentalItemCard.svelte';
 	import { rentalCart } from '#lib/stores/cart.svelte';
 	import {
-		buildWhatsAppUrl,
+		buildBranchWhatsAppUrl,
 		formatRupiah,
-		getCategoryTheme
+		getCategoryTheme,
+		resolveItemBranchPricing
 	} from '#lib/utils/catalog';
 	import { calculateDurationDays, getTodayIsoDate } from '#lib/utils/orders';
 	import type { PageData } from './$types';
@@ -56,24 +57,33 @@
 		return urls;
 	});
 
+	let activeBranch = $derived(
+		data.branches.find((b) => b.id === rentalCart.branchId) ?? data.branches[0] ?? null
+	);
+
+	let branchPricing = $derived(resolveItemBranchPricing(data.item, activeBranch?.id));
+
 	let estimatedDays = $derived(
 		Math.max(data.item.minDurationDays, calculateDurationDays(startDate, endDate))
 	);
 
-	let unitPrice = $derived(data.item.pricePerDay ?? 0);
+	let unitPrice = $derived(branchPricing.pricePerDay);
+	let effectiveStockQty = $derived(branchPricing.stockQty);
+	let isOutOfStock = $derived(!branchPricing.isAvailable || effectiveStockQty <= 0);
 	let estimatedTotal = $derived(unitPrice * qty * estimatedDays);
 
 	let whatsappAskUrl = $derived.by(() => {
 		const lines = [
-			`Halo ${data.settings.companyName}, saya ingin bertanya mengenai unit:`,
+			`Halo ${data.settings.companyName}${activeBranch ? ` (${activeBranch.name})` : ''}, saya ingin bertanya mengenai unit:`,
 			`- Barang: ${data.item.name}`
 		];
 		if (selectedVariant) lines.push(`- Varian: ${selectedVariant}`);
 		lines.push(`- Rencana jumlah: ${qty} unit (${estimatedDays} hari)`);
-		return buildWhatsAppUrl(data.settings, lines.join('\n'));
+		return buildBranchWhatsAppUrl(activeBranch, data.settings, lines.join('\n'));
 	});
 
 	function addCurrentToCart(openDrawer: boolean): void {
+		if (isOutOfStock) return;
 		rentalCart.addItem(
 			{
 				itemId: data.item.id,
@@ -84,11 +94,12 @@
 				variant: selectedVariant || null,
 				pricePerDay: unitPrice,
 				unitLabel: data.item.unitLabel,
-				quantity: qty,
-				stockQty: data.item.stockQty,
+				quantity: Math.min(qty, Math.max(1, effectiveStockQty)),
+				stockQty: effectiveStockQty,
 				requiresDeposit: data.item.requiresDeposit,
 				startDate,
-				endDate
+				endDate,
+				branchStocks: data.item.branchStocks
 			},
 			openDrawer
 		);
@@ -96,6 +107,7 @@
 	}
 
 	function handleRentNow(): void {
+		if (isOutOfStock) return;
 		addCurrentToCart(false);
 		void goto('/keranjang');
 	}
@@ -145,7 +157,7 @@
 							</div>
 							<p class="mt-5 text-sm font-semibold text-neutral-800">{data.item.name}</p>
 							<p class="mt-1 text-xs text-neutral-500">
-								Kategori {data.item.category.name} · Stok tersedia: {data.item.stockQty} unit
+								Kategori {data.item.category.name} · Stok {activeBranch?.name ?? ''}: {effectiveStockQty} unit
 							</p>
 						</div>
 					{/if}
@@ -186,10 +198,10 @@
 					</div>
 					<div class="rounded-2xl border border-neutral-200/70 bg-surface/70 p-4">
 						<p class="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase">
-							Stok Tersedia
+							Stok {activeBranch?.name ?? 'Tersedia'}
 						</p>
 						<p class="mt-1 text-xs font-semibold text-neutral-900">
-							{data.item.stockQty} Unit Siap Pakai
+							{isOutOfStock ? 'Stok Habis di Cabang Ini' : `${effectiveStockQty} Unit Siap Pakai`}
 						</p>
 					</div>
 				</div>
@@ -283,8 +295,12 @@
 							<CategoryIcon icon={data.item.category.icon} class="h-3.5 w-3.5" />
 							{data.item.category.name}
 						</a>
-						<span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-							Stok: {data.item.stockQty} Unit
+						<span
+							class="rounded-full px-3 py-1 text-xs font-semibold {isOutOfStock
+								? 'bg-red-50 text-red-700'
+								: 'bg-emerald-50 text-emerald-700'}"
+						>
+							{isOutOfStock ? 'Stok Habis' : `Stok: ${effectiveStockQty} Unit`}
 						</span>
 					</div>
 
@@ -295,10 +311,63 @@
 						{data.item.shortDescription}
 					</p>
 
+					<!-- Pilihan Cabang & Perbandingan Tarif -->
+					{#if data.branches.length > 0}
+						<div class="mt-5">
+							<p class="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase">
+								Pilih Cabang Penyewaan
+							</p>
+							<div class="mt-2 grid gap-2 sm:grid-cols-2">
+								{#each data.branches as branch (branch.id)}
+									{@const bp = resolveItemBranchPricing(data.item, branch.id)}
+									{@const isSelected = activeBranch?.id === branch.id}
+									<button
+										type="button"
+										onclick={() => {
+											rentalCart.selectBranch(branch);
+											qty = Math.min(qty, Math.max(1, bp.stockQty));
+										}}
+										class="rounded-2xl border p-3 text-left transition {isSelected
+											? 'border-neutral-950 bg-neutral-950 text-white'
+											: 'border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400'}"
+									>
+										<div class="flex items-center justify-between gap-1">
+											<span class="text-xs font-bold">{branch.name}</span>
+											<span
+												class="text-[10px] font-medium {isSelected
+													? 'text-emerald-300'
+													: bp.isAvailable && bp.stockQty > 0
+														? 'text-emerald-700'
+														: 'text-red-600'}"
+											>
+												{bp.isAvailable && bp.stockQty > 0 ? `Stok ${bp.stockQty}` : 'Habis'}
+											</span>
+										</div>
+										<p class="mt-1 text-sm font-bold">
+											{formatRupiah(bp.pricePerDay)}
+											<span
+												class="text-[10px] font-normal {isSelected
+													? 'text-neutral-300'
+													: 'text-neutral-400'}"
+											>
+												/ {data.item.unitLabel}
+											</span>
+										</p>
+									</button>
+								{/each}
+							</div>
+							{#if activeBranch}
+								<p class="mt-2 text-[11px] text-neutral-500">
+									📍 Kios {activeBranch.name}: {activeBranch.address}
+								</p>
+							{/if}
+						</div>
+					{/if}
+
 					<!-- Price Box -->
-					<div class="mt-6 rounded-2xl bg-surface p-4">
+					<div class="mt-5 rounded-2xl bg-surface p-4">
 						<p class="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase">
-							Tarif Sewa
+							Tarif Sewa {activeBranch ? `— ${activeBranch.name}` : ''}
 						</p>
 						<p class="mt-1 text-2xl font-bold text-neutral-950">
 							{formatRupiah(unitPrice)}
@@ -363,7 +432,7 @@
 
 						<div>
 							<label for="rent-qty" class="block text-xs font-medium text-neutral-700">
-								Jumlah Unit (maks. {data.item.stockQty})
+								Jumlah Unit (maks. {effectiveStockQty})
 							</label>
 							<div class="mt-1 flex items-center rounded-xl border border-neutral-200">
 								<button
@@ -378,13 +447,13 @@
 									id="rent-qty"
 									type="number"
 									min="1"
-									max={Math.max(1, data.item.stockQty)}
+									max={Math.max(1, effectiveStockQty)}
 									bind:value={qty}
 									class="w-full text-center text-sm font-semibold text-neutral-950 focus:outline-none"
 								/>
 								<button
 									type="button"
-									onclick={() => (qty = Math.min(Math.max(1, data.item.stockQty), qty + 1))}
+									onclick={() => (qty = Math.min(Math.max(1, effectiveStockQty), qty + 1))}
 									aria-label="Tambah jumlah"
 									class="px-4 py-2 text-sm font-semibold text-neutral-600 hover:text-neutral-950"
 								>
@@ -413,16 +482,18 @@
 						<div class="space-y-2.5 pt-1">
 							<button
 								type="button"
+								disabled={isOutOfStock}
 								onclick={() => addCurrentToCart(true)}
-								class="flex w-full items-center justify-center gap-2 rounded-full bg-neutral-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
+								class="flex w-full items-center justify-center gap-2 rounded-full bg-neutral-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
 							>
-								+ Masukkan ke Keranjang
+								{isOutOfStock ? 'Stok Habis di Cabang Ini' : '+ Masukkan ke Keranjang'}
 							</button>
 
 							<button
 								type="button"
+								disabled={isOutOfStock}
 								onclick={handleRentNow}
-								class="flex w-full items-center justify-center gap-1.5 rounded-full border border-neutral-300 bg-white px-6 py-3.5 text-sm font-semibold text-neutral-950 transition hover:border-neutral-950"
+								class="flex w-full items-center justify-center gap-1.5 rounded-full border border-neutral-300 bg-white px-6 py-3.5 text-sm font-semibold text-neutral-950 transition hover:border-neutral-950 disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								Sewa Sekarang &amp; Cek Total →
 							</button>
@@ -435,7 +506,7 @@
 								rel="noopener noreferrer"
 								class="text-xs font-medium text-neutral-500 underline underline-offset-4 transition hover:text-neutral-950"
 							>
-								Butuh konsultasi teknis? Chat CS via WhatsApp
+								Butuh konsultasi teknis? Chat CS {activeBranch?.name ?? ''} via WhatsApp
 							</a>
 						</div>
 					</div>

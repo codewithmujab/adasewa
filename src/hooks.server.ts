@@ -76,7 +76,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			const redirectTo = encodeURIComponent(`${pathname}${event.url.search}`);
 			redirect(303, `/login?redirectTo=${redirectTo}`);
 		}
-		if (event.locals.user.role !== 'admin') {
+		const role = event.locals.user.role;
+		if (role !== 'admin' && role !== 'branch_admin') {
 			redirect(303, '/akun');
 		}
 	}
@@ -89,7 +90,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (pathname === '/login' && event.locals.session && event.locals.user) {
-		const target = event.locals.user.role === 'admin' ? '/admin' : '/akun';
+		const role = event.locals.user.role;
+		const target = role === 'admin' || role === 'branch_admin' ? '/admin' : '/akun';
 		redirect(303, target);
 	}
 

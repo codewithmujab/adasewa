@@ -13,6 +13,7 @@ export const createOrderItemInputSchema = z.object({
 
 export const createOrderSchema = z
 	.object({
+		branchId: uuidSchema.optional(),
 		customerName: z
 			.string()
 			.trim()

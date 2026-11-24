@@ -37,7 +37,13 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 		.limit(1);
 
 	const currentUser = locals.user!;
-	if (!order || (order.userId !== currentUser.id && currentUser.role !== 'admin')) {
+	const isSuperAdmin = currentUser.role === 'admin';
+	const isOwnBranchAdmin =
+		currentUser.role === 'branch_admin' &&
+		Boolean(currentUser.branchId) &&
+		order?.branchId === currentUser.branchId;
+
+	if (!order || (order.userId !== currentUser.id && !isSuperAdmin && !isOwnBranchAdmin)) {
 		return apiError('Pesanan tidak ditemukan.', { status: 404 });
 	}
 
@@ -75,7 +81,12 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 	}
 
 	const currentUser = locals.user!;
-	const isAdmin = currentUser.role === 'admin';
+	const isSuperAdmin = currentUser.role === 'admin';
+	const isOwnBranchAdmin =
+		currentUser.role === 'branch_admin' &&
+		Boolean(currentUser.branchId) &&
+		existing.branchId === currentUser.branchId;
+	const isStaffAllowed = isSuperAdmin || isOwnBranchAdmin;
 	const bodyRecord =
 		typeof parsedBody.data === 'object' && parsedBody.data !== null
 			? (parsedBody.data as Record<string, unknown>)
@@ -83,7 +94,7 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 
 	// Alur 1: Pemesan mengirim konfirmasi pembayaran
 	if (bodyRecord.action === 'confirm_payment') {
-		if (existing.userId !== currentUser.id && !isAdmin) {
+		if (existing.userId !== currentUser.id && !isStaffAllowed) {
 			return apiError('Akses ditolak.', { status: 403 });
 		}
 
@@ -126,8 +137,8 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 	}
 
 	// Alur 2: Pembaruan penuh oleh Admin (verifikasi bayar, status sewa, & verifikasi pengembalian)
-	if (!isAdmin) {
-		return apiError('Hanya admin yang dapat mengubah status transaksi ini.', { status: 403 });
+	if (!isStaffAllowed) {
+		return apiError('Anda tidak memiliki izin mengelola transaksi cabang ini.', { status: 403 });
 	}
 
 	const adminValidation = adminUpdateOrderSchema.safeParse(parsedBody.data);

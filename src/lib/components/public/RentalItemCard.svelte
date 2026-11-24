@@ -4,6 +4,7 @@
 	import {
 		formatRupiah,
 		getCategoryTheme,
+		resolveItemBranchPricing,
 		type RentalItemWithCategory
 	} from '#lib/utils/catalog';
 
@@ -18,7 +19,10 @@
 	let secondarySpec = $derived(item.specs[1] ?? null);
 	let hasVariants = $derived(item.variants.length > 0);
 
+	let branchPricing = $derived(resolveItemBranchPricing(item, rentalCart.branchId));
+
 	function handleQuickAdd(): void {
+		if (!branchPricing.isAvailable || branchPricing.stockQty <= 0) return;
 		rentalCart.addItem({
 			itemId: item.id,
 			slug: item.slug,
@@ -26,11 +30,12 @@
 			categoryName: item.category.name,
 			imageUrl: item.imageUrl,
 			variant: null,
-			pricePerDay: item.pricePerDay ?? 0,
+			pricePerDay: branchPricing.pricePerDay,
 			unitLabel: item.unitLabel,
 			quantity: 1,
-			stockQty: item.stockQty,
-			requiresDeposit: item.requiresDeposit
+			stockQty: branchPricing.stockQty,
+			requiresDeposit: item.requiresDeposit,
+			branchStocks: item.branchStocks
 		});
 	}
 </script>
@@ -71,7 +76,13 @@
 				<span class="truncate">{item.category.name}</span>
 			</span>
 
-			{#if item.isFeatured}
+			{#if !branchPricing.isAvailable || branchPricing.stockQty <= 0}
+				<span
+					class="shrink-0 rounded-full bg-neutral-200/95 px-2.5 py-1 text-[10px] font-semibold text-neutral-700"
+				>
+					Stok Habis
+				</span>
+			{:else if item.isFeatured}
 				<span
 					class="shrink-0 rounded-full bg-neutral-950/90 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur-md"
 				>
@@ -106,23 +117,19 @@
 				</span>
 			{/if}
 
-			{#if item.deliveryAvailable}
+			{#if rentalCart.branchName}
 				<span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
-					Delivery / Kios
+					{rentalCart.branchName} · Stok {branchPricing.stockQty}
 				</span>
 			{/if}
 		</div>
 
 		<div class="mt-5 flex items-center justify-between gap-2 border-t border-neutral-100 pt-4">
 			<div>
-				{#if item.pricePerDay !== null}
-					<p class="text-sm font-bold text-neutral-950">
-						{formatRupiah(item.pricePerDay)}
-					</p>
-					<p class="text-[11px] text-neutral-400">per {item.unitLabel}</p>
-				{:else}
-					<p class="text-xs font-semibold text-neutral-800">Tanya Harga CS</p>
-				{/if}
+				<p class="text-sm font-bold text-neutral-950">
+					{formatRupiah(branchPricing.pricePerDay)}
+				</p>
+				<p class="text-[11px] text-neutral-400">per {item.unitLabel}</p>
 			</div>
 
 			<div class="flex items-center gap-1.5">
@@ -132,7 +139,11 @@
 				>
 					Detail
 				</a>
-				{#if hasVariants}
+				{#if !branchPricing.isAvailable || branchPricing.stockQty <= 0}
+					<span class="rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-400">
+						Kosong
+					</span>
+				{:else if hasVariants}
 					<a
 						href={`/katalog/${item.slug}`}
 						class="rounded-full bg-neutral-950 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-neutral-800"

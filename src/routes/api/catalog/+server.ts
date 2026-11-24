@@ -9,6 +9,8 @@ import {
 	requireAdmin
 } from '#lib/server/api/response';
 import {
+	branchItemStocks,
+	branches,
 	rentalCategories,
 	rentalItems,
 	type RentalItem
@@ -206,6 +208,25 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		if (!created) {
 			return apiError('Gagal menyimpan barang katalog.', { status: 500 });
+		}
+
+		// Otomatis buat entri stok & harga awal di setiap cabang aktif
+		const activeBranches = await locals.db.select({ id: branches.id }).from(branches);
+		if (activeBranches.length > 0) {
+			await locals.db
+				.insert(branchItemStocks)
+				.values(
+					activeBranches.map((br) => ({
+						branchId: br.id,
+						rentalItemId: created.id,
+						pricePerDay: created.pricePerDay ?? 100000,
+						stockQty: created.stockQty,
+						isAvailable: true
+					}))
+				)
+				.onConflictDoNothing({
+					target: [branchItemStocks.branchId, branchItemStocks.rentalItemId]
+				});
 		}
 
 		return apiSuccess(created, {

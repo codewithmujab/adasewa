@@ -1,3 +1,5 @@
+import type { Branch } from '#lib/server/db/schema';
+import type { BranchStockSnapshot } from '#lib/utils/catalog';
 import {
 	addDaysIsoDate,
 	calculateDurationDays,
@@ -17,6 +19,7 @@ export interface CartLineItem {
 	quantity: number;
 	stockQty: number;
 	requiresDeposit: boolean;
+	branchStocks?: Record<string, BranchStockSnapshot>;
 }
 
 export interface AddToCartPayload {
@@ -33,15 +36,20 @@ export interface AddToCartPayload {
 	requiresDeposit: boolean;
 	startDate?: string;
 	endDate?: string;
+	branchStocks?: Record<string, BranchStockSnapshot>;
 }
 
 interface PersistedCart {
+	branchId: string | null;
+	branchSlug: string | null;
+	branchName: string | null;
+	branchCode: string | null;
 	items: CartLineItem[];
 	startDate: string;
 	endDate: string;
 }
 
-const STORAGE_KEY = 'adasewa_rental_cart_v1';
+const STORAGE_KEY = 'adasewa_rental_cart_v2';
 
 function buildCartKey(itemId: string, variant: string | null | undefined): string {
 	const normalized = variant?.trim() ?? '';
@@ -57,6 +65,10 @@ function getDefaultDates(): { startDate: string; endDate: string } {
 function createRentalCart() {
 	const defaults = getDefaultDates();
 
+	let branchId = $state<string | null>(null);
+	let branchSlug = $state<string | null>(null);
+	let branchName = $state<string | null>(null);
+	let branchCode = $state<string | null>(null);
 	let items = $state<CartLineItem[]>([]);
 	let startDate = $state<string>(defaults.startDate);
 	let endDate = $state<string>(defaults.endDate);
@@ -66,43 +78,105 @@ function createRentalCart() {
 	function persist(): void {
 		if (typeof window === 'undefined') return;
 		try {
-			const payload: PersistedCart = { items, startDate, endDate };
+			const payload: PersistedCart = {
+				branchId,
+				branchSlug,
+				branchName,
+				branchCode,
+				items,
+				startDate,
+				endDate
+			};
 			window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 		} catch {
-			// Abaikan jika storage penuh / mode privat
+			// Abaikan jika storage penuh
 		}
 	}
 
-	function hydrate(): void {
+	function ensureDefaultBranch(availableBranches: Branch[]): void {
+		if (availableBranches.length === 0) return;
+		const matched = branchId
+			? availableBranches.find((b) => b.id === branchId)
+			: branchSlug
+				? availableBranches.find((b) => b.slug === branchSlug)
+				: null;
+		const chosen = matched ?? availableBranches[0];
+		if (!chosen) return;
+		branchId = chosen.id;
+		branchSlug = chosen.slug;
+		branchName = chosen.name;
+		branchCode = chosen.code;
+	}
+
+	function hydrate(availableBranches: Branch[] = []): void {
 		if (hydrated || typeof window === 'undefined') return;
 		hydrated = true;
 		try {
 			const raw = window.localStorage.getItem(STORAGE_KEY);
-			if (!raw) return;
-			const parsed = JSON.parse(raw) as Partial<PersistedCart>;
-			if (Array.isArray(parsed.items)) {
-				items = parsed.items.filter(
-					(entry): entry is CartLineItem =>
-						typeof entry === 'object' &&
-						entry !== null &&
-						typeof entry.itemId === 'string' &&
-						typeof entry.name === 'string' &&
-						typeof entry.quantity === 'number' &&
-						entry.quantity > 0
-				);
-			}
-			const today = getTodayIsoDate();
-			if (typeof parsed.startDate === 'string' && parsed.startDate >= today) {
-				startDate = parsed.startDate;
-			}
-			if (typeof parsed.endDate === 'string' && parsed.endDate >= startDate) {
-				endDate = parsed.endDate;
-			} else {
-				endDate = startDate;
+			if (raw) {
+				const parsed = JSON.parse(raw) as Partial<PersistedCart>;
+				if (typeof parsed.branchId === 'string') branchId = parsed.branchId;
+				if (typeof parsed.branchSlug === 'string') branchSlug = parsed.branchSlug;
+				if (typeof parsed.branchName === 'string') branchName = parsed.branchName;
+				if (typeof parsed.branchCode === 'string') branchCode = parsed.branchCode;
+
+				if (Array.isArray(parsed.items)) {
+					items = parsed.items.filter(
+						(entry): entry is CartLineItem =>
+							typeof entry === 'object' &&
+							entry !== null &&
+							typeof entry.itemId === 'string' &&
+							typeof entry.name === 'string' &&
+							typeof entry.quantity === 'number' &&
+							entry.quantity > 0
+					);
+				}
+				const today = getTodayIsoDate();
+				if (typeof parsed.startDate === 'string' && parsed.startDate >= today) {
+					startDate = parsed.startDate;
+				}
+				if (typeof parsed.endDate === 'string' && parsed.endDate >= startDate) {
+					endDate = parsed.endDate;
+				} else {
+					endDate = startDate;
+				}
 			}
 		} catch {
 			// Abaikan JSON rusak
 		}
+		ensureDefaultBranch(availableBranches);
+		persist();
+	}
+
+	function selectBranch(branch: Branch): void {
+		if (branchId === branch.id) return;
+		branchId = branch.id;
+		branchSlug = branch.slug;
+		branchName = branch.name;
+		branchCode = branch.code;
+
+		// Perbarui harga & stok item di keranjang agar selalu cocok dengan tarif cabang baru!
+		if (items.length > 0) {
+			items = items
+				.map((entry) => {
+					const branchPrice = entry.branchStocks?.[branch.id];
+					if (branchPrice) {
+						if (!branchPrice.isAvailable || branchPrice.stockQty <= 0) {
+							return null;
+						}
+						return {
+							...entry,
+							pricePerDay: branchPrice.pricePerDay,
+							stockQty: branchPrice.stockQty,
+							quantity: Math.min(entry.quantity, Math.max(1, branchPrice.stockQty))
+						};
+					}
+					return entry;
+				})
+				.filter((entry): entry is CartLineItem => entry !== null);
+		}
+
+		persist();
 	}
 
 	function addItem(payload: AddToCartPayload, openDrawerAfter = true): void {
@@ -123,12 +197,14 @@ function createRentalCart() {
 		if (existingIndex >= 0) {
 			const current = items[existingIndex];
 			if (current) {
-				const maxAllowed = Math.max(1, current.stockQty || 99);
+				const maxAllowed = Math.max(1, payload.stockQty || current.stockQty || 99);
 				items = items.map((entry, idx) =>
 					idx === existingIndex
 						? {
 								...entry,
 								pricePerDay: payload.pricePerDay,
+								stockQty: maxAllowed,
+								branchStocks: payload.branchStocks ?? entry.branchStocks,
 								quantity: Math.min(maxAllowed, entry.quantity + addQty)
 							}
 						: entry
@@ -149,7 +225,8 @@ function createRentalCart() {
 					unitLabel: payload.unitLabel,
 					quantity: Math.min(Math.max(1, payload.stockQty || 99), addQty),
 					stockQty: Math.max(1, payload.stockQty || 1),
-					requiresDeposit: payload.requiresDeposit
+					requiresDeposit: payload.requiresDeposit,
+					branchStocks: payload.branchStocks
 				}
 			];
 		}
@@ -208,6 +285,18 @@ function createRentalCart() {
 	}
 
 	return {
+		get branchId(): string | null {
+			return branchId;
+		},
+		get branchSlug(): string | null {
+			return branchSlug;
+		},
+		get branchName(): string | null {
+			return branchName;
+		},
+		get branchCode(): string | null {
+			return branchCode;
+		},
 		get items(): CartLineItem[] {
 			return items;
 		},
@@ -242,7 +331,9 @@ function createRentalCart() {
 		get hasDepositItems(): boolean {
 			return items.some((item) => item.requiresDeposit);
 		},
+		ensureDefaultBranch,
 		hydrate,
+		selectBranch,
 		addItem,
 		updateQuantity,
 		removeItem,

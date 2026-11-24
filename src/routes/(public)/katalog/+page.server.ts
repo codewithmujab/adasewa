@@ -1,4 +1,5 @@
 import { asc, desc, eq } from 'drizzle-orm';
+import { getAllBranchStocksByItem } from '#lib/server/branches';
 import {
 	rentalCategories,
 	rentalItems,
@@ -8,7 +9,7 @@ import type { CategorySummary, RentalItemWithCategory } from '#lib/utils/catalog
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
-	const [categories, items] = await Promise.all([
+	const [categories, items, branchStocksMap] = await Promise.all([
 		locals.db
 			.select()
 			.from(rentalCategories)
@@ -18,7 +19,8 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 			.select()
 			.from(rentalItems)
 			.where(eq(rentalItems.isPublished, true))
-			.orderBy(asc(rentalItems.sortOrder), desc(rentalItems.isFeatured), asc(rentalItems.name))
+			.orderBy(asc(rentalItems.sortOrder), desc(rentalItems.isFeatured), asc(rentalItems.name)),
+		getAllBranchStocksByItem(locals.db)
 	]);
 
 	const categoryById = new Map<string, RentalCategory>(categories.map((cat) => [cat.id, cat]));
@@ -29,7 +31,11 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		const category = categoryById.get(item.categoryId);
 		if (!category) continue;
 		countByCategory.set(category.id, (countByCategory.get(category.id) ?? 0) + 1);
-		catalogItems.push({ ...item, category });
+		catalogItems.push({
+			...item,
+			category,
+			branchStocks: branchStocksMap.get(item.id)
+		});
 	}
 
 	const categorySummaries: CategorySummary[] = categories.map((cat) => ({

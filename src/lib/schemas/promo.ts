@@ -25,11 +25,13 @@ const nullableIsoDateSchema = z
 
 export const validatePromoSchema = z.object({
 	code: z.string().trim().min(1, 'Masukkan kode promo terlebih dahulu.').max(40),
-	subtotalAmount: z.number().int().min(0)
+	subtotalAmount: z.number().int().min(0),
+	branchId: uuidSchema.nullable().optional()
 });
 
 export const createPromoSchema = z
 	.object({
+		branchId: uuidSchema.nullable().optional(),
 		code: promoCodeStringSchema,
 		title: z.string().trim().min(3, 'Judul promo minimal 3 karakter.').max(140),
 		description: z.string().trim().min(5, 'Deskripsi promo minimal 5 karakter.').max(1000),
@@ -62,6 +64,7 @@ export const createPromoSchema = z
 
 export const updatePromoSchema = z
 	.object({
+		branchId: uuidSchema.nullable().optional(),
 		code: promoCodeStringSchema.optional(),
 		title: z.string().trim().min(3).max(140).optional(),
 		description: z.string().trim().min(5).max(1000).optional(),

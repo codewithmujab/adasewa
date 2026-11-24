@@ -60,6 +60,12 @@ export function createAuth(db: Database, env: AuthEnv) {
 					required: false,
 					defaultValue: 'customer',
 					input: false
+				},
+				branchId: {
+					type: 'string',
+					required: false,
+					defaultValue: null,
+					input: false
 				}
 			}
 		},

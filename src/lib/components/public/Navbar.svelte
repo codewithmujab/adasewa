@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { CompanySettings } from '#lib/server/db/schema';
+	import type { Branch, CompanySettings } from '#lib/server/db/schema';
 	import { rentalCart } from '#lib/stores/cart.svelte';
 
 	interface CurrentUserSummary {
@@ -8,63 +8,92 @@
 		name: string;
 		email: string;
 		role: string;
+		branchId: string | null;
 		pointBalance: number;
 	}
 
 	interface Props {
 		settings: CompanySettings;
+		branches: Branch[];
 		isAuthenticated: boolean;
 		currentUser: CurrentUserSummary | null;
 	}
 
-	let { settings, isAuthenticated, currentUser }: Props = $props();
+	let { settings, branches, isAuthenticated, currentUser }: Props = $props();
 	let mobileOpen = $state(false);
 
 	const navItems = [
 		{ href: '/', label: 'Beranda' },
 		{ href: '/katalog', label: 'Katalog Barang' },
 		{ href: '/#cara-sewa', label: 'Cara Sewa' },
-		{ href: '/#area-layanan', label: 'Area Delivery' },
+		{ href: '/#area-layanan', label: 'Cabang' },
 		{ href: '/about', label: 'Tentang' }
 	] as const;
 
 	let pathname = $derived(page.url.pathname);
-	let isAdmin = $derived(currentUser?.role === 'admin');
+	let isStaff = $derived(currentUser?.role === 'admin' || currentUser?.role === 'branch_admin');
+	let activeBranchId = $derived(rentalCart.branchId ?? branches[0]?.id ?? '');
 
 	function isActive(href: string): boolean {
 		if (href.startsWith('/#')) return false;
 		if (href === '/') return pathname === '/';
 		return pathname === href || pathname.startsWith(`${href}/`);
 	}
+
+	function handleBranchChange(nextId: string): void {
+		const target = branches.find((b) => b.id === nextId);
+		if (target) {
+			rentalCart.selectBranch(target);
+		}
+	}
 </script>
 
 <header class="sticky top-0 z-40 border-b border-neutral-200/70 bg-white/85 backdrop-blur-xl">
-	<div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
-		<a
-			href="/"
-			class="flex items-center gap-2.5 text-sm font-bold tracking-tight text-neutral-950"
-			onclick={() => (mobileOpen = false)}
-		>
-			{#if settings.logoUrl}
-				<img
-					src={settings.logoUrl}
-					alt={settings.companyName}
-					class="h-8 w-8 rounded-xl object-cover"
-				/>
-			{:else}
-				<span
-					class="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-950 text-xs font-bold text-white"
-				>
-					AS
-				</span>
-			{/if}
-			<div class="flex flex-col leading-none">
-				<span>{settings.companyName}</span>
-				<span class="mt-0.5 text-[10px] font-medium text-neutral-400">Pusat Sewa Barang</span>
-			</div>
-		</a>
+	<div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-6">
+		<div class="flex items-center gap-3">
+			<a
+				href="/"
+				class="flex items-center gap-2.5 text-sm font-bold tracking-tight text-neutral-950"
+				onclick={() => (mobileOpen = false)}
+			>
+				{#if settings.logoUrl}
+					<img
+						src={settings.logoUrl}
+						alt={settings.companyName}
+						class="h-8 w-8 rounded-xl object-cover"
+					/>
+				{:else}
+					<span
+						class="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-950 text-xs font-bold text-white"
+					>
+						AS
+					</span>
+				{/if}
+				<div class="flex flex-col leading-none">
+					<span>{settings.companyName}</span>
+					<span class="mt-0.5 text-[10px] font-medium text-neutral-400">Pusat Sewa Barang</span>
+				</div>
+			</a>
 
-		<nav aria-label="Navigasi utama" class="hidden items-center gap-7 lg:flex">
+			<!-- Pemilih Cabang Cepat (Bogor / Depok) -->
+			{#if branches.length > 0}
+				<div class="hidden items-center sm:flex">
+					<label for="nav-branch-select" class="sr-only">Pilih cabang penyewaan</label>
+					<select
+						id="nav-branch-select"
+						value={activeBranchId}
+						onchange={(e) => handleBranchChange(e.currentTarget.value)}
+						class="rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1.5 text-xs font-semibold text-emerald-900 transition hover:border-emerald-400 focus:border-neutral-950 focus:outline-none"
+					>
+						{#each branches as br (br.id)}
+							<option value={br.id}>📍 {br.name}</option>
+						{/each}
+					</select>
+				</div>
+			{/if}
+		</div>
+
+		<nav aria-label="Navigasi utama" class="hidden items-center gap-6 lg:flex">
 			{#each navItems as item (item.href)}
 				<a
 					href={item.href}
@@ -78,7 +107,6 @@
 		</nav>
 
 		<div class="flex items-center gap-2">
-			<!-- Tombol Keranjang Sewa -->
 			<button
 				type="button"
 				onclick={() => rentalCart.openDrawer()}
@@ -127,7 +155,7 @@
 					>
 						Pesanan Saya
 					</a>
-					{#if isAdmin}
+					{#if isStaff}
 						<a
 							href="/admin"
 							class="rounded-full border border-neutral-200 px-3.5 py-2 text-xs font-semibold text-neutral-700 transition hover:border-neutral-950 hover:text-neutral-950"
@@ -167,6 +195,24 @@
 
 	{#if mobileOpen}
 		<div class="border-t border-neutral-100 bg-white px-6 py-5 lg:hidden">
+			{#if branches.length > 0}
+				<div class="mb-4">
+					<label for="mobile-branch-select" class="block text-[11px] font-semibold text-neutral-500 uppercase">
+						Cabang Penyewaan (Tarif &amp; Stok)
+					</label>
+					<select
+						id="mobile-branch-select"
+						value={activeBranchId}
+						onchange={(e) => handleBranchChange(e.currentTarget.value)}
+						class="mt-1.5 w-full rounded-xl border border-emerald-200 bg-emerald-50/70 px-3.5 py-2.5 text-sm font-semibold text-emerald-950"
+					>
+						{#each branches as br (br.id)}
+							<option value={br.id}>📍 {br.name} — {br.city}</option>
+						{/each}
+					</select>
+				</div>
+			{/if}
+
 			<nav class="flex flex-col gap-2">
 				{#each navItems as item (item.href)}
 					<a
@@ -195,13 +241,13 @@
 						>
 							Dashboard Pemesan
 						</a>
-						{#if isAdmin}
+						{#if isStaff}
 							<a
 								href="/admin"
 								onclick={() => (mobileOpen = false)}
 								class="rounded-full border border-neutral-200 px-4 py-2 text-center text-xs font-semibold text-neutral-700"
 							>
-								Dashboard Admin CMS
+								Dashboard Admin
 							</a>
 						{/if}
 					{:else}

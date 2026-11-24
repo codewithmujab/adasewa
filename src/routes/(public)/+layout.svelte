@@ -14,7 +14,13 @@
 	let { data, children }: Props = $props();
 
 	onMount(() => {
-		rentalCart.hydrate();
+		rentalCart.hydrate(data.branches);
+	});
+
+	$effect(() => {
+		if (data.branches.length > 0 && !rentalCart.branchId) {
+			rentalCart.ensureDefaultBranch(data.branches);
+		}
 	});
 </script>
 
@@ -22,6 +28,7 @@
 	<div class="print:hidden">
 		<Navbar
 			settings={data.settings}
+			branches={data.branches}
 			isAuthenticated={data.isAuthenticated}
 			currentUser={data.currentUser}
 		/>

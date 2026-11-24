@@ -18,7 +18,8 @@ export function isPromoCurrentlyValid(promo: PromoCode, now = new Date()): boole
 
 export async function getActivePublicPromos(
 	db: Database,
-	onlyLanding = false
+	onlyLanding = false,
+	branchId?: string | null
 ): Promise<PromoCode[]> {
 	const condition = onlyLanding
 		? and(eq(promoCodes.isActive, true), eq(promoCodes.showOnLanding, true))
@@ -29,16 +30,21 @@ export async function getActivePublicPromos(
 		.from(promoCodes)
 		.where(condition)
 		.orderBy(desc(promoCodes.createdAt))
-		.limit(20);
+		.limit(30);
 
 	const now = new Date();
-	return rows.filter((row) => isPromoCurrentlyValid(row, now));
+	return rows.filter((row) => {
+		if (!isPromoCurrentlyValid(row, now)) return false;
+		if (branchId && row.branchId && row.branchId !== branchId) return false;
+		return true;
+	});
 }
 
 export async function validatePromoForSubtotal(
 	db: Database,
 	rawCode: string,
-	subtotalAmount: number
+	subtotalAmount: number,
+	branchId?: string | null
 ): Promise<PromoValidationResult> {
 	const normalized = normalizePromoCode(rawCode);
 	if (!normalized) {
@@ -57,6 +63,13 @@ export async function validatePromoForSubtotal(
 
 	if (!promo.isActive) {
 		return { ok: false, message: `Promo "${promo.code}" sedang tidak aktif.` };
+	}
+
+	if (promo.branchId && branchId && promo.branchId !== branchId) {
+		return {
+			ok: false,
+			message: `Kode promo "${promo.code}" tidak berlaku untuk cabang yang sedang dipilih.`
+		};
 	}
 
 	const now = new Date();

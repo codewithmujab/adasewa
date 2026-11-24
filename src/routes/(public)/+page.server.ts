@@ -1,4 +1,5 @@
 import { asc, desc, eq } from 'drizzle-orm';
+import { getAllBranchStocksByItem } from '#lib/server/branches';
 import {
 	portfolios,
 	rentalCategories,
@@ -11,30 +12,32 @@ import type { CategorySummary, RentalItemWithCategory } from '#lib/utils/catalog
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const [categories, allPublishedItems, featuredPortfolios, activePromos] = await Promise.all([
-		locals.db
-			.select()
-			.from(rentalCategories)
-			.where(eq(rentalCategories.isPublished, true))
-			.orderBy(asc(rentalCategories.sortOrder), asc(rentalCategories.name)),
-		locals.db
-			.select()
-			.from(rentalItems)
-			.where(eq(rentalItems.isPublished, true))
-			.orderBy(desc(rentalItems.isFeatured), asc(rentalItems.sortOrder), asc(rentalItems.name)),
-		locals.db
-			.select()
-			.from(portfolios)
-			.where(eq(portfolios.isPublished, true))
-			.orderBy(
-				desc(portfolios.isFeatured),
-				asc(portfolios.sortOrder),
-				desc(portfolios.completedAt),
-				desc(portfolios.createdAt)
-			)
-			.limit(4),
-		getActivePublicPromos(locals.db, true)
-	]);
+	const [categories, allPublishedItems, featuredPortfolios, activePromos, branchStocksMap] =
+		await Promise.all([
+			locals.db
+				.select()
+				.from(rentalCategories)
+				.where(eq(rentalCategories.isPublished, true))
+				.orderBy(asc(rentalCategories.sortOrder), asc(rentalCategories.name)),
+			locals.db
+				.select()
+				.from(rentalItems)
+				.where(eq(rentalItems.isPublished, true))
+				.orderBy(desc(rentalItems.isFeatured), asc(rentalItems.sortOrder), asc(rentalItems.name)),
+			locals.db
+				.select()
+				.from(portfolios)
+				.where(eq(portfolios.isPublished, true))
+				.orderBy(
+					desc(portfolios.isFeatured),
+					asc(portfolios.sortOrder),
+					desc(portfolios.completedAt),
+					desc(portfolios.createdAt)
+				)
+				.limit(4),
+			getActivePublicPromos(locals.db, true),
+			getAllBranchStocksByItem(locals.db)
+		]);
 
 	const categoryById = new Map<string, RentalCategory>(categories.map((c) => [c.id, c]));
 
@@ -66,7 +69,11 @@ export const load: PageServerLoad = async ({ locals }) => {
 		const category = categoryById.get(item.categoryId);
 		if (!category) return;
 		showcaseIds.add(item.id);
-		showcaseItems.push({ ...item, category });
+		showcaseItems.push({
+			...item,
+			category,
+			branchStocks: branchStocksMap.get(item.id)
+		});
 	};
 
 	for (const item of allPublishedItems) {

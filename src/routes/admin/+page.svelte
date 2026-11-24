@@ -17,12 +17,20 @@
 <div class="space-y-8">
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
-			<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">Dashboard</p>
+			<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
+				{data.isSuperAdmin
+					? 'Dashboard Owner · Semua Cabang'
+					: `Dashboard ${data.assignedBranch?.name ?? 'Admin Cabang'}`}
+			</p>
 			<h1 class="mt-1 text-3xl font-semibold tracking-tight text-neutral-950">
 				Selamat datang, {data.user.name}
 			</h1>
 			<p class="mt-1.5 text-sm text-neutral-500">
-				Pantau transaksi masuk, pengembalian barang, katalog sewa, dan pengaturan {data.companyName}.
+				{#if data.isSuperAdmin}
+					Pantau transaksi semua cabang, harga &amp; stok per cabang, pengembalian barang, dan pengaturan {data.companyName}.
+				{:else}
+					Pantau transaksi sewa, pengembalian barang, harga &amp; stok khusus {data.assignedBranch?.name ?? 'cabang Anda'}.
+				{/if}
 			</p>
 		</div>
 
@@ -37,7 +45,7 @@
 				href="/admin/catalog"
 				class="rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-xs font-medium text-neutral-800 transition hover:border-neutral-300"
 			>
-				Kelola Katalog Barang
+				{data.isSuperAdmin ? 'Katalog & Harga Cabang' : 'Atur Harga & Stok Cabang'}
 			</a>
 		</div>
 	</header>
@@ -74,18 +82,59 @@
 		</div>
 
 		<div class="rounded-3xl border border-neutral-200/80 bg-white p-6">
-			<p class="text-xs font-medium text-neutral-400">Identitas Situs</p>
+			<p class="text-xs font-medium text-neutral-400">
+				{data.isSuperAdmin ? 'Cabang Aktif' : 'Info Kios Cabang'}
+			</p>
 			<p class="mt-2 truncate text-xl font-semibold tracking-tight text-neutral-950">
-				{data.companyName}
+				{data.isSuperAdmin
+					? `${data.branches.length} Cabang`
+					: (data.assignedBranch?.name ?? data.companyName)}
 			</p>
 			<a
-				href="/admin/settings"
+				href="/admin/branches"
 				class="mt-1 inline-block text-xs font-medium text-neutral-900 hover:underline"
 			>
-				Edit pengaturan →
+				Kelola cabang &amp; kios →
 			</a>
 		</div>
 	</div>
+
+	{#if data.isSuperAdmin && data.branchBreakdown.length > 0}
+		<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
+			<div class="flex items-center justify-between gap-2">
+				<div>
+					<h2 class="text-base font-semibold tracking-tight text-neutral-950">
+						Ringkasan Transaksi Per Cabang
+					</h2>
+					<p class="text-xs text-neutral-500">
+						Data transaksi terpisah per cabang · Pembayaran masuk ke rekening terpusat.
+					</p>
+				</div>
+				<a href="/admin/branches" class="text-xs font-medium text-neutral-500 hover:text-neutral-950">
+					Kelola cabang →
+				</a>
+			</div>
+			<div class="mt-4 grid gap-4 sm:grid-cols-2">
+				{#each data.branchBreakdown as br (br.id)}
+					<div class="flex items-center justify-between gap-4 rounded-2xl border border-neutral-200/70 bg-surface/60 p-4">
+						<div>
+							<div class="flex items-center gap-2">
+								<span class="rounded bg-neutral-950 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+									{br.code}
+								</span>
+								<p class="text-sm font-bold text-neutral-950">{br.name}</p>
+							</div>
+							<p class="mt-1 text-xs text-neutral-500">WA CS: {br.phone}</p>
+						</div>
+						<div class="text-right">
+							<p class="text-sm font-bold text-emerald-700">{formatRupiah(br.totalRevenue)}</p>
+							<p class="text-xs text-neutral-500">{br.orderCount} transaksi</p>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</section>
+	{/if}
 
 	<div class="grid gap-6 lg:grid-cols-2">
 		<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
@@ -108,6 +157,9 @@
 									{ord.orderCode} · {ord.customerName}
 								</p>
 								<p class="truncate text-xs text-neutral-400">
+									{#if ord.branchName}
+										<span class="font-medium text-emerald-700">{ord.branchName}</span> ·
+									{/if}
 									{formatDateId(ord.startDate)} – {formatDateId(ord.endDate)} ·
 									{formatRupiah(ord.totalAmount)}
 								</p>

@@ -72,9 +72,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	try {
+		const currentUser = locals.user!;
+		const resolvedBranchId =
+			currentUser.role === 'branch_admin' ? (currentUser.branchId ?? null) : (input.branchId ?? null);
+
 		const [created] = await locals.db
 			.insert(promoCodes)
 			.values({
+				branchId: resolvedBranchId,
 				code: input.code,
 				title: input.title,
 				description: input.description,
