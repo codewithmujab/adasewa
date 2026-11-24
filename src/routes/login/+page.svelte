@@ -85,7 +85,7 @@
 			<p class="mt-2 text-sm text-neutral-500">
 				{mode === 'signup'
 					? 'Daftar gratis untuk menyimpan transaksi sewa, status pembayaran, dan jadwal pengembalian barang.'
-					: 'Pantau pesanan sewa, jadwal pengembalian barang, atau masuk sebagai pengelola.'}
+					: 'Pantau pesanan sewa, Rekening Poin, dan jadwal pengembalian barang Anda.'}
 			</p>
 		</div>
 

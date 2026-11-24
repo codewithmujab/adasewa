@@ -146,7 +146,7 @@
 			class="mt-14 flex flex-col items-start justify-between gap-4 border-t border-neutral-200 pt-6 text-xs text-neutral-500 sm:flex-row sm:items-center"
 		>
 			<p>&copy; {currentYear} {settings.companyName}. Pusat Sewa Barang Terlengkap.</p>
-			<a href="/admin" class="transition hover:text-neutral-900">Portal Admin</a>
+			<p class="text-neutral-400">Cabang Bogor &amp; Cabang Depok</p>
 		</div>
 	</div>
 </footer>
