@@ -42,19 +42,11 @@
 		<div class="grid gap-10 md:grid-cols-12">
 			<div class="md:col-span-4">
 				<div class="flex items-center gap-2.5">
-					{#if settings.logoUrl}
-						<img
-							src={settings.logoUrl}
-							alt={settings.companyName}
-							class="h-8 w-8 rounded-xl object-cover"
-						/>
-					{:else}
-						<span
-							class="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-950 text-xs font-bold text-white"
-						>
-							AS
-						</span>
-					{/if}
+					<img
+						src={settings.logoUrl || '/logo-adasewa.jpg'}
+						alt={settings.companyName}
+						class="h-9 w-9 rounded-full object-cover ring-1 ring-neutral-200/80"
+					/>
 					<span class="text-sm font-bold tracking-tight text-neutral-950">
 						{settings.companyName}
 					</span>

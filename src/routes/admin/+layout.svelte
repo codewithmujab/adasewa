@@ -19,6 +19,7 @@
   >
     <AdminSidebar
       companyName={data.companyName}
+      logoUrl={data.logoUrl}
       userName={data.user.name}
       userEmail={data.user.email}
       isSuperAdmin={data.isSuperAdmin}
@@ -32,9 +33,14 @@
   >
     <a
       href="/admin"
-      class="text-sm font-semibold tracking-tight text-neutral-950"
+      class="flex items-center gap-2 text-sm font-semibold tracking-tight text-neutral-950"
     >
-      {data.companyName} · CMS
+      <img
+        src={data.logoUrl}
+        alt={data.companyName}
+        class="h-7 w-7 rounded-full object-cover ring-1 ring-neutral-200/80"
+      />
+      <span>{data.companyName}</span>
     </a>
     <button
       type="button"
@@ -69,6 +75,7 @@
       <div class="relative z-10 h-full w-72 max-w-[85vw] bg-white shadow-xl">
         <AdminSidebar
           companyName={data.companyName}
+          logoUrl={data.logoUrl}
           userName={data.user.name}
           userEmail={data.user.email}
           isSuperAdmin={data.isSuperAdmin}

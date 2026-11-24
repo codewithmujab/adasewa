@@ -70,13 +70,13 @@
 		<div class="mb-8 text-center">
 			<a
 				href="/"
-				class="inline-flex items-center gap-2.5 text-sm font-bold tracking-tight text-neutral-950"
+				class="inline-flex flex-col items-center gap-2.5 text-sm font-bold tracking-tight text-neutral-950"
 			>
-				<span
-					class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-950 text-xs font-bold text-white"
-				>
-					AS
-				</span>
+				<img
+					src={data.logoUrl}
+					alt={data.companyName}
+					class="h-14 w-14 rounded-full object-cover shadow-xs ring-1 ring-neutral-200"
+				/>
 				<span>{data.companyName}</span>
 			</a>
 			<h1 class="mt-6 text-2xl font-bold tracking-tight text-neutral-950">

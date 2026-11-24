@@ -56,19 +56,11 @@
 				class="flex items-center gap-2.5 text-sm font-bold tracking-tight text-neutral-950"
 				onclick={() => (mobileOpen = false)}
 			>
-				{#if settings.logoUrl}
-					<img
-						src={settings.logoUrl}
-						alt={settings.companyName}
-						class="h-8 w-8 rounded-xl object-cover"
-					/>
-				{:else}
-					<span
-						class="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-950 text-xs font-bold text-white"
-					>
-						AS
-					</span>
-				{/if}
+				<img
+					src={settings.logoUrl || '/logo-adasewa.jpg'}
+					alt={settings.companyName}
+					class="h-9 w-9 rounded-full object-cover ring-1 ring-neutral-200/80"
+				/>
 				<div class="flex flex-col leading-none">
 					<span>{settings.companyName}</span>
 					<span class="mt-0.5 text-[10px] font-medium text-neutral-400">Pusat Sewa Barang</span>

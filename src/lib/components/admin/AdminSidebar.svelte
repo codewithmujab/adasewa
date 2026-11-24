@@ -5,6 +5,7 @@
 
   interface Props {
     companyName: string;
+    logoUrl?: string | null;
     userName: string;
     userEmail: string;
     isSuperAdmin?: boolean;
@@ -14,6 +15,7 @@
 
   let {
     companyName,
+    logoUrl = "/logo-adasewa.jpg",
     userName,
     userEmail,
     isSuperAdmin = true,
@@ -77,11 +79,11 @@
       onclick={onNavigate}
       class="flex items-center gap-3 px-2 text-sm font-semibold tracking-tight text-neutral-950"
     >
-      <span
-        class="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-950 text-xs font-semibold text-white"
-      >
-        {companyName.slice(0, 2).toUpperCase()}
-      </span>
+      <img
+        src={logoUrl || "/logo-adasewa.jpg"}
+        alt={companyName}
+        class="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-neutral-200/80"
+      />
       <div class="min-w-0">
         <p class="truncate text-sm font-semibold text-neutral-950">
           {companyName}

@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ url, locals, setHeaders }) => {
 
 	return {
 		companyName: settings.companyName,
+		logoUrl: settings.logoUrl || '/logo-adasewa.jpg',
 		initialMode: rawMode === 'daftar' ? ('signup' as const) : ('signin' as const),
 		redirectTo: sanitizeRedirectTo(url.searchParams.get('redirectTo'))
 	};

@@ -33,19 +33,11 @@
 	<!-- Kop Invoice -->
 	<header class="flex items-start justify-between gap-6 border-b-2 border-neutral-950 pb-4">
 		<div class="flex items-start gap-3">
-			{#if settings.logoUrl}
-				<img
-					src={settings.logoUrl}
-					alt={settings.companyName}
-					class="h-10 w-10 rounded-lg object-cover"
-				/>
-			{:else}
-				<span
-					class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-950 text-xs font-bold text-white"
-				>
-					AS
-				</span>
-			{/if}
+			<img
+				src={settings.logoUrl || '/logo-adasewa.jpg'}
+				alt={settings.companyName}
+				class="h-11 w-11 shrink-0 rounded-full border border-neutral-200 object-cover"
+			/>
 			<div>
 				<p class="text-base font-bold tracking-tight text-neutral-950">
 					{settings.companyName}{#if order.branchName} — {order.branchName}{/if}

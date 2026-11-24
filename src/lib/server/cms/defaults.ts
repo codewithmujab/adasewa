@@ -3,6 +3,7 @@ import type { Database } from '#lib/server/db';
 import { companySettings, type CompanySettings } from '#lib/server/db/schema';
 
 export const DEFAULT_COMPANY_SETTINGS_ID = 'default';
+export const DEFAULT_LOGO_URL = '/logo-adasewa.jpg';
 
 export const ADASEWA_GOOGLE_FORM_URL =
 	'https://docs.google.com/forms/d/e/1FAIpQLSc7oXCUZVUNH3gUMrlcaI2MhvNbJiPGnSFFPGNWTLK6wdETRg/viewform';
@@ -24,7 +25,7 @@ export function getFallbackCompanySettings(): CompanySettings {
 		phone: '+62 857-7713-9748',
 		address: 'Layanan Delivery DKI Jakarta, Jawa Barat, Jawa Tengah & D.I. Yogyakarta · Tersedia Ambil di Kios',
 		logoKey: null,
-		logoUrl: null,
+		logoUrl: DEFAULT_LOGO_URL,
 		imageKey: null,
 		imageUrl: null,
 		socialLinks: {
@@ -46,5 +47,9 @@ export async function getCompanySettings(db: Database): Promise<CompanySettings>
 		.where(eq(companySettings.id, DEFAULT_COMPANY_SETTINGS_ID))
 		.limit(1);
 
-	return record ?? getFallbackCompanySettings();
+	if (!record) return getFallbackCompanySettings();
+	return {
+		...record,
+		logoUrl: record.logoUrl || DEFAULT_LOGO_URL
+	};
 }

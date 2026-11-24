@@ -49,6 +49,7 @@ export const load: LayoutServerLoad = async ({ locals, setHeaders, url }) => {
 		isSuperAdmin: role === 'admin',
 		assignedBranch,
 		branches: allBranches,
-		companyName: settings.companyName
+		companyName: settings.companyName,
+		logoUrl: settings.logoUrl || '/logo-adasewa.jpg'
 	};
 };
