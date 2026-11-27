@@ -57,16 +57,16 @@
 				<!-- Periode Tanggal Sewa -->
 				<div class="border-b border-white/10 bg-black/60 px-6 py-4">
 					<div class="flex items-center justify-between">
-						<span class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase">
+						<span class="text-xs font-bold tracking-wider text-neutral-400 uppercase">
 							Jadwal Pemakaian
 						</span>
-						<span class="rounded-full bg-white px-3 py-0.5 text-[11px] font-extrabold text-black">
+						<span class="rounded-full bg-white px-3 py-0.5 text-xs font-semibold text-black">
 							{rentalCart.durationDays} hari
 						</span>
 					</div>
 					<div class="mt-2.5 grid grid-cols-2 gap-2.5">
 						<div>
-							<label for="drawer-start" class="block text-[11px] font-medium text-neutral-400">
+							<label for="drawer-start" class="block text-sm font-medium text-neutral-400">
 								Mulai
 							</label>
 							<input
@@ -79,7 +79,7 @@
 							/>
 						</div>
 						<div>
-							<label for="drawer-end" class="block text-[11px] font-medium text-neutral-400">
+							<label for="drawer-end" class="block text-sm font-medium text-neutral-400">
 								Sampai
 							</label>
 							<input
@@ -100,7 +100,7 @@
 						<div class="rounded-[1.5rem] border border-white/15 bg-[#121216] p-4">
 							<div class="flex items-start justify-between gap-3">
 								<div class="min-w-0">
-									<p class="text-[11px] font-medium text-neutral-400">{item.categoryName}</p>
+									<p class="text-xs font-medium text-neutral-400">{item.categoryName}</p>
 									<a
 										href={`/katalog/${item.slug}`}
 										onclick={() => rentalCart.closeDrawer()}
@@ -110,7 +110,7 @@
 									</a>
 									{#if item.variant}
 										<span
-											class="mt-1.5 inline-block rounded-full border border-white/10 bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-medium text-neutral-200"
+											class="mt-1.5 inline-block rounded-full border border-white/10 bg-white/[0.08] px-2.5 py-0.5 text-xs font-medium text-neutral-200"
 										>
 											{item.variant}
 										</span>
@@ -150,10 +150,10 @@
 								</div>
 
 								<div class="text-right">
-									<p class="text-xs font-extrabold text-white">
+									<p class="text-xs font-semibold text-white">
 										{formatRupiah(item.pricePerDay * item.quantity * rentalCart.durationDays)}
 									</p>
-									<p class="text-[10px] text-neutral-400">
+									<p class="text-xs text-neutral-400">
 										{formatRupiah(item.pricePerDay)} × {item.quantity} × {rentalCart.durationDays}
 										hari
 									</p>
@@ -168,12 +168,12 @@
 					<div class="flex items-baseline justify-between">
 						<div>
 							<p class="text-xs font-medium text-neutral-400">Estimasi Total Sewa</p>
-							<p class="text-[11px] text-neutral-500">
+							<p class="text-xs text-neutral-500">
 								{rentalCart.distinctCount} jenis · {rentalCart.totalUnits} unit · {rentalCart.durationDays}
 								hari
 							</p>
 						</div>
-						<p class="text-xl font-extrabold text-white">
+						<p class="text-xl font-bold text-white">
 							{formatRupiah(rentalCart.estimatedSubtotal)}
 						</p>
 					</div>
@@ -211,7 +211,7 @@
 						</svg>
 					</div>
 					<p class="mt-5 text-base font-bold text-white">Keranjang sewa masih kosong</p>
-					<p class="mt-1.5 text-xs leading-relaxed text-neutral-400">
+					<p class="mt-1.5 text-sm leading-relaxed text-neutral-400">
 						Pilih satu atau beberapa barang dari katalog untuk melihat estimasi total biaya sewa
 						Anda.
 					</p>

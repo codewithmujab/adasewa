@@ -43,14 +43,14 @@
 	<div class="mx-auto max-w-4xl px-6">
 		<a
 			href="/portfolios"
-			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-xs font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
+			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-sm font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
 		>
 			← Kembali ke Dokumentasi
 		</a>
 
 		<div class="mt-8 rounded-[2.5rem] border border-white/15 bg-[#0c0c0f] p-7 sm:p-12">
 			<div class="flex flex-wrap items-center gap-2.5">
-				<span class="rounded-full bg-white px-3.5 py-1 text-xs font-extrabold text-black">
+				<span class="rounded-full bg-white px-3.5 py-1 text-xs font-semibold text-black">
 					{data.portfolio.category}
 				</span>
 				{#if data.relatedService}
@@ -63,7 +63,7 @@
 				{/if}
 			</div>
 
-			<h1 class="mt-5 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+			<h1 class="mt-5 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 				{data.portfolio.title}
 			</h1>
 			<p class="mt-5 text-lg leading-relaxed text-neutral-300">
@@ -120,7 +120,7 @@
 
 			{#if data.portfolio.gallery.length > 0}
 				<div class="mt-14 border-t border-white/10 pt-10">
-					<h2 class="text-xl font-extrabold tracking-tight text-white">Galeri Proyek</h2>
+					<h2 class="text-xl font-bold tracking-tight text-white">Galeri Proyek</h2>
 					<div class="mt-6 grid gap-4 sm:grid-cols-2">
 						{#each data.portfolio.gallery as item (item.imageKey)}
 							<button
@@ -170,7 +170,7 @@
 				<button
 					type="button"
 					onclick={() => (activeLightbox = null)}
-					class="rounded-full bg-white px-5 py-1.5 text-xs font-extrabold text-black hover:bg-neutral-200"
+					class="rounded-full bg-white px-5 py-1.5 text-xs font-semibold text-black hover:bg-neutral-200"
 				>
 					Tutup
 				</button>

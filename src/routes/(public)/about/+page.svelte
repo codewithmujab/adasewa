@@ -25,11 +25,11 @@
 	<div class="mx-auto max-w-5xl px-6">
 		<div class="rounded-[2.5rem] border border-white/15 bg-[#0b0b0e] p-8 sm:p-14">
 			<span
-				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 			>
 				Tentang Perusahaan
 			</span>
-			<h1 class="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-6xl sm:leading-[1.06]">
+			<h1 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 				{data.settings.companyName}
 			</h1>
 			<p class="mt-5 max-w-3xl text-lg leading-relaxed text-neutral-300 sm:text-xl">
@@ -62,7 +62,7 @@
 				{#if data.settings.vision}
 					<div class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-8 sm:p-10">
 						<span
-							class="inline-flex rounded-full bg-white px-3.5 py-1 text-[11px] font-extrabold tracking-widest text-black uppercase"
+							class="inline-flex rounded-full bg-white px-3.5 py-1 text-xs font-semibold tracking-wide text-black uppercase"
 						>
 							Visi
 						</span>
@@ -75,7 +75,7 @@
 				{#if data.settings.mission}
 					<div class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-8 sm:p-10">
 						<span
-							class="inline-flex rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-[11px] font-extrabold tracking-widest text-white uppercase"
+							class="inline-flex rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-semibold tracking-wide text-white uppercase"
 						>
 							Misi
 						</span>
@@ -93,11 +93,11 @@
 	<section class="border-t border-white/10 bg-black py-16 sm:py-20">
 		<div class="mx-auto max-w-5xl px-6">
 			<span
-				class="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/15 px-3.5 py-1 text-[11px] font-bold tracking-widest text-emerald-300 uppercase"
+				class="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/15 px-3.5 py-1 text-xs font-bold tracking-wide text-emerald-300 uppercase"
 			>
 				Lokasi Cabang Resmi
 			</span>
-			<h2 class="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+			<h2 class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 				Kios Penyewaan {data.settings.companyName}
 			</h2>
 
@@ -110,7 +110,7 @@
 							<div class="flex items-center justify-between gap-2">
 								<h3 class="text-lg font-bold text-white">{branch.name}</h3>
 								<span
-									class="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-white"
+									class="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 font-mono text-xs font-bold text-white"
 								>
 									{branch.code}
 								</span>
@@ -131,7 +131,7 @@
 								)}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-xs font-bold text-black transition hover:bg-neutral-200"
+								class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-bold text-black transition hover:bg-neutral-200"
 							>
 								Chat WA {branch.name} →
 							</a>
@@ -149,7 +149,7 @@
 			class="grid gap-8 rounded-[2.5rem] border border-white/15 bg-[#0c0c0f] p-8 sm:p-10 md:grid-cols-3"
 		>
 			<div>
-				<p class="text-xs font-bold tracking-widest text-neutral-400 uppercase">Email</p>
+				<p class="text-xs font-bold tracking-wide text-neutral-400 uppercase">Email</p>
 				<a
 					href={`mailto:${data.settings.email}`}
 					class="mt-2 block text-base font-bold text-white hover:underline"
@@ -160,7 +160,7 @@
 
 			{#if data.settings.phone}
 				<div>
-					<p class="text-xs font-bold tracking-widest text-neutral-400 uppercase">Telepon Pusat</p>
+					<p class="text-xs font-bold tracking-wide text-neutral-400 uppercase">Telepon Pusat</p>
 					<a
 						href={`tel:${data.settings.phone}`}
 						class="mt-2 block text-base font-bold text-white hover:underline"
@@ -172,7 +172,7 @@
 
 			{#if data.settings.address}
 				<div>
-					<p class="text-xs font-bold tracking-widest text-neutral-400 uppercase">Jangkauan</p>
+					<p class="text-xs font-bold tracking-wide text-neutral-400 uppercase">Jangkauan</p>
 					<p class="mt-2 text-sm leading-relaxed text-neutral-300">
 						{data.settings.address}
 					</p>

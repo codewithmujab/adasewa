@@ -190,7 +190,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="pf-title" class="block text-xs font-semibold text-neutral-300">
+			<label for="pf-title" class="block text-sm font-semibold text-neutral-300">
 				Judul Proyek *
 			</label>
 			<input
@@ -208,7 +208,7 @@
 		</div>
 
 		<div>
-			<label for="pf-slug" class="block text-xs font-semibold text-neutral-300">Slug URL</label>
+			<label for="pf-slug" class="block text-sm font-semibold text-neutral-300">Slug URL</label>
 			<input
 				id="pf-slug"
 				type="text"
@@ -228,7 +228,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="pf-client" class="block text-xs font-semibold text-neutral-300">
+			<label for="pf-client" class="block text-sm font-semibold text-neutral-300">
 				Nama Klien *
 			</label>
 			<input
@@ -245,7 +245,7 @@
 		</div>
 
 		<div>
-			<label for="pf-category" class="block text-xs font-semibold text-neutral-300">
+			<label for="pf-category" class="block text-sm font-semibold text-neutral-300">
 				Kategori *
 			</label>
 			<input
@@ -264,7 +264,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-3">
 		<div>
-			<label for="pf-service" class="block text-xs font-semibold text-neutral-300">
+			<label for="pf-service" class="block text-sm font-semibold text-neutral-300">
 				Layanan Terkait
 			</label>
 			<select
@@ -280,7 +280,7 @@
 		</div>
 
 		<div>
-			<label for="pf-date" class="block text-xs font-semibold text-neutral-300">
+			<label for="pf-date" class="block text-sm font-semibold text-neutral-300">
 				Tanggal Selesai
 			</label>
 			<input
@@ -292,7 +292,7 @@
 		</div>
 
 		<div>
-			<label for="pf-order" class="block text-xs font-semibold text-neutral-300">Urutan</label>
+			<label for="pf-order" class="block text-sm font-semibold text-neutral-300">Urutan</label>
 			<input
 				id="pf-order"
 				type="number"
@@ -305,7 +305,7 @@
 	</div>
 
 	<div>
-		<label for="pf-url" class="block text-xs font-semibold text-neutral-300">
+		<label for="pf-url" class="block text-sm font-semibold text-neutral-300">
 			URL Proyek Live (Opsional)
 		</label>
 		<input
@@ -321,7 +321,7 @@
 	</div>
 
 	<div>
-		<label for="pf-summary" class="block text-xs font-semibold text-neutral-300">Ringkasan *</label>
+		<label for="pf-summary" class="block text-sm font-semibold text-neutral-300">Ringkasan *</label>
 		<textarea
 			id="pf-summary"
 			rows="2"
@@ -336,7 +336,7 @@
 	</div>
 
 	<div>
-		<label for="pf-content" class="block text-xs font-semibold text-neutral-300">
+		<label for="pf-content" class="block text-sm font-semibold text-neutral-300">
 			Studi Kasus Lengkap *
 		</label>
 		<textarea
@@ -368,7 +368,7 @@
 		<div class="flex items-center justify-between">
 			<div>
 				<p class="text-xs font-bold text-white">Galeri Proyek ({gallery.length})</p>
-				<p class="text-[11px] text-neutral-400">
+				<p class="text-xs text-neutral-400">
 					Tambahkan tangkapan layar atau dokumentasi ke R2.
 				</p>
 			</div>
@@ -442,7 +442,7 @@
 		<button
 			type="submit"
 			disabled={submitting}
-			class="rounded-full bg-white px-6 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200 disabled:opacity-60"
+			class="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:opacity-60"
 		>
 			{submitting ? 'Menyimpan...' : portfolio ? 'Simpan Perubahan' : 'Tambah Portofolio'}
 		</button>

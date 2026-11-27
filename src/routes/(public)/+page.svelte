@@ -151,15 +151,15 @@
 				<div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 					<div>
 						<span
-							class="inline-flex rounded-full border border-rose-400/30 bg-rose-500/15 px-3.5 py-1 text-[11px] font-bold tracking-widest text-rose-300 uppercase"
+							class="inline-flex rounded-full border border-rose-400/30 bg-rose-500/15 px-3.5 py-1 text-xs font-bold tracking-wide text-rose-300 uppercase"
 						>
 							Promo &amp; Voucher Aktif
 						</span>
-						<h2 class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+						<h2 class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 							Hemat lebih banyak dengan kode promo sewa.
 						</h2>
 					</div>
-					<p class="max-w-sm text-xs leading-relaxed text-neutral-400">
+					<p class="max-w-sm text-sm leading-relaxed text-neutral-400">
 						Salin kode promo di bawah dan masukkan di halaman Checkout — bisa digabung dengan Poin
 						Sewa!
 					</p>
@@ -173,13 +173,13 @@
 							<div>
 								<div class="flex items-center justify-between gap-2">
 									<span
-										class="inline-flex rounded-full bg-white px-3.5 py-1 text-[11px] font-extrabold text-black"
+										class="inline-flex rounded-full bg-white px-3.5 py-1 text-xs font-semibold text-black"
 									>
 										{formatPromoBadge(promo)}
 									</span>
 									{#if promo.usageLimit !== null}
 										<span
-											class="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-neutral-300"
+											class="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-xs font-medium text-neutral-300"
 										>
 											Sisa {Math.max(0, promo.usageLimit - promo.usedCount)} kuota
 										</span>
@@ -187,8 +187,8 @@
 								</div>
 
 								<h3 class="mt-4 text-lg font-bold text-white">{promo.title}</h3>
-								<p class="mt-1.5 text-xs leading-relaxed text-neutral-400">{promo.description}</p>
-								<p class="mt-3 text-[11px] font-semibold text-neutral-200">
+								<p class="mt-1.5 text-sm leading-relaxed text-neutral-400">{promo.description}</p>
+								<p class="mt-3 text-sm font-medium text-neutral-200">
 									{formatPromoDetail(promo)}
 								</p>
 							</div>
@@ -202,7 +202,7 @@
 								<button
 									type="button"
 									onclick={() => copyPromoCode(promo.code)}
-									class="rounded-full bg-white px-4 py-1.5 text-[11px] font-bold text-black transition hover:bg-neutral-200"
+									class="rounded-full bg-white px-4 py-1.5 text-xs font-bold text-black transition hover:bg-neutral-200"
 								>
 									{copiedPromoCode === promo.code ? '✓ Tersalin' : 'Salin Kode'}
 								</button>
@@ -220,11 +220,11 @@
 			<div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
 				<div class="max-w-2xl">
 					<span
-						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 					>
 						Kategori Lengkap
 					</span>
-					<h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+					<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						Satu tempat untuk semua kebutuhan sewa Anda.
 					</h2>
 					<p class="mt-3 text-sm leading-relaxed text-neutral-400 sm:text-base">
@@ -260,7 +260,7 @@
 								<CategoryIcon icon={category.icon} class="h-5 w-5" />
 							</span>
 							<span
-								class="rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] font-bold text-white"
+								class="rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-xs font-bold text-white"
 							>
 								{category.itemCount} item
 							</span>
@@ -270,13 +270,13 @@
 							{category.name}
 						</h3>
 
-						<p class="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-neutral-400">
+						<p class="mt-1.5 line-clamp-2 flex-1 text-sm leading-relaxed text-neutral-400">
 							{category.description}
 						</p>
 
 						{#if category.previewItems.length > 0}
 							<div class="mt-4 border-t border-white/10 pt-3">
-								<p class="truncate text-[11px] font-medium text-neutral-500">
+								<p class="truncate text-xs font-medium text-neutral-500">
 									{category.previewItems.slice(0, 2).join(' · ')}
 								</p>
 							</div>
@@ -293,11 +293,11 @@
 			<div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
 				<div class="max-w-2xl">
 					<span
-						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 					>
 						Detail Katalog Unit {activeBranch ? `· ${activeBranch.name}` : ''}
 					</span>
-					<h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+					<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						Cek spesifikasi &amp; kelengkapan sebelum menyewa.
 					</h2>
 				</div>
@@ -340,7 +340,7 @@
 					>
 						<span>{cat.name}</span>
 						<span
-							class="text-[10px] {activeTab === cat.slug ? 'text-neutral-600' : 'text-neutral-500'}"
+							class="text-xs {activeTab === cat.slug ? 'text-neutral-600' : 'text-neutral-500'}"
 						>
 							{cat.itemCount}
 						</span>
@@ -381,11 +381,11 @@
 		<div class="mx-auto max-w-6xl px-6">
 			<div class="max-w-2xl">
 				<span
-					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 				>
 					Alur Pemesanan
 				</span>
-				<h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+				<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 					Cara sewa barang di Adasewa.id sangat mudah.
 				</h2>
 				<p class="mt-3 text-sm leading-relaxed text-neutral-400 sm:text-base">
@@ -399,7 +399,7 @@
 						class="flex flex-col rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-7 transition hover:border-white/35"
 					>
 						<span
-							class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white font-mono text-sm font-extrabold text-black"
+							class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white font-mono text-sm font-semibold text-black"
 						>
 							{step.num}
 						</span>
@@ -424,11 +424,11 @@
 					class="rounded-[2.5rem] border border-white/15 bg-[#0b0b0e] p-7 sm:p-10 lg:col-span-7"
 				>
 					<span
-						class="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/15 px-3.5 py-1 text-[11px] font-bold tracking-widest text-emerald-300 uppercase"
+						class="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/15 px-3.5 py-1 text-xs font-bold tracking-wide text-emerald-300 uppercase"
 					>
 						Lokasi Cabang Kios &amp; Area Layanan
 					</span>
-					<h2 class="mt-4 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+					<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						Cabang Penyewaan Resmi Adasewa.id
 					</h2>
 					<p class="mt-3 text-sm leading-relaxed text-neutral-400">
@@ -458,22 +458,22 @@
 												<p class="text-sm font-bold text-white">{branch.name}</p>
 											</div>
 											<span
-												class="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-white"
+												class="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 font-mono text-xs font-bold text-white"
 											>
 												{branch.code}
 											</span>
 										</div>
-										<p class="mt-2.5 text-xs leading-relaxed text-neutral-300">
+										<p class="mt-2.5 text-sm leading-relaxed text-neutral-300">
 											📍 {branch.address}
 										</p>
-										<p class="mt-2 text-[11px] text-neutral-400">
+										<p class="mt-2 text-sm text-neutral-400">
 											🕒 {branch.operatingHours}
 										</p>
-										<p class="mt-1 text-[11px] text-neutral-400">
+										<p class="mt-1 text-sm text-neutral-400">
 											🚚 Ongkir dasar:
 											<strong class="text-white">{formatRupiah(branch.deliveryFeeDefault)}</strong>
 										</p>
-										<p class="mt-1 text-[11px] text-neutral-400">
+										<p class="mt-1 text-sm text-neutral-400">
 											📞 WA CS: <strong class="text-white">{branch.phone}</strong>
 										</p>
 									</div>
@@ -482,7 +482,7 @@
 										<button
 											type="button"
 											onclick={() => rentalCart.selectBranch(branch)}
-											class="flex-1 rounded-full px-3.5 py-2 text-[11px] font-bold transition {isSelected
+											class="flex-1 rounded-full px-3.5 py-2 text-xs font-bold transition {isSelected
 												? 'bg-emerald-400 text-black'
 												: 'bg-white text-black hover:bg-neutral-200'}"
 										>
@@ -496,7 +496,7 @@
 											)}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="rounded-full border border-white/20 bg-white/[0.06] px-3.5 py-2 text-[11px] font-semibold text-white transition hover:border-white hover:bg-white/15"
+											class="rounded-full border border-white/20 bg-white/[0.06] px-3.5 py-2 text-xs font-semibold text-white transition hover:border-white hover:bg-white/15"
 										>
 											WA Cabang
 										</a>
@@ -511,8 +511,8 @@
 							<div
 								class="rounded-[1.25rem] border border-white/10 bg-black/70 px-4 py-3"
 							>
-								<p class="text-xs font-bold text-white">{area.region}</p>
-								<p class="mt-0.5 text-[11px] leading-relaxed text-neutral-400">{area.areas}</p>
+								<p class="text-sm font-semibold text-white">{area.region}</p>
+								<p class="mt-0.5 text-sm leading-relaxed text-neutral-400">{area.areas}</p>
 							</div>
 						{/each}
 					</div>
@@ -524,18 +524,18 @@
 				>
 					<div>
 						<span
-							class="inline-flex rounded-full border border-white/15 bg-white/[0.08] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-200 uppercase"
+							class="inline-flex rounded-full border border-white/15 bg-white/[0.08] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-200 uppercase"
 						>
 							Ketentuan &amp; Jaminan Kualitas
 						</span>
-						<h2 class="mt-4 text-2xl font-extrabold tracking-tight sm:text-3xl">
+						<h2 class="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">
 							Hal penting sebelum melakukan pemesanan.
 						</h2>
 
 						<ul class="mt-7 space-y-4 text-sm text-neutral-300">
 							<li class="flex gap-3">
 								<span
-									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-extrabold text-black"
+									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-black"
 								>
 									✓
 								</span>
@@ -547,7 +547,7 @@
 							</li>
 							<li class="flex gap-3">
 								<span
-									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-extrabold text-black"
+									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-black"
 								>
 									✓
 								</span>
@@ -558,7 +558,7 @@
 							</li>
 							<li class="flex gap-3">
 								<span
-									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-extrabold text-black"
+									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-black"
 								>
 									✓
 								</span>
@@ -570,7 +570,7 @@
 							</li>
 							<li class="flex gap-3">
 								<span
-									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-extrabold text-black"
+									class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-black"
 								>
 									✓
 								</span>
@@ -585,13 +585,13 @@
 					<div class="mt-8 flex flex-wrap gap-2.5 border-t border-white/15 pt-6">
 						<a
 							href="/keranjang"
-							class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-5 py-3.5 text-xs font-bold text-black transition hover:bg-neutral-200"
+							class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-5 py-3.5 text-sm font-bold text-black transition hover:bg-neutral-200"
 						>
 							Buka Keranjang Sewa →
 						</a>
 						<a
 							href="/akun"
-							class="inline-flex flex-1 items-center justify-center rounded-full border border-white/25 px-5 py-3.5 text-xs font-bold text-white transition hover:border-white hover:bg-white/10"
+							class="inline-flex flex-1 items-center justify-center rounded-full border border-white/25 px-5 py-3.5 text-sm font-bold text-white transition hover:border-white hover:bg-white/10"
 						>
 							Dashboard Pemesan
 						</a>
@@ -608,11 +608,11 @@
 				<div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
 					<div class="max-w-2xl">
 						<span
-							class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+							class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 						>
 							Contoh Paket &amp; Dokumentasi
 						</span>
-						<h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+						<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 							Inspirasi penggunaan unit untuk berbagai skala acara.
 						</h2>
 					</div>
@@ -638,11 +638,11 @@
 		<div class="mx-auto max-w-4xl px-6">
 			<div class="text-center">
 				<span
-					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 				>
 					FAQ
 				</span>
-				<h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+				<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 					Pertanyaan yang sering ditanyakan penyewa.
 				</h2>
 			</div>
@@ -693,11 +693,11 @@
 				<div class="grid items-center gap-10 lg:grid-cols-12">
 					<div class="lg:col-span-7">
 						<span
-							class="inline-flex rounded-full border border-emerald-400/35 bg-emerald-400/15 px-3.5 py-1 text-[11px] font-bold tracking-widest text-emerald-300 uppercase"
+							class="inline-flex rounded-full border border-emerald-400/35 bg-emerald-400/15 px-3.5 py-1 text-xs font-bold tracking-wide text-emerald-300 uppercase"
 						>
 							Siap Sewa Sekarang?
 						</span>
-						<h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+						<h2 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 							Temukan barang yang Anda butuhkan dan kunci jadwalnya hari ini.
 						</h2>
 						<p class="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-300 sm:text-base">
@@ -722,7 +722,7 @@
 							href={whatsappUrl}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center justify-center rounded-full bg-emerald-400 px-7 py-4 text-sm font-extrabold text-black transition hover:bg-emerald-300"
+							class="inline-flex items-center justify-center rounded-full bg-emerald-400 px-7 py-4 text-sm font-semibold text-black transition hover:bg-emerald-300"
 						>
 							WhatsApp CS
 						</a>

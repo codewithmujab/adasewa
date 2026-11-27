@@ -120,11 +120,11 @@
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
 			<span
-				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 			>
 				Loyalitas Penyewa
 			</span>
-			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white">Rekening Poin Sewa</h1>
+			<h1 class="mt-3 text-2xl font-bold tracking-tight text-white">Rekening Poin Sewa</h1>
 			<p class="mt-1 text-sm text-neutral-400">
 				Aturan aktif:
 				<strong class="text-white">+1 Poin tiap {formatRupiah(POINT_EARN_UNIT_IDR)}</strong> saat
@@ -136,8 +136,8 @@
 
 	<div class="grid gap-4 sm:grid-cols-3">
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-			<p class="text-xs font-semibold text-neutral-400">Total Poin Beredar</p>
-			<p class="mt-2 text-3xl font-extrabold text-white">
+			<p class="text-sm font-medium text-neutral-400">Total Poin Beredar</p>
+			<p class="mt-2 text-2xl font-bold text-white">
 				{totalPointsCirculating.toLocaleString('id-ID')}
 				<span class="text-sm font-bold text-amber-300">Poin</span>
 			</p>
@@ -147,14 +147,14 @@
 		</div>
 
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-			<p class="text-xs font-semibold text-neutral-400">Rekening Poin Terdaftar</p>
-			<p class="mt-2 text-3xl font-extrabold text-white">{accounts.length}</p>
+			<p class="text-sm font-medium text-neutral-400">Rekening Poin Terdaftar</p>
+			<p class="mt-2 text-2xl font-bold text-white">{accounts.length}</p>
 			<p class="mt-1 text-xs text-neutral-400">Akun penyewa &amp; admin</p>
 		</div>
 
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-			<p class="text-xs font-semibold text-neutral-400">Total Mutasi Tercatat</p>
-			<p class="mt-2 text-3xl font-extrabold text-white">{transactions.length}</p>
+			<p class="text-sm font-medium text-neutral-400">Total Mutasi Tercatat</p>
+			<p class="mt-2 text-2xl font-bold text-white">{transactions.length}</p>
 			<p class="mt-1 text-xs text-neutral-400">Masuk, tukar &amp; penyesuaian</p>
 		</div>
 	</div>
@@ -162,7 +162,7 @@
 	<!-- Daftar Rekening Poin Penyewa -->
 	<section class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6">
 		<div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-			<h2 class="text-base font-extrabold text-white">Saldo Rekening Poin Penyewa</h2>
+			<h2 class="text-base font-bold text-white">Saldo Rekening Poin Penyewa</h2>
 			<input
 				type="search"
 				bind:value={search}
@@ -189,7 +189,7 @@
 									{acc.name}
 									{#if acc.role === 'admin' || acc.role === 'branch_admin'}
 										<span
-											class="ml-1.5 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-[10px] font-bold text-neutral-200"
+											class="ml-1.5 rounded-full border border-white/15 bg-white/10 px-2 py-0.5 text-xs font-bold text-neutral-200"
 										>
 											{acc.role === 'admin' ? 'Owner' : 'Admin Cabang'}
 										</span>
@@ -201,10 +201,10 @@
 								{formatPointAccountNumber(acc.id)}
 							</td>
 							<td class="px-3 py-3.5">
-								<p class="text-sm font-extrabold text-amber-300">
+								<p class="text-sm font-semibold text-amber-300">
 									★ {acc.pointBalance.toLocaleString('id-ID')} Poin
 								</p>
-								<p class="text-[11px] text-neutral-400">
+								<p class="text-xs text-neutral-400">
 									≈ {formatRupiah(calculatePointDiscountIdr(acc.pointBalance))}
 								</p>
 							</td>
@@ -212,7 +212,7 @@
 								<button
 									type="button"
 									onclick={() => openAdjust(acc)}
-									class="rounded-full bg-white px-4 py-1.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+									class="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black transition hover:bg-neutral-200"
 								>
 									Sesuaikan Poin
 								</button>
@@ -226,11 +226,11 @@
 
 	<!-- Riwayat Mutasi Poin Global -->
 	<section class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6">
-		<h2 class="text-base font-extrabold text-white">Mutasi Poin Terbaru</h2>
+		<h2 class="text-base font-bold text-white">Mutasi Poin Terbaru</h2>
 		{#if transactions.length > 0}
 			<div class="mt-4 overflow-x-auto">
-				<table class="w-full text-left text-xs">
-					<thead class="border-b border-white/10 text-[11px] text-neutral-400">
+				<table class="w-full text-left text-sm">
+					<thead class="border-b border-white/10 text-xs text-neutral-400">
 						<tr>
 							<th class="py-2.5 pr-3 font-semibold">Waktu</th>
 							<th class="px-2 py-2.5 font-semibold">Penyewa</th>
@@ -252,14 +252,14 @@
 								</td>
 								<td class="px-2 py-3">
 									<span
-										class="inline-block rounded-full border px-2 py-0.5 text-[10px] font-bold {meta.badgeClass}"
+										class="inline-block rounded-full border px-2 py-0.5 text-xs font-bold {meta.badgeClass}"
 									>
 										{meta.label}
 									</span>
 								</td>
 								<td class="px-2 py-3 text-neutral-300">{tx.description}</td>
 								<td
-									class="px-2 py-3 text-right font-mono font-extrabold {tx.points >= 0
+									class="px-2 py-3 text-right font-mono font-semibold {tx.points >= 0
 										? 'text-emerald-400'
 										: 'text-amber-300'}"
 								>
@@ -315,7 +315,7 @@
 			</div>
 
 			<div>
-				<label for="adj-pts" class="block text-xs font-semibold text-neutral-300">Jumlah Poin *</label>
+				<label for="adj-pts" class="block text-sm font-semibold text-neutral-300">Jumlah Poin *</label>
 				<input
 					id="adj-pts"
 					type="number"
@@ -328,7 +328,7 @@
 			</div>
 
 			<div>
-				<label for="adj-desc" class="block text-xs font-semibold text-neutral-300">
+				<label for="adj-desc" class="block text-sm font-semibold text-neutral-300">
 					Alasan / Keterangan *
 				</label>
 				<input
@@ -353,7 +353,7 @@
 				<button
 					type="submit"
 					disabled={busy}
-					class="rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
+					class="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-neutral-200 disabled:opacity-60"
 				>
 					{busy ? 'Menyimpan...' : 'Simpan Mutasi Poin'}
 				</button>

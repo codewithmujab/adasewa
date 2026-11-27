@@ -127,11 +127,11 @@
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
 			<span
-				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 			>
 				CMS Konten
 			</span>
-			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white">Dokumentasi Acara</h1>
+			<h1 class="mt-3 text-2xl font-bold tracking-tight text-white">Dokumentasi Acara</h1>
 			<p class="mt-1 text-sm text-neutral-400">
 				Kelola studi kasus acara, galeri media Cloudflare R2, dan relasi layanan.
 			</p>
@@ -140,7 +140,7 @@
 		<button
 			type="button"
 			onclick={openCreate}
-			class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200"
+			class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 		>
 			+ Tambah Dokumentasi
 		</button>
@@ -200,7 +200,7 @@
 											/>
 										{:else}
 											<div
-												class="flex h-11 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black text-[10px] font-bold text-neutral-500 uppercase"
+												class="flex h-11 w-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black text-xs font-bold text-neutral-500 uppercase"
 											>
 												CASE
 											</div>
@@ -210,7 +210,7 @@
 												<p class="truncate font-bold text-white">{portfolio.title}</p>
 												{#if portfolio.isFeatured}
 													<span
-														class="rounded-full bg-white px-2 py-0.5 text-[10px] font-extrabold text-black"
+														class="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-black"
 													>
 														Unggulan
 													</span>
@@ -268,7 +268,7 @@
 			<button
 				type="button"
 				onclick={openCreate}
-				class="mt-4 rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black"
+				class="mt-4 rounded-full bg-white px-5 py-2 text-sm font-semibold text-black"
 			>
 				Tambah Dokumentasi Pertama
 			</button>
@@ -321,7 +321,7 @@
 				type="button"
 				disabled={busyId === deletingPortfolio.id}
 				onclick={confirmDelete}
-				class="rounded-full bg-red-500 px-5 py-2 text-xs font-extrabold text-white hover:bg-red-600 disabled:opacity-60"
+				class="rounded-full bg-red-500 px-5 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60"
 			>
 				{busyId === deletingPortfolio.id ? 'Menghapus...' : 'Ya, Hapus'}
 			</button>

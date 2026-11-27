@@ -47,11 +47,11 @@
 			<div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
 				<div class="max-w-2xl">
 					<span
-						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 					>
 						Dokumentasi &amp; Portofolio
 					</span>
-					<h1 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+					<h1 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						Karya nyata dengan dampak terukur.
 					</h1>
 				</div>

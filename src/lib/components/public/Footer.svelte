@@ -74,7 +74,7 @@
 				<div class="mt-5 flex flex-wrap gap-1.5">
 					{#each ['DKI Jakarta', 'Jawa Barat', 'Jawa Tengah', 'D.I. Yogyakarta'] as area (area)}
 						<span
-							class="rounded-full border px-3 py-1 text-[11px] font-semibold {dark
+							class="rounded-full border px-3 py-1 text-xs font-medium {dark
 								? 'border-white/15 bg-white/[0.06] text-neutral-200'
 								: 'border-neutral-200 bg-white text-neutral-600'}"
 						>
@@ -86,7 +86,7 @@
 
 			<div class="md:col-span-3">
 				<h3
-					class="text-xs font-bold tracking-wider uppercase {dark
+					class="text-sm font-semibold {dark
 						? 'text-white'
 						: 'text-neutral-950'}"
 				>
@@ -110,7 +110,7 @@
 
 			<div class="md:col-span-2">
 				<h3
-					class="text-xs font-bold tracking-wider uppercase {dark
+					class="text-sm font-semibold {dark
 						? 'text-white'
 						: 'text-neutral-950'}"
 				>
@@ -164,7 +164,7 @@
 
 			<div class="md:col-span-3">
 				<h3
-					class="text-xs font-bold tracking-wider uppercase {dark
+					class="text-sm font-semibold {dark
 						? 'text-white'
 						: 'text-neutral-950'}"
 				>

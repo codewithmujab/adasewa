@@ -25,7 +25,7 @@
 	<div class="mx-auto max-w-4xl px-6">
 		<a
 			href="/services"
-			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-xs font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
+			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-sm font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
 		>
 			← Kembali ke Layanan
 		</a>
@@ -40,13 +40,13 @@
 					</span>
 				{/if}
 				{#if data.service.isFeatured}
-					<span class="rounded-full bg-white px-3.5 py-1 text-xs font-extrabold text-black">
+					<span class="rounded-full bg-white px-3.5 py-1 text-xs font-semibold text-black">
 						Layanan Unggulan
 					</span>
 				{/if}
 			</div>
 
-			<h1 class="mt-5 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+			<h1 class="mt-5 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 				{data.service.title}
 			</h1>
 			<p class="mt-5 text-lg leading-relaxed text-neutral-300">
@@ -70,7 +70,7 @@
 			</div>
 
 			<div class="mt-12 rounded-[2rem] border border-white/15 bg-black p-7 sm:p-9">
-				<h2 class="text-xl font-extrabold tracking-tight text-white">
+				<h2 class="text-xl font-bold tracking-tight text-white">
 					Tertarik dengan layanan {data.service.title}?
 				</h2>
 				<p class="mt-2 text-sm leading-relaxed text-neutral-400">
@@ -79,7 +79,7 @@
 				<div class="mt-6 flex flex-wrap gap-3">
 					<a
 						href={`mailto:${data.settings.email}?subject=${encodeURIComponent(`Konsultasi Layanan: ${data.service.title}`)}`}
-						class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-extrabold text-black transition hover:bg-neutral-200"
+						class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 					>
 						Hubungi Tim Kami
 					</a>
@@ -98,7 +98,7 @@
 {#if data.relatedPortfolios.length > 0}
 	<section class="border-t border-white/10 bg-black py-20">
 		<div class="mx-auto max-w-6xl px-6">
-			<h2 class="text-2xl font-extrabold tracking-tight text-white">Portofolio Terkait</h2>
+			<h2 class="text-2xl font-bold tracking-tight text-white">Portofolio Terkait</h2>
 			<div class="mt-8 grid gap-8 md:grid-cols-2">
 				{#each data.relatedPortfolios as portfolio (portfolio.id)}
 					<PortfolioCard {portfolio} variant="dark" />

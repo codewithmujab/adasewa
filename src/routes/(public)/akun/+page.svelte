@@ -81,11 +81,11 @@
 		>
 			<div>
 				<span
-					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 				>
 					Dashboard Pemesan
 				</span>
-				<h1 class="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
+				<h1 class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 					Halo, {data.user.name}
 				</h1>
 				<p class="mt-1.5 text-sm text-neutral-400">
@@ -96,14 +96,14 @@
 			<div class="flex flex-wrap items-center gap-2.5">
 				<a
 					href="/katalog"
-					class="rounded-full bg-white px-5 py-2.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+					class="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 				>
 					+ Sewa Barang Baru
 				</a>
 				{#if data.user.role === 'admin' || data.user.role === 'branch_admin'}
 					<a
 						href="/admin/orders"
-						class="rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-xs font-bold text-white transition hover:border-white"
+						class="rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-bold text-white transition hover:border-white"
 					>
 						Admin Transaksi
 					</a>
@@ -112,7 +112,7 @@
 					type="button"
 					disabled={signingOut}
 					onclick={handleSignOut}
-					class="rounded-full border border-white/20 bg-black px-4 py-2.5 text-xs font-bold text-neutral-300 transition hover:border-red-400 hover:text-red-300 disabled:opacity-60"
+					class="rounded-full border border-white/20 bg-black px-4 py-2.5 text-sm font-bold text-neutral-300 transition hover:border-red-400 hover:text-red-300 disabled:opacity-60"
 				>
 					{signingOut ? 'Keluar...' : 'Keluar'}
 				</button>
@@ -127,11 +127,11 @@
 			>
 				<div>
 					<div class="flex items-center justify-between gap-2">
-						<span class="text-[11px] font-extrabold tracking-widest text-amber-300 uppercase">
+						<span class="text-xs font-semibold tracking-wide text-amber-300 uppercase">
 							★ Rekening Poin Sewa
 						</span>
 						<span
-							class="rounded-full border border-white/20 bg-black/60 px-3 py-0.5 font-mono text-[10px] font-bold text-neutral-200"
+							class="rounded-full border border-white/20 bg-black/60 px-3 py-0.5 font-mono text-xs font-bold text-neutral-200"
 						>
 							{pointAccountNo}
 						</span>
@@ -139,7 +139,7 @@
 
 					<p class="mt-5 text-xs text-neutral-400">Saldo Poin Aktif</p>
 					<div class="mt-1 flex items-baseline gap-2.5">
-						<p class="text-4xl font-extrabold tracking-tight text-white">
+						<p class="text-3xl font-bold tracking-tight text-white">
 							{data.points.balance.toLocaleString('id-ID')}
 						</p>
 						<span class="text-sm font-bold text-amber-300">Poin</span>
@@ -153,17 +153,17 @@
 				<div class="mt-6 space-y-3 border-t border-white/15 pt-4">
 					<div class="grid grid-cols-2 gap-3 text-xs">
 						<div class="rounded-2xl border border-white/10 bg-black/60 p-3.5">
-							<p class="text-[10px] font-bold text-neutral-400 uppercase">Total Poin Masuk</p>
-							<p class="mt-1 text-base font-extrabold text-emerald-400">+{data.points.totalEarned}</p>
+							<p class="text-xs font-bold text-neutral-400 uppercase">Total Poin Masuk</p>
+							<p class="mt-1 text-base font-semibold text-emerald-400">+{data.points.totalEarned}</p>
 						</div>
 						<div class="rounded-2xl border border-white/10 bg-black/60 p-3.5">
-							<p class="text-[10px] font-bold text-neutral-400 uppercase">Total Poin Dipakai</p>
-							<p class="mt-1 text-base font-extrabold text-amber-300">
+							<p class="text-xs font-bold text-neutral-400 uppercase">Total Poin Dipakai</p>
+							<p class="mt-1 text-base font-semibold text-amber-300">
 								−{data.points.totalRedeemed}
 							</p>
 						</div>
 					</div>
-					<p class="text-[11px] leading-relaxed text-neutral-400">
+					<p class="text-sm leading-relaxed text-neutral-400">
 						Dapatkan
 						<strong class="text-neutral-200"
 							>+1 Poin setiap {formatRupiah(POINT_EARN_UNIT_IDR)}</strong
@@ -180,7 +180,7 @@
 			>
 				<div class="flex flex-wrap items-center justify-between gap-2">
 					<div>
-						<h2 class="text-base font-extrabold tracking-tight text-white">
+						<h2 class="text-base font-bold tracking-tight text-white">
 							Mutasi Rekening Poin
 						</h2>
 						<p class="text-xs text-neutral-400">
@@ -190,7 +190,7 @@
 					{#if data.points.balance > 0}
 						<a
 							href="/katalog"
-							class="rounded-full bg-amber-400 px-4 py-1.5 text-xs font-extrabold text-black transition hover:bg-amber-300"
+							class="rounded-full bg-amber-400 px-4 py-1.5 text-xs font-semibold text-black transition hover:bg-amber-300"
 						>
 							Pakai Poin di Sewa Berikutnya →
 						</a>
@@ -199,8 +199,8 @@
 
 				{#if visiblePointHistory.length > 0}
 					<div class="mt-4 flex-1 overflow-x-auto">
-						<table class="w-full text-left text-xs">
-							<thead class="border-b border-white/10 text-[11px] text-neutral-400">
+						<table class="w-full text-left text-sm">
+							<thead class="border-b border-white/10 text-xs text-neutral-400">
 								<tr>
 									<th class="py-2.5 pr-3 font-semibold">Waktu &amp; Keterangan</th>
 									<th class="px-2 py-2.5 font-semibold">Jenis</th>
@@ -214,7 +214,7 @@
 									<tr>
 										<td class="py-3 pr-3">
 											<p class="font-semibold text-white">{tx.description}</p>
-											<p class="mt-0.5 text-[11px] text-neutral-400">
+											<p class="mt-0.5 text-xs text-neutral-400">
 												{formatDateTimeId(tx.createdAt)}
 												{#if tx.orderCode}
 													·
@@ -229,13 +229,13 @@
 										</td>
 										<td class="px-2 py-3">
 											<span
-												class="inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold {meta.badgeClass}"
+												class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold {meta.badgeClass}"
 											>
 												{meta.label}
 											</span>
 										</td>
 										<td
-											class="px-2 py-3 text-right font-mono font-extrabold {tx.points >= 0
+											class="px-2 py-3 text-right font-mono font-semibold {tx.points >= 0
 												? 'text-emerald-400'
 												: 'text-amber-300'}"
 										>
@@ -280,24 +280,24 @@
 		<!-- KPI Cards Transaksi -->
 		<div class="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
 			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-				<p class="text-xs font-semibold text-neutral-400">Total Transaksi</p>
-				<p class="mt-2 text-3xl font-extrabold tracking-tight text-white">
+				<p class="text-sm font-medium text-neutral-400">Total Transaksi</p>
+				<p class="mt-2 text-2xl font-bold tracking-tight text-white">
 					{data.stats.totalOrders}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">Riwayat seluruh pesanan sewa</p>
 			</div>
 
 			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-				<p class="text-xs font-semibold text-neutral-400">Menunggu Bayar</p>
-				<p class="mt-2 text-3xl font-extrabold tracking-tight text-amber-300">
+				<p class="text-sm font-medium text-neutral-400">Menunggu Bayar</p>
+				<p class="mt-2 text-2xl font-bold tracking-tight text-amber-300">
 					{data.stats.pendingPayment}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">Perlu konfirmasi pembayaran</p>
 			</div>
 
 			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-				<p class="text-xs font-semibold text-neutral-400">Sedang Disewa</p>
-				<p class="mt-2 text-3xl font-extrabold tracking-tight text-sky-300">
+				<p class="text-sm font-medium text-neutral-400">Sedang Disewa</p>
+				<p class="mt-2 text-2xl font-bold tracking-tight text-sky-300">
 					{data.stats.activeRentals + data.stats.returnInProgress}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">
@@ -308,8 +308,8 @@
 			</div>
 
 			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
-				<p class="text-xs font-semibold text-neutral-400">Selesai Dikembalikan</p>
-				<p class="mt-2 text-3xl font-extrabold tracking-tight text-emerald-400">
+				<p class="text-sm font-medium text-neutral-400">Selesai Dikembalikan</p>
+				<p class="mt-2 text-2xl font-bold tracking-tight text-emerald-400">
 					{data.stats.completedReturned}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">Barang kembali &amp; poin masuk</p>
@@ -328,11 +328,11 @@
 							class="flex flex-col justify-between gap-3 rounded-[1.5rem] border border-white/15 bg-black/80 p-4 sm:flex-row sm:items-center"
 						>
 							<div>
-								<p class="text-sm font-extrabold text-white">
+								<p class="text-sm font-semibold text-white">
 									{activeOrder.orderCode}
 									{#if activeOrder.branchName}
 										<span
-											class="ml-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300"
+											class="ml-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-0.5 text-xs font-bold text-emerald-300"
 										>
 											📍 {activeOrder.branchName}
 										</span>
@@ -351,7 +351,7 @@
 							</div>
 							<a
 								href={`/akun/pesanan/${activeOrder.orderCode}`}
-								class="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+								class="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200"
 							>
 								{activeOrder.orderStatus === 'return_requested'
 									? 'Pantau Pengembalian →'
@@ -366,7 +366,7 @@
 		<!-- Filter & Daftar Transaksi -->
 		<div class="mt-10">
 			<div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-				<h2 class="text-xl font-extrabold tracking-tight text-white">
+				<h2 class="text-xl font-bold tracking-tight text-white">
 					Riwayat Transaksi &amp; Pengembalian
 				</h2>
 
@@ -407,29 +407,29 @@
 							>
 								<div>
 									<div class="flex flex-wrap items-center gap-2">
-										<span class="font-mono text-sm font-extrabold text-white">
+										<span class="font-mono text-sm font-semibold text-white">
 											{order.orderCode}
 										</span>
 										{#if order.branchName}
 											<span
-												class="rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300"
+												class="rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-0.5 text-xs font-bold text-emerald-300"
 											>
 												📍 {order.branchName}
 											</span>
 										{/if}
 										<span
-											class="rounded-full border px-2.5 py-0.5 text-[11px] font-bold {orderMeta.badgeClass}"
+											class="rounded-full border px-2.5 py-0.5 text-xs font-bold {orderMeta.badgeClass}"
 										>
 											{orderMeta.label}
 										</span>
 										<span
-											class="rounded-full border px-2.5 py-0.5 text-[11px] font-bold {payMeta.badgeClass}"
+											class="rounded-full border px-2.5 py-0.5 text-xs font-bold {payMeta.badgeClass}"
 										>
 											Bayar: {payMeta.label}
 										</span>
 										{#if order.pointsEarned > 0}
 											<span
-												class="rounded-full border border-amber-400/30 bg-amber-400/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-300"
+												class="rounded-full border border-amber-400/30 bg-amber-400/15 px-2.5 py-0.5 text-xs font-bold text-amber-300"
 											>
 												★ +{order.pointsEarned} Poin
 											</span>
@@ -445,8 +445,8 @@
 								</div>
 
 								<div class="text-left sm:text-right">
-									<p class="text-[11px] text-neutral-400">Total Transaksi</p>
-									<p class="text-lg font-extrabold text-white">
+									<p class="text-xs text-neutral-400">Total Transaksi</p>
+									<p class="text-lg font-bold text-white">
 										{formatRupiah(order.totalAmount)}
 									</p>
 								</div>
@@ -501,7 +501,7 @@
 
 								<a
 									href={`/akun/pesanan/${order.orderCode}`}
-									class="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+									class="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200"
 								>
 									Detail, Bayar &amp; Pengembalian →
 								</a>
@@ -518,7 +518,7 @@
 					</p>
 					<a
 						href="/katalog"
-						class="mt-6 inline-flex rounded-full bg-white px-7 py-3 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+						class="mt-6 inline-flex rounded-full bg-white px-7 py-3 text-sm font-semibold text-black transition hover:bg-neutral-200"
 					>
 						Jelajahi Katalog Barang
 					</a>

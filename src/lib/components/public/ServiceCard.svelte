@@ -42,7 +42,7 @@
 			</span>
 			{#if service.isFeatured}
 				<span
-					class="rounded-full bg-white px-3 py-0.5 text-[11px] font-extrabold text-black"
+					class="rounded-full bg-white px-3 py-0.5 text-xs font-semibold text-black"
 				>
 					Unggulan
 				</span>

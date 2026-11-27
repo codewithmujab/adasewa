@@ -179,7 +179,7 @@
 
 				<div class="grid gap-3 sm:grid-cols-3">
 					<div class="rounded-[1.5rem] border border-white/15 bg-[#0c0c0f] p-4">
-						<p class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase">
+						<p class="text-xs font-bold tracking-wider text-neutral-400 uppercase">
 							Pengiriman
 						</p>
 						<p class="mt-1 text-xs font-bold text-white">
@@ -187,7 +187,7 @@
 						</p>
 					</div>
 					<div class="rounded-[1.5rem] border border-white/15 bg-[#0c0c0f] p-4">
-						<p class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase">
+						<p class="text-xs font-bold tracking-wider text-neutral-400 uppercase">
 							Pengambilan
 						</p>
 						<p class="mt-1 text-xs font-bold text-white">
@@ -195,7 +195,7 @@
 						</p>
 					</div>
 					<div class="rounded-[1.5rem] border border-white/15 bg-[#0c0c0f] p-4">
-						<p class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase">
+						<p class="text-xs font-bold tracking-wider text-neutral-400 uppercase">
 							Stok {activeBranch?.name ?? 'Tersedia'}
 						</p>
 						<p class="mt-1 text-xs font-bold {isOutOfStock ? 'text-red-400' : 'text-emerald-300'}">
@@ -244,7 +244,7 @@
 							{#each data.item.includes as inc (inc)}
 								<li class="flex items-start gap-2.5 text-sm text-neutral-200">
 									<span
-										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-extrabold text-black"
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-semibold text-black"
 									>
 										✓
 									</span>
@@ -306,7 +306,7 @@
 						</span>
 					</div>
 
-					<h1 class="mt-4 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+					<h1 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						{data.item.name}
 					</h1>
 					<p class="mt-2.5 text-sm leading-relaxed text-neutral-400">
@@ -316,7 +316,7 @@
 					<!-- Pilihan Cabang & Perbandingan Tarif -->
 					{#if data.branches.length > 0}
 						<div class="mt-5">
-							<p class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase">
+							<p class="text-xs font-bold tracking-wider text-neutral-400 uppercase">
 								Pilih Cabang Penyewaan
 							</p>
 							<div class="mt-2 grid gap-2 sm:grid-cols-2">
@@ -336,7 +336,7 @@
 										<div class="flex items-center justify-between gap-1">
 											<span class="text-xs font-bold">{branch.name}</span>
 											<span
-												class="text-[10px] font-bold {isSelected
+												class="text-xs font-bold {isSelected
 													? bp.isAvailable && bp.stockQty > 0
 														? 'text-emerald-700'
 														: 'text-red-600'
@@ -347,10 +347,10 @@
 												{bp.isAvailable && bp.stockQty > 0 ? `Stok ${bp.stockQty}` : 'Habis'}
 											</span>
 										</div>
-										<p class="mt-1 text-sm font-extrabold">
+										<p class="mt-1 text-sm font-semibold">
 											{formatRupiah(bp.pricePerDay)}
 											<span
-												class="text-[10px] font-normal {isSelected
+												class="text-xs font-normal {isSelected
 													? 'text-neutral-600'
 													: 'text-neutral-400'}"
 											>
@@ -361,7 +361,7 @@
 								{/each}
 							</div>
 							{#if activeBranch}
-								<p class="mt-2 text-[11px] text-neutral-400">
+								<p class="mt-2 text-xs text-neutral-400">
 									📍 Kios {activeBranch.name}: {activeBranch.address}
 								</p>
 							{/if}
@@ -370,10 +370,10 @@
 
 					<!-- Price Box -->
 					<div class="mt-5 rounded-[1.5rem] border border-white/10 bg-black p-4">
-						<p class="text-[11px] font-bold tracking-wider text-neutral-400 uppercase">
+						<p class="text-xs font-bold tracking-wider text-neutral-400 uppercase">
 							Tarif Sewa {activeBranch ? `— ${activeBranch.name}` : ''}
 						</p>
-						<p class="mt-1 text-2xl font-extrabold text-white">
+						<p class="mt-1 text-2xl font-bold text-white">
 							{formatRupiah(unitPrice)}
 							<span class="text-sm font-normal text-neutral-400">/ {data.item.unitLabel}</span>
 						</p>
@@ -406,7 +406,7 @@
 					<div class="mt-6 space-y-4 border-t border-white/10 pt-5">
 						<div class="grid grid-cols-2 gap-3">
 							<div>
-								<label for="rent-start" class="block text-xs font-semibold text-neutral-300">
+								<label for="rent-start" class="block text-sm font-semibold text-neutral-300">
 									Mulai Tanggal
 								</label>
 								<input
@@ -421,7 +421,7 @@
 								/>
 							</div>
 							<div>
-								<label for="rent-end" class="block text-xs font-semibold text-neutral-300">
+								<label for="rent-end" class="block text-sm font-semibold text-neutral-300">
 									Sampai Tanggal
 								</label>
 								<input
@@ -435,7 +435,7 @@
 						</div>
 
 						<div>
-							<label for="rent-qty" class="block text-xs font-semibold text-neutral-300">
+							<label for="rent-qty" class="block text-sm font-semibold text-neutral-300">
 								Jumlah Unit (maks. {effectiveStockQty})
 							</label>
 							<div
@@ -476,7 +476,7 @@
 								</span>
 								<span>{formatRupiah(unitPrice)} / {data.item.unitLabel}</span>
 							</div>
-							<p class="mt-1 text-2xl font-extrabold text-white">{formatRupiah(estimatedTotal)}</p>
+							<p class="mt-1 text-2xl font-bold text-white">{formatRupiah(estimatedTotal)}</p>
 						</div>
 
 						{#if addedFeedback}
@@ -492,7 +492,7 @@
 								type="button"
 								disabled={isOutOfStock}
 								onclick={() => addCurrentToCart(true)}
-								class="flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-extrabold text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-40"
+								class="flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-40"
 							>
 								{isOutOfStock ? 'Stok Habis di Cabang Ini' : '+ Masukkan ke Keranjang'}
 							</button>
@@ -530,17 +530,17 @@
 			<div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 				<div>
 					<span
-						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 					>
 						Kategori {data.item.category.name}
 					</span>
-					<h2 class="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+					<h2 class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						Unit lain yang sering disewa bersamaan
 					</h2>
 				</div>
 				<a
 					href={`/katalog?kategori=${data.item.category.slug}`}
-					class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-xs font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
+					class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-sm font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
 				>
 					Lihat semua {data.item.category.name} →
 				</a>

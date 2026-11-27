@@ -18,7 +18,7 @@
 	<div class="mx-auto mb-6 flex max-w-[210mm] items-center justify-between gap-3 px-4 print:hidden">
 		<a
 			href={data.backHref}
-			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-[#0c0c0f] px-4 py-2 text-xs font-bold text-neutral-200 transition hover:border-white hover:text-white"
+			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-[#0c0c0f] px-4 py-2 text-sm font-bold text-neutral-200 transition hover:border-white hover:text-white"
 		>
 			← Kembali
 		</a>
@@ -28,7 +28,7 @@
 			<button
 				type="button"
 				onclick={() => window.print()}
-				class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+				class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-black transition hover:bg-neutral-200"
 			>
 				Cetak / Simpan PDF
 			</button>

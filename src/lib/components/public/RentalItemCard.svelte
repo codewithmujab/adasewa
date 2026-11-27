@@ -77,7 +77,7 @@
 
 				<div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
 					<span
-						class="inline-flex max-w-[70%] items-center gap-1.5 truncate rounded-full border border-white/15 bg-black/80 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-md"
+						class="inline-flex max-w-[70%] items-center gap-1.5 truncate rounded-full border border-white/15 bg-black/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-md"
 					>
 						<CategoryIcon icon={item.category.icon} class="h-3.5 w-3.5 shrink-0" />
 						<span class="truncate">{item.category.name}</span>
@@ -85,13 +85,13 @@
 
 					{#if !branchPricing.isAvailable || branchPricing.stockQty <= 0}
 						<span
-							class="shrink-0 rounded-full border border-red-400/30 bg-red-500/20 px-2.5 py-1 text-[10px] font-bold text-red-200 backdrop-blur-md"
+							class="shrink-0 rounded-full border border-red-400/30 bg-red-500/20 px-2.5 py-1 text-xs font-semibold text-red-200 backdrop-blur-md"
 						>
 							Habis
 						</span>
 					{:else if item.isFeatured}
 						<span
-							class="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-black"
+							class="shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-black"
 						>
 							Populer
 						</span>
@@ -103,7 +103,7 @@
 		<div class="flex flex-1 flex-col p-5 pt-4 sm:p-6 sm:pt-5">
 			<a
 				href={`/katalog/${item.slug}`}
-				class="line-clamp-2 text-base font-bold tracking-tight text-white transition hover:text-neutral-300 sm:text-lg"
+				class="line-clamp-2 text-base font-semibold tracking-tight text-white transition hover:text-neutral-300"
 			>
 				{item.name}
 			</a>
@@ -115,13 +115,13 @@
 			<div class="mt-4 flex flex-wrap gap-1.5">
 				{#if hasVariants}
 					<span
-						class="rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-neutral-200"
+						class="rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-xs font-medium text-neutral-200"
 					>
 						{item.variants.length} pilihan varian
 					</span>
 				{:else if secondarySpec}
 					<span
-						class="max-w-full truncate rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-neutral-300"
+						class="max-w-full truncate rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-xs font-medium text-neutral-300"
 					>
 						{secondarySpec.label}: {secondarySpec.value}
 					</span>
@@ -129,7 +129,7 @@
 
 				{#if rentalCart.branchName}
 					<span
-						class="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300"
+						class="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-300"
 					>
 						{rentalCart.branchName} · Stok {branchPricing.stockQty}
 					</span>
@@ -138,29 +138,29 @@
 
 			<div class="mt-5 flex items-center justify-between gap-2 border-t border-white/10 pt-4">
 				<div>
-					<p class="text-base font-extrabold text-white">
+					<p class="text-base font-bold text-white">
 						{formatRupiah(branchPricing.pricePerDay)}
 					</p>
-					<p class="text-[11px] text-neutral-400">per {item.unitLabel}</p>
+					<p class="text-xs text-neutral-400">per {item.unitLabel}</p>
 				</div>
 
 				<div class="flex items-center gap-1.5">
 					<a
 						href={`/katalog/${item.slug}`}
-						class="rounded-full border border-white/20 px-3.5 py-1.5 text-xs font-semibold text-neutral-200 transition hover:border-white hover:text-white"
+						class="rounded-full border border-white/20 px-3.5 py-1.5 text-xs font-medium text-neutral-200 transition hover:border-white hover:text-white"
 					>
 						Detail
 					</a>
 					{#if !branchPricing.isAvailable || branchPricing.stockQty <= 0}
 						<span
-							class="rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-neutral-500"
+							class="rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-medium text-neutral-500"
 						>
 							Kosong
 						</span>
 					{:else if hasVariants}
 						<a
 							href={`/katalog/${item.slug}`}
-							class="rounded-full bg-white px-4 py-1.5 text-xs font-bold text-black transition hover:bg-neutral-200"
+							class="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black transition hover:bg-neutral-200"
 						>
 							Pilih Varian
 						</a>
@@ -168,7 +168,7 @@
 						<button
 							type="button"
 							onclick={handleQuickAdd}
-							class="rounded-full bg-white px-4 py-1.5 text-xs font-bold text-black transition hover:bg-neutral-200"
+							class="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black transition hover:bg-neutral-200"
 						>
 							+ Keranjang
 						</button>
@@ -211,7 +211,7 @@
 
 			<div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2">
 				<span
-					class="inline-flex max-w-[70%] items-center gap-1.5 truncate rounded-full border {theme.border} bg-white/95 px-2.5 py-1 text-[11px] font-semibold {theme.badgeText} backdrop-blur-md"
+					class="inline-flex max-w-[70%] items-center gap-1.5 truncate rounded-full border {theme.border} bg-white/95 px-2.5 py-1 text-xs font-semibold {theme.badgeText} backdrop-blur-md"
 				>
 					<CategoryIcon icon={item.category.icon} class="h-3.5 w-3.5 shrink-0" />
 					<span class="truncate">{item.category.name}</span>
@@ -219,13 +219,13 @@
 
 				{#if !branchPricing.isAvailable || branchPricing.stockQty <= 0}
 					<span
-						class="shrink-0 rounded-full bg-neutral-200/95 px-2.5 py-1 text-[10px] font-semibold text-neutral-700"
+						class="shrink-0 rounded-full bg-neutral-200/95 px-2.5 py-1 text-xs font-semibold text-neutral-700"
 					>
 						Stok Habis
 					</span>
 				{:else if item.isFeatured}
 					<span
-						class="shrink-0 rounded-full bg-neutral-950/90 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur-md"
+						class="shrink-0 rounded-full bg-neutral-950/90 px-2.5 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur-md"
 					>
 						Populer
 					</span>
@@ -247,12 +247,12 @@
 
 			<div class="mt-4 flex flex-wrap gap-1.5">
 				{#if hasVariants}
-					<span class="rounded-full bg-surface px-2.5 py-1 text-[11px] font-medium text-neutral-700">
+					<span class="rounded-full bg-surface px-2.5 py-1 text-xs font-medium text-neutral-700">
 						{item.variants.length} pilihan varian
 					</span>
 				{:else if secondarySpec}
 					<span
-						class="max-w-full truncate rounded-full bg-surface px-2.5 py-1 text-[11px] font-medium text-neutral-600"
+						class="max-w-full truncate rounded-full bg-surface px-2.5 py-1 text-xs font-medium text-neutral-600"
 					>
 						{secondarySpec.label}: {secondarySpec.value}
 					</span>
@@ -260,7 +260,7 @@
 
 				{#if rentalCart.branchName}
 					<span
-						class="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700"
+						class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700"
 					>
 						{rentalCart.branchName} · Stok {branchPricing.stockQty}
 					</span>
@@ -272,7 +272,7 @@
 					<p class="text-sm font-bold text-neutral-950">
 						{formatRupiah(branchPricing.pricePerDay)}
 					</p>
-					<p class="text-[11px] text-neutral-400">per {item.unitLabel}</p>
+					<p class="text-xs text-neutral-400">per {item.unitLabel}</p>
 				</div>
 
 				<div class="flex items-center gap-1.5">

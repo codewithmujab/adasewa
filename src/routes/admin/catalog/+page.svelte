@@ -214,13 +214,13 @@
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
 			<span
-				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 			>
 				{data.isSuperAdmin
 					? 'Inventaris & Tarif Multi-Cabang'
 					: `Tarif & Stok ${data.assignedBranch?.name ?? 'Cabang'}`}
 			</span>
-			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white">
+			<h1 class="mt-3 text-2xl font-bold tracking-tight text-white">
 				{data.isSuperAdmin
 					? `Katalog & Harga Cabang (${items.length})`
 					: `Harga & Stok ${data.assignedBranch?.name ?? ''}`}
@@ -240,7 +240,7 @@
 			<button
 				type="button"
 				onclick={openCreate}
-				class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200"
+				class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 			>
 				+ Tambah Barang Master
 			</button>
@@ -253,7 +253,7 @@
 			class="flex flex-col justify-between gap-3 rounded-[2rem] border border-emerald-400/30 bg-emerald-400/10 p-5 sm:flex-row sm:items-center"
 		>
 			<div>
-				<p class="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+				<p class="text-xs font-bold tracking-wider text-emerald-300 uppercase">
 					📍 Menampilkan Harga &amp; Stok: {activeBranch?.name ?? '-'}
 				</p>
 				<p class="mt-0.5 text-xs text-neutral-300">
@@ -278,7 +278,7 @@
 					{/each}
 				</div>
 			{:else if activeBranch}
-				<span class="rounded-full bg-emerald-400 px-4 py-1.5 text-xs font-extrabold text-black">
+				<span class="rounded-full bg-emerald-400 px-4 py-1.5 text-xs font-semibold text-black">
 					{activeBranch.name} ({activeBranch.code})
 				</span>
 			{/if}
@@ -359,7 +359,7 @@
 											/>
 										{:else}
 											<div
-												class="flex h-10 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black text-[10px] font-bold text-neutral-500"
+												class="flex h-10 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black text-xs font-bold text-neutral-500"
 											>
 												UNIT
 											</div>
@@ -369,7 +369,7 @@
 												<p class="truncate font-bold text-white">{item.name}</p>
 												{#if item.isFeatured}
 													<span
-														class="rounded-full bg-white px-2 py-0.5 text-[10px] font-extrabold text-black"
+														class="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-black"
 													>
 														Populer
 													</span>
@@ -379,7 +379,7 @@
 												href={`/katalog/${item.slug}`}
 												target="_blank"
 												rel="noopener noreferrer"
-												class="truncate font-mono text-[11px] text-neutral-400 hover:text-white"
+												class="truncate font-mono text-xs text-neutral-400 hover:text-white"
 											>
 												/katalog/{item.slug} ↗
 											</a>
@@ -390,12 +390,12 @@
 									{categoryNameById.get(item.categoryId) ?? '-'}
 								</td>
 								<td class="px-4 py-3.5 text-xs">
-									<p class="font-extrabold text-white">
+									<p class="font-semibold text-white">
 										{formatRupiah(bStock.pricePerDay)}
 										<span class="font-normal text-neutral-400">/ {item.unitLabel}</span>
 									</p>
 									<p
-										class="mt-0.5 text-[11px] font-semibold {bStock.isAvailable && bStock.stockQty > 0
+										class="mt-0.5 text-xs font-semibold {bStock.isAvailable && bStock.stockQty > 0
 											? 'text-emerald-400'
 											: 'text-red-400'}"
 									>
@@ -432,7 +432,7 @@
 										<button
 											type="button"
 											onclick={() => openBranchStockModal(item)}
-											class="rounded-full bg-white px-3.5 py-1.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+											class="rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-black transition hover:bg-neutral-200"
 										>
 											Harga &amp; Stok
 										</button>
@@ -510,7 +510,7 @@
 				type="button"
 				disabled={busyId === deletingItem.id}
 				onclick={confirmDelete}
-				class="rounded-full bg-red-500 px-5 py-2 text-xs font-extrabold text-white hover:bg-red-600 disabled:opacity-60"
+				class="rounded-full bg-red-500 px-5 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60"
 			>
 				{busyId === deletingItem.id ? 'Menghapus...' : 'Ya, Hapus'}
 			</button>
@@ -528,7 +528,7 @@
 	{#if stockModalItem && activeBranch}
 		<form onsubmit={handleSaveBranchStock} class="space-y-4">
 			<div>
-				<label for="bs-price" class="block text-xs font-semibold text-neutral-300">
+				<label for="bs-price" class="block text-sm font-semibold text-neutral-300">
 					Tarif Sewa per {stockModalItem.unitLabel} di {activeBranch.name} (Rp) *
 				</label>
 				<input
@@ -538,9 +538,9 @@
 					step="5000"
 					required
 					bind:value={editBranchPrice}
-					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm font-extrabold text-white focus:border-white focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm font-semibold text-white focus:border-white focus:outline-none"
 				/>
-				<p class="mt-1 text-[11px] text-neutral-400">
+				<p class="mt-1 text-xs text-neutral-400">
 					Preview:
 					<strong class="text-emerald-300">{formatRupiah(Number(editBranchPrice) || 0)}</strong> /
 					{stockModalItem.unitLabel}
@@ -548,7 +548,7 @@
 			</div>
 
 			<div>
-				<label for="bs-stock" class="block text-xs font-semibold text-neutral-300">
+				<label for="bs-stock" class="block text-sm font-semibold text-neutral-300">
 					Jumlah Stok Tersedia di {activeBranch.name} *
 				</label>
 				<input
@@ -580,7 +580,7 @@
 				<button
 					type="submit"
 					disabled={savingBranchStock}
-					class="rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
+					class="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-neutral-200 disabled:opacity-60"
 				>
 					{savingBranchStock ? 'Menyimpan...' : 'Simpan Harga Cabang'}
 				</button>

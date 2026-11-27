@@ -108,7 +108,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="svc-title" class="block text-xs font-semibold text-neutral-300">
+			<label for="svc-title" class="block text-sm font-semibold text-neutral-300">
 				Judul Layanan *
 			</label>
 			<input
@@ -126,7 +126,7 @@
 		</div>
 
 		<div>
-			<label for="svc-slug" class="block text-xs font-semibold text-neutral-300">Slug URL</label>
+			<label for="svc-slug" class="block text-sm font-semibold text-neutral-300">Slug URL</label>
 			<input
 				id="svc-slug"
 				type="text"
@@ -146,7 +146,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="svc-icon" class="block text-xs font-semibold text-neutral-300">
+			<label for="svc-icon" class="block text-sm font-semibold text-neutral-300">
 				Label / Ikon Singkat
 			</label>
 			<input
@@ -159,7 +159,7 @@
 		</div>
 
 		<div>
-			<label for="svc-order" class="block text-xs font-semibold text-neutral-300">
+			<label for="svc-order" class="block text-sm font-semibold text-neutral-300">
 				Urutan Tampil
 			</label>
 			<input
@@ -174,7 +174,7 @@
 	</div>
 
 	<div>
-		<label for="svc-short" class="block text-xs font-semibold text-neutral-300">
+		<label for="svc-short" class="block text-sm font-semibold text-neutral-300">
 			Deskripsi Singkat *
 		</label>
 		<textarea
@@ -191,7 +191,7 @@
 	</div>
 
 	<div>
-		<label for="svc-desc" class="block text-xs font-semibold text-neutral-300">
+		<label for="svc-desc" class="block text-sm font-semibold text-neutral-300">
 			Deskripsi Lengkap *
 		</label>
 		<textarea
@@ -240,7 +240,7 @@
 		<button
 			type="submit"
 			disabled={submitting}
-			class="rounded-full bg-white px-6 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200 disabled:opacity-60"
+			class="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:opacity-60"
 		>
 			{submitting ? 'Menyimpan...' : service ? 'Simpan Perubahan' : 'Tambah Layanan'}
 		</button>

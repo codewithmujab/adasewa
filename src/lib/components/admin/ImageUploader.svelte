@@ -74,7 +74,7 @@
 	<div class="flex items-center justify-between">
 		<span class="text-xs font-semibold text-neutral-300">{label}</span>
 		{#if imageKey}
-			<span class="max-w-55 truncate font-mono text-[11px] text-neutral-500" title={imageKey}>
+			<span class="max-w-55 truncate font-mono text-xs text-neutral-500" title={imageKey}>
 				{imageKey}
 			</span>
 		{/if}

@@ -48,7 +48,7 @@
 		>
 			<header class="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5">
 				<div>
-					<h2 class="text-lg font-extrabold tracking-tight text-white">{title}</h2>
+					<h2 class="text-lg font-bold tracking-tight text-white">{title}</h2>
 					{#if subtitle}
 						<p class="mt-0.5 text-sm text-neutral-400">{subtitle}</p>
 					{/if}

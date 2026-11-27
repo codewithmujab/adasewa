@@ -177,7 +177,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="cat-name" class="block text-xs font-semibold text-neutral-300">Nama Barang *</label>
+			<label for="cat-name" class="block text-sm font-semibold text-neutral-300">Nama Barang *</label>
 			<input
 				id="cat-name"
 				type="text"
@@ -193,7 +193,7 @@
 		</div>
 
 		<div>
-			<label for="cat-category" class="block text-xs font-semibold text-neutral-300">Kategori *</label>
+			<label for="cat-category" class="block text-sm font-semibold text-neutral-300">Kategori *</label>
 			<select
 				id="cat-category"
 				required
@@ -209,7 +209,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-3">
 		<div>
-			<label for="cat-price" class="block text-xs font-semibold text-neutral-300">
+			<label for="cat-price" class="block text-sm font-semibold text-neutral-300">
 				Harga Sewa Dasar (Rp)
 			</label>
 			<input
@@ -224,7 +224,7 @@
 		</div>
 
 		<div>
-			<label for="cat-unit" class="block text-xs font-semibold text-neutral-300">Satuan Tarif</label>
+			<label for="cat-unit" class="block text-sm font-semibold text-neutral-300">Satuan Tarif</label>
 			<input
 				id="cat-unit"
 				type="text"
@@ -235,7 +235,7 @@
 		</div>
 
 		<div>
-			<label for="cat-stock" class="block text-xs font-semibold text-neutral-300">Stok Unit Dasar</label>
+			<label for="cat-stock" class="block text-sm font-semibold text-neutral-300">Stok Unit Dasar</label>
 			<input
 				id="cat-stock"
 				type="number"
@@ -248,7 +248,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-3">
 		<div class="sm:col-span-2">
-			<label for="cat-slug" class="block text-xs font-semibold text-neutral-300">Slug URL</label>
+			<label for="cat-slug" class="block text-sm font-semibold text-neutral-300">Slug URL</label>
 			<input
 				id="cat-slug"
 				type="text"
@@ -261,7 +261,7 @@
 			/>
 		</div>
 		<div>
-			<label for="cat-order" class="block text-xs font-semibold text-neutral-300">Urutan</label>
+			<label for="cat-order" class="block text-sm font-semibold text-neutral-300">Urutan</label>
 			<input
 				id="cat-order"
 				type="number"
@@ -274,7 +274,7 @@
 	</div>
 
 	<div>
-		<label for="cat-short" class="block text-xs font-semibold text-neutral-300">
+		<label for="cat-short" class="block text-sm font-semibold text-neutral-300">
 			Deskripsi Singkat (Kartu Katalog) *
 		</label>
 		<textarea
@@ -287,7 +287,7 @@
 	</div>
 
 	<div>
-		<label for="cat-desc" class="block text-xs font-semibold text-neutral-300">
+		<label for="cat-desc" class="block text-sm font-semibold text-neutral-300">
 			Detail &amp; Rekomendasi Penggunaan *
 		</label>
 		<textarea
@@ -301,7 +301,7 @@
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="cat-specs" class="block text-xs font-semibold text-neutral-300">
+			<label for="cat-specs" class="block text-sm font-semibold text-neutral-300">
 				Spesifikasi (1 baris = Label: Nilai)
 			</label>
 			<textarea
@@ -314,7 +314,7 @@
 		</div>
 
 		<div>
-			<label for="cat-includes" class="block text-xs font-semibold text-neutral-300">
+			<label for="cat-includes" class="block text-sm font-semibold text-neutral-300">
 				Kelengkapan Didapat (1 item per baris)
 			</label>
 			<textarea
@@ -328,7 +328,7 @@
 	</div>
 
 	<div>
-		<label for="cat-variants" class="block text-xs font-semibold text-neutral-300">
+		<label for="cat-variants" class="block text-sm font-semibold text-neutral-300">
 			Pilihan Varian / Ukuran (pisahkan dengan koma, opsional)
 		</label>
 		<input
@@ -385,7 +385,7 @@
 		<button
 			type="submit"
 			disabled={submitting}
-			class="rounded-full bg-white px-6 py-2.5 text-sm font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
+			class="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black hover:bg-neutral-200 disabled:opacity-60"
 		>
 			{submitting ? 'Menyimpan...' : item ? 'Simpan Perubahan' : 'Tambah Barang'}
 		</button>

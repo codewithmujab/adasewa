@@ -18,13 +18,13 @@
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
 			<span
-				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 			>
 				{data.isSuperAdmin
 					? 'Dashboard Owner · Semua Cabang'
 					: `Dashboard ${data.assignedBranch?.name ?? 'Admin Cabang'}`}
 			</span>
-			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+			<h1 class="mt-3 text-2xl font-bold tracking-tight text-white">
 				Selamat datang, {data.user.name}
 			</h1>
 			<p class="mt-1.5 text-sm text-neutral-400">
@@ -41,13 +41,13 @@
 		<div class="flex flex-wrap gap-2.5">
 			<a
 				href="/admin/orders"
-				class="rounded-full bg-white px-5 py-2.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
+				class="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 			>
 				Kelola Transaksi &amp; Pengembalian
 			</a>
 			<a
 				href="/admin/catalog"
-				class="rounded-full border border-white/20 bg-[#0c0c0f] px-5 py-2.5 text-xs font-bold text-white transition hover:border-white"
+				class="rounded-full border border-white/20 bg-[#0c0c0f] px-5 py-2.5 text-sm font-bold text-white transition hover:border-white"
 			>
 				{data.isSuperAdmin ? 'Katalog & Harga Cabang' : 'Atur Harga & Stok Cabang'}
 			</a>
@@ -56,8 +56,8 @@
 
 	<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
-			<p class="text-xs font-semibold text-neutral-400">Total Transaksi</p>
-			<p class="mt-2 text-3xl font-extrabold tracking-tight text-white">
+			<p class="text-sm font-medium text-neutral-400">Total Transaksi</p>
+			<p class="mt-2 text-2xl font-bold tracking-tight text-white">
 				{data.stats.totalOrders}
 			</p>
 			<p class="mt-1 text-xs text-neutral-400">
@@ -66,8 +66,8 @@
 		</div>
 
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
-			<p class="text-xs font-semibold text-neutral-400">Katalog Barang</p>
-			<p class="mt-2 text-3xl font-extrabold tracking-tight text-white">
+			<p class="text-sm font-medium text-neutral-400">Katalog Barang</p>
+			<p class="mt-2 text-2xl font-bold tracking-tight text-white">
 				{data.stats.totalCatalog}
 			</p>
 			<p class="mt-1 text-xs text-neutral-400">
@@ -76,8 +76,8 @@
 		</div>
 
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
-			<p class="text-xs font-semibold text-neutral-400">Layanan &amp; Dokumentasi</p>
-			<p class="mt-2 text-3xl font-extrabold tracking-tight text-white">
+			<p class="text-sm font-medium text-neutral-400">Layanan &amp; Dokumentasi</p>
+			<p class="mt-2 text-2xl font-bold tracking-tight text-white">
 				{data.stats.totalServices + data.stats.totalPortfolios}
 			</p>
 			<p class="mt-1 text-xs text-neutral-400">
@@ -86,10 +86,10 @@
 		</div>
 
 		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
-			<p class="text-xs font-semibold text-neutral-400">
+			<p class="text-sm font-medium text-neutral-400">
 				{data.isSuperAdmin ? 'Cabang Aktif' : 'Info Kios Cabang'}
 			</p>
-			<p class="mt-2 truncate text-xl font-extrabold tracking-tight text-white">
+			<p class="mt-2 truncate text-xl font-bold tracking-tight text-white">
 				{data.isSuperAdmin
 					? `${data.branches.length} Cabang`
 					: (data.assignedBranch?.name ?? data.companyName)}
@@ -107,7 +107,7 @@
 		<section class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6 sm:p-7">
 			<div class="flex items-center justify-between gap-2">
 				<div>
-					<h2 class="text-base font-extrabold tracking-tight text-white">
+					<h2 class="text-base font-bold tracking-tight text-white">
 						Ringkasan Transaksi Per Cabang
 					</h2>
 					<p class="text-xs text-neutral-400">
@@ -126,7 +126,7 @@
 						<div>
 							<div class="flex items-center gap-2">
 								<span
-									class="rounded-full bg-white px-2.5 py-0.5 font-mono text-[10px] font-extrabold text-black"
+									class="rounded-full bg-white px-2.5 py-0.5 font-mono text-xs font-semibold text-black"
 								>
 									{br.code}
 								</span>
@@ -135,7 +135,7 @@
 							<p class="mt-1.5 text-xs text-neutral-400">WA CS: {br.phone}</p>
 						</div>
 						<div class="text-right">
-							<p class="text-sm font-extrabold text-emerald-400">{formatRupiah(br.totalRevenue)}</p>
+							<p class="text-sm font-semibold text-emerald-400">{formatRupiah(br.totalRevenue)}</p>
 							<p class="text-xs text-neutral-400">{br.orderCount} transaksi</p>
 						</div>
 					</div>
@@ -147,7 +147,7 @@
 	<div class="grid gap-6 lg:grid-cols-2">
 		<section class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6">
 			<div class="flex items-center justify-between">
-				<h2 class="text-base font-extrabold tracking-tight text-white">Transaksi Sewa Terbaru</h2>
+				<h2 class="text-base font-bold tracking-tight text-white">Transaksi Sewa Terbaru</h2>
 				<a href="/admin/orders" class="text-xs font-bold text-neutral-400 hover:text-white">
 					Kelola semua →
 				</a>
@@ -171,7 +171,7 @@
 								</p>
 							</div>
 							<span
-								class="shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-bold {meta.badgeClass}"
+								class="shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-bold {meta.badgeClass}"
 							>
 								{meta.label}
 							</span>
@@ -185,7 +185,7 @@
 
 		<section class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6">
 			<div class="flex items-center justify-between">
-				<h2 class="text-base font-extrabold tracking-tight text-white">Katalog Barang Terbaru</h2>
+				<h2 class="text-base font-bold tracking-tight text-white">Katalog Barang Terbaru</h2>
 				<a href="/admin/catalog" class="text-xs font-bold text-neutral-400 hover:text-white">
 					Lihat semua ({data.stats.totalCatalog}) →
 				</a>
@@ -204,7 +204,7 @@
 								</p>
 							</div>
 							<span
-								class="shrink-0 rounded-full px-3 py-0.5 text-[11px] font-bold {item.isPublished
+								class="shrink-0 rounded-full px-3 py-0.5 text-xs font-bold {item.isPublished
 									? 'border border-emerald-400/30 bg-emerald-400/15 text-emerald-300'
 									: 'border border-white/15 bg-white/10 text-neutral-300'}"
 							>

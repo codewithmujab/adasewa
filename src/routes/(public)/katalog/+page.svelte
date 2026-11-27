@@ -124,11 +124,11 @@
 			<div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
 				<div class="max-w-2xl">
 					<span
-						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 					>
 						Katalog Resmi {data.settings.companyName}
 					</span>
-					<h1 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+					<h1 class="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 						{activeCategoryObj ? activeCategoryObj.name : 'Katalog Barang Sewa'}
 					</h1>
 					<p class="mt-3 text-sm leading-relaxed text-neutral-400 sm:text-base">
@@ -150,7 +150,7 @@
 						href={whatsappAskUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white transition hover:border-white hover:bg-white/15"
+						class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-sm font-bold text-white transition hover:border-white hover:bg-white/15"
 					>
 						Tanya CS via WA
 					</a>
@@ -163,7 +163,7 @@
 					class="mt-7 flex flex-col justify-between gap-4 rounded-[1.75rem] border border-emerald-400/25 bg-emerald-400/10 p-4 sm:flex-row sm:items-center sm:px-5"
 				>
 					<div class="min-w-0">
-						<p class="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+						<p class="text-xs font-bold tracking-wider text-emerald-300 uppercase">
 							📍 Tarif &amp; Stok Aktif: {activeBranch?.name ?? 'Semua Cabang'}
 						</p>
 						{#if activeBranch}
@@ -255,7 +255,7 @@
 					>
 						<span>Semua Kategori</span>
 						<span
-							class="text-[10px] {selectedCategory === 'all'
+							class="text-xs {selectedCategory === 'all'
 								? 'text-neutral-600'
 								: 'text-neutral-500'}"
 						>
@@ -275,7 +275,7 @@
 							<CategoryIcon icon={cat.icon} class="h-3.5 w-3.5" />
 							<span>{cat.name}</span>
 							<span
-								class="text-[10px] {selectedCategory === cat.slug
+								class="text-xs {selectedCategory === cat.slug
 									? 'text-neutral-600'
 									: 'text-neutral-500'}"
 							>
@@ -347,7 +347,7 @@
 					<button
 						type="button"
 						onclick={resetFilters}
-						class="rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white hover:border-white"
+						class="rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-sm font-bold text-white hover:border-white"
 					>
 						Reset Filter
 					</button>
@@ -355,7 +355,7 @@
 						href={whatsappAskUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="rounded-full bg-emerald-400 px-5 py-2.5 text-xs font-extrabold text-black hover:bg-emerald-300"
+						class="rounded-full bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-black hover:bg-emerald-300"
 					>
 						Tanya Ketersediaan via WA
 					</a>

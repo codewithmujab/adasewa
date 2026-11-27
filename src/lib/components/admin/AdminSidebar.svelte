@@ -85,11 +85,11 @@
 				class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white/25"
 			/>
 			<div class="min-w-0">
-				<p class="truncate text-sm font-extrabold text-white">
+				<p class="truncate text-sm font-semibold text-white">
 					{companyName}
 				</p>
 				<p
-					class="truncate text-[11px] font-semibold {isSuperAdmin
+					class="truncate text-xs font-semibold {isSuperAdmin
 						? 'text-neutral-400'
 						: 'text-emerald-400'}"
 				>
@@ -121,7 +121,7 @@
 			href="/"
 			target="_blank"
 			rel="noopener noreferrer"
-			class="flex items-center justify-between rounded-full border border-white/20 bg-black px-4 py-2 text-xs font-bold text-neutral-200 transition hover:border-white hover:text-white"
+			class="flex items-center justify-between rounded-full border border-white/20 bg-black px-4 py-2 text-sm font-bold text-neutral-200 transition hover:border-white hover:text-white"
 		>
 			<span>Lihat Situs Publik</span>
 			<span aria-hidden="true">↗</span>
@@ -129,7 +129,7 @@
 
 		<div class="rounded-[1.5rem] border border-white/15 bg-black p-4">
 			<p class="truncate text-xs font-bold text-white">{userName}</p>
-			<p class="truncate text-[11px] text-neutral-400">{userEmail}</p>
+			<p class="truncate text-xs text-neutral-400">{userEmail}</p>
 			<button
 				type="button"
 				disabled={signingOut}

@@ -31,11 +31,11 @@
 		<div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 			<div>
 				<span
-					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 				>
 					Langkah 1 dari 2
 				</span>
-				<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+				<h1 class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
 					Keranjang Sewa Anda
 				</h1>
 				<p class="mt-2 text-sm text-neutral-400">
@@ -46,7 +46,7 @@
 
 			<a
 				href="/katalog"
-				class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
+				class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-sm font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
 			>
 				+ Tambah Barang Lainnya
 			</a>
@@ -57,10 +57,10 @@
 				class="mt-7 flex flex-col justify-between gap-4 rounded-[2rem] border border-emerald-400/25 bg-emerald-400/10 p-5 sm:flex-row sm:items-center sm:px-6"
 			>
 				<div>
-					<p class="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+					<p class="text-xs font-bold tracking-wider text-emerald-300 uppercase">
 						📍 Cabang Penyewaan Aktif
 					</p>
-					<p class="mt-0.5 text-base font-extrabold text-white">
+					<p class="mt-0.5 text-base font-semibold text-white">
 						{activeBranch?.name ?? 'Belum dipilih'}
 					</p>
 					{#if activeBranch}
@@ -99,14 +99,14 @@
 									Durasi otomatis menghitung estimasi biaya seluruh barang di keranjang.
 								</p>
 							</div>
-							<span class="rounded-full bg-white px-4 py-1 text-xs font-extrabold text-black">
+							<span class="rounded-full bg-white px-4 py-1 text-xs font-semibold text-black">
 								Durasi {rentalCart.durationDays} Hari
 							</span>
 						</div>
 
 						<div class="mt-5 grid gap-4 sm:grid-cols-2">
 							<div>
-								<label for="cart-start" class="block text-xs font-semibold text-neutral-300">
+								<label for="cart-start" class="block text-sm font-semibold text-neutral-300">
 									Mulai Tanggal Pemakaian
 								</label>
 								<input
@@ -119,7 +119,7 @@
 								/>
 							</div>
 							<div>
-								<label for="cart-end" class="block text-xs font-semibold text-neutral-300">
+								<label for="cart-end" class="block text-sm font-semibold text-neutral-300">
 									Sampai Tanggal (Jatuh Tempo Kembali)
 								</label>
 								<input
@@ -172,7 +172,7 @@
 									{/if}
 
 									<div class="min-w-0">
-										<p class="text-[11px] font-semibold text-neutral-400">{item.categoryName}</p>
+										<p class="text-sm font-medium text-neutral-400">{item.categoryName}</p>
 										<a
 											href={`/katalog/${item.slug}`}
 											class="mt-0.5 block text-base font-bold text-white hover:underline"
@@ -220,16 +220,16 @@
 									</div>
 
 									<div class="min-w-[120px] text-right">
-										<p class="text-sm font-extrabold text-white">
+										<p class="text-sm font-semibold text-white">
 											{formatRupiah(item.pricePerDay * item.quantity * rentalCart.durationDays)}
 										</p>
-										<p class="text-[11px] text-neutral-400">
+										<p class="text-xs text-neutral-400">
 											{item.quantity} unit × {rentalCart.durationDays} hari
 										</p>
 										<button
 											type="button"
 											onclick={() => rentalCart.removeItem(item.key)}
-											class="mt-1 text-[11px] font-semibold text-red-400 hover:underline"
+											class="mt-1 text-xs font-semibold text-red-400 hover:underline"
 										>
 											Hapus
 										</button>
@@ -245,7 +245,7 @@
 					<div
 						class="sticky top-24 rounded-[2.25rem] border-2 border-white/20 bg-[#0d0d11] p-6 shadow-2xl"
 					>
-						<h2 class="text-base font-extrabold text-white">Ringkasan Estimasi Biaya</h2>
+						<h2 class="text-base font-bold text-white">Ringkasan Estimasi Biaya</h2>
 
 						<dl class="mt-5 space-y-3 text-sm">
 							{#if activeBranch}
@@ -286,14 +286,14 @@
 
 						<div class="mt-5 flex items-baseline justify-between border-t border-white/15 pt-5">
 							<span class="text-sm font-bold text-neutral-300">Estimasi Subtotal</span>
-							<span class="text-2xl font-extrabold text-white">
+							<span class="text-2xl font-bold text-white">
 								{formatRupiah(rentalCart.estimatedSubtotal)}
 							</span>
 						</div>
 
 						{#if rentalCart.hasDepositItems}
 							<p
-								class="mt-4 rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-xs leading-relaxed text-amber-200"
+								class="mt-4 rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm leading-relaxed text-amber-200"
 							>
 								Keranjang memuat unit bernilai tinggi / skala event. Verifikasi identitas &amp;
 								ketentuan jaminan akan dikonfirmasi oleh tim kami.
@@ -302,13 +302,13 @@
 
 						<a
 							href="/checkout"
-							class="mt-6 flex w-full items-center justify-center rounded-full bg-white px-6 py-4 text-sm font-extrabold text-black transition hover:bg-neutral-200"
+							class="mt-6 flex w-full items-center justify-center rounded-full bg-white px-6 py-4 text-sm font-semibold text-black transition hover:bg-neutral-200"
 						>
 							Lanjut ke Checkout &amp; Pembayaran →
 						</a>
 
 						{#if !data.isAuthenticated}
-							<p class="mt-3.5 text-center text-[11px] leading-relaxed text-neutral-400">
+							<p class="mt-3.5 text-center text-sm leading-relaxed text-neutral-400">
 								Belum login? Anda akan diminta <strong class="text-white">daftar atau masuk</strong>
 								di halaman Checkout agar transaksi &amp; jadwal pengembalian tercatat di dashboard
 								Anda.
@@ -319,7 +319,7 @@
 			</div>
 		{:else}
 			<div class="mt-10 rounded-[2.5rem] border border-white/15 bg-[#0c0c0f] p-14 text-center">
-				<h2 class="text-xl font-extrabold text-white">Keranjang sewa Anda masih kosong</h2>
+				<h2 class="text-xl font-bold text-white">Keranjang sewa Anda masih kosong</h2>
 				<p class="mx-auto mt-2 max-w-md text-sm text-neutral-400">
 					Jelajahi 135+ unit barang kami dan tambahkan barang yang Anda butuhkan ke keranjang untuk
 					melihat rincian total biaya secara langsung.

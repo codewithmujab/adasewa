@@ -32,7 +32,7 @@
 					<div
 						class="flex h-full w-full flex-col items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_rgba(12,12,15,1))] p-6 text-center"
 					>
-						<span class="text-xs font-bold tracking-widest text-neutral-400 uppercase">
+						<span class="text-xs font-bold tracking-wide text-neutral-400 uppercase">
 							{portfolio.category}
 						</span>
 						<span class="mt-2 text-lg font-bold tracking-tight text-white">
@@ -98,7 +98,7 @@
 				/>
 			{:else}
 				<div class="flex h-full w-full flex-col items-center justify-center p-6 text-center">
-					<span class="text-xs font-medium tracking-widest text-neutral-400 uppercase">
+					<span class="text-xs font-medium tracking-wide text-neutral-400 uppercase">
 						{portfolio.category}
 					</span>
 					<span class="mt-2 text-lg font-semibold tracking-tight text-neutral-700">

@@ -143,11 +143,11 @@
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
 			<span
-				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wide text-neutral-300 uppercase"
 			>
 				Manajemen Multi-Cabang
 			</span>
-			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white">
+			<h1 class="mt-3 text-2xl font-bold tracking-tight text-white">
 				{data.isSuperAdmin
 					? 'Cabang & Kios Penyewaan'
 					: `Info ${data.assignedBranch?.name ?? 'Cabang'}`}
@@ -162,7 +162,7 @@
 			<button
 				type="button"
 				onclick={openCreate}
-				class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200"
+				class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 			>
 				+ Tambah Cabang Baru
 			</button>
@@ -171,7 +171,7 @@
 
 	<!-- Info Rekening Terpusat -->
 	<div class="rounded-[2rem] border border-sky-400/30 bg-sky-400/10 p-5 text-xs text-sky-100">
-		<p class="font-extrabold text-sky-300">🏦 Kebijakan Rekening Terpusat &amp; Operasional Per Cabang</p>
+		<p class="font-semibold text-sky-300">🏦 Kebijakan Rekening Terpusat &amp; Operasional Per Cabang</p>
 		<p class="mt-1 leading-relaxed text-neutral-300">
 			Setiap cabang mengelola
 			<strong class="text-white"
@@ -193,19 +193,19 @@
 						<div>
 							<div class="flex items-center gap-2">
 								<span
-									class="rounded-full bg-white px-3 py-0.5 font-mono text-xs font-extrabold text-black"
+									class="rounded-full bg-white px-3 py-0.5 font-mono text-xs font-semibold text-black"
 								>
 									{branch.code}
 								</span>
 								<span
-									class="rounded-full px-3 py-0.5 text-[11px] font-bold {branch.isActive
+									class="rounded-full px-3 py-0.5 text-xs font-bold {branch.isActive
 										? 'border border-emerald-400/30 bg-emerald-400/15 text-emerald-300'
 										: 'border border-white/15 bg-white/10 text-neutral-400'}"
 								>
 									{branch.isActive ? 'Aktif' : 'Nonaktif'}
 								</span>
 							</div>
-							<h2 class="mt-3 text-xl font-extrabold text-white">{branch.name}</h2>
+							<h2 class="mt-3 text-xl font-bold text-white">{branch.name}</h2>
 							<p class="text-xs text-neutral-400">
 								Kota {branch.city} · Slug: <span class="font-mono text-neutral-300">/{branch.slug}</span>
 							</p>
@@ -254,11 +254,11 @@
 					<div class="grid grid-cols-2 gap-3 rounded-2xl border border-white/10 bg-black p-4 text-xs">
 						<div>
 							<p class="text-neutral-400">Total Transaksi</p>
-							<p class="mt-0.5 text-lg font-extrabold text-white">{branch.orderCount}</p>
+							<p class="mt-0.5 text-lg font-bold text-white">{branch.orderCount}</p>
 						</div>
 						<div>
 							<p class="text-neutral-400">Omzet Tercatat</p>
-							<p class="mt-0.5 text-lg font-extrabold text-emerald-400">
+							<p class="mt-0.5 text-lg font-bold text-emerald-400">
 								{formatRupiah(branch.totalRevenue)}
 							</p>
 						</div>
@@ -270,7 +270,7 @@
 							<div class="mt-1.5 flex flex-wrap gap-1.5">
 								{#each branch.staff as st (st.id)}
 									<span
-										class="rounded-full border border-white/15 bg-black px-3 py-1 text-[11px] font-semibold text-neutral-200"
+										class="rounded-full border border-white/15 bg-black px-3 py-1 text-xs font-semibold text-neutral-200"
 									>
 										{st.name} ({st.email})
 									</span>
@@ -302,7 +302,7 @@
 
 		<div class="grid gap-4 sm:grid-cols-3">
 			<div>
-				<label for="br-code" class="block text-xs font-semibold text-neutral-300">Kode Cabang *</label>
+				<label for="br-code" class="block text-sm font-semibold text-neutral-300">Kode Cabang *</label>
 				<input
 					id="br-code"
 					type="text"
@@ -314,7 +314,7 @@
 				/>
 			</div>
 			<div class="sm:col-span-2">
-				<label for="br-name" class="block text-xs font-semibold text-neutral-300">Nama Cabang *</label>
+				<label for="br-name" class="block text-sm font-semibold text-neutral-300">Nama Cabang *</label>
 				<input
 					id="br-name"
 					type="text"
@@ -328,7 +328,7 @@
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div>
-				<label for="br-city" class="block text-xs font-semibold text-neutral-300">Kota *</label>
+				<label for="br-city" class="block text-sm font-semibold text-neutral-300">Kota *</label>
 				<input
 					id="br-city"
 					type="text"
@@ -339,7 +339,7 @@
 				/>
 			</div>
 			<div>
-				<label for="br-fee" class="block text-xs font-semibold text-neutral-300">
+				<label for="br-fee" class="block text-sm font-semibold text-neutral-300">
 					Ongkir Dasar Delivery (Rp) *
 				</label>
 				<input
@@ -355,7 +355,7 @@
 		</div>
 
 		<div>
-			<label for="br-addr" class="block text-xs font-semibold text-neutral-300">
+			<label for="br-addr" class="block text-sm font-semibold text-neutral-300">
 				Alamat Kios Lengkap *
 			</label>
 			<textarea
@@ -370,7 +370,7 @@
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div>
-				<label for="br-phone" class="block text-xs font-semibold text-neutral-300">
+				<label for="br-phone" class="block text-sm font-semibold text-neutral-300">
 					Nomor Telepon / Display *
 				</label>
 				<input
@@ -383,7 +383,7 @@
 				/>
 			</div>
 			<div>
-				<label for="br-wa" class="block text-xs font-semibold text-neutral-300">
+				<label for="br-wa" class="block text-sm font-semibold text-neutral-300">
 					Nomor WhatsApp CS *
 				</label>
 				<input
@@ -398,7 +398,7 @@
 		</div>
 
 		<div>
-			<label for="br-hours" class="block text-xs font-semibold text-neutral-300">
+			<label for="br-hours" class="block text-sm font-semibold text-neutral-300">
 				Jam Operasional *
 			</label>
 			<input
@@ -445,7 +445,7 @@
 			<button
 				type="submit"
 				disabled={saving}
-				class="rounded-full bg-white px-6 py-2.5 text-xs font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
+				class="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black hover:bg-neutral-200 disabled:opacity-60"
 			>
 				{saving ? 'Menyimpan...' : editingBranch ? 'Simpan Perubahan' : 'Tambah Cabang'}
 			</button>

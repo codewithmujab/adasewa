@@ -74,10 +74,10 @@
 						? 'ring-2 ring-white/25'
 						: 'ring-1 ring-neutral-200/80'}"
 				/>
-				<div class="flex flex-col leading-none">
-					<span>{settings.companyName}</span>
+				<div class="flex flex-col leading-tight">
+					<span class="text-sm font-bold">{settings.companyName}</span>
 					<span
-						class="mt-0.5 text-[10px] font-medium {dark ? 'text-neutral-400' : 'text-neutral-400'}"
+						class="text-xs font-normal {dark ? 'text-neutral-400' : 'text-neutral-500'}"
 					>
 						Pusat Sewa Barang
 					</span>
@@ -92,7 +92,7 @@
 						id="nav-branch-select"
 						value={activeBranchId}
 						onchange={(e) => handleBranchChange(e.currentTarget.value)}
-						class="rounded-full border px-3.5 py-1.5 text-xs font-semibold transition focus:outline-none {dark
+						class="rounded-full border px-3.5 py-1.5 text-sm font-medium transition focus:outline-none {dark
 							? 'border-white/20 bg-white/10 text-white hover:border-white/40 focus:border-white'
 							: 'border-emerald-200 bg-emerald-50/80 text-emerald-900 hover:border-emerald-400 focus:border-neutral-950'}"
 					>
@@ -132,7 +132,7 @@
 				type="button"
 				onclick={() => rentalCart.openDrawer()}
 				aria-label="Buka keranjang sewa"
-				class="relative inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold transition {dark
+				class="relative inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition {dark
 					? 'border-white/20 bg-white/[0.07] text-white hover:border-white/45 hover:bg-white/15'
 					: 'border-neutral-200 bg-white text-neutral-900 hover:border-neutral-950'}"
 			>
@@ -155,7 +155,7 @@
 				<span class="hidden sm:inline">Keranjang</span>
 				{#if rentalCart.totalUnits > 0}
 					<span
-						class="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-bold text-black"
+						class="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-xs font-bold text-black"
 					>
 						{rentalCart.totalUnits}
 					</span>
@@ -176,7 +176,7 @@
 					</a>
 					<a
 						href="/akun"
-						class="rounded-full px-4 py-2 text-xs font-bold transition {dark
+						class="rounded-full px-4 py-2 text-sm font-semibold transition {dark
 							? 'bg-white text-black hover:bg-neutral-200'
 							: 'bg-neutral-950 text-white hover:bg-neutral-800'}"
 					>
@@ -185,7 +185,7 @@
 					{#if isStaff}
 						<a
 							href="/admin"
-							class="rounded-full border px-3.5 py-2 text-xs font-semibold transition {dark
+							class="rounded-full border px-3.5 py-2 text-sm font-medium transition {dark
 								? 'border-white/20 text-neutral-200 hover:border-white hover:text-white'
 								: 'border-neutral-200 text-neutral-700 hover:border-neutral-950 hover:text-neutral-950'}"
 						>
@@ -195,7 +195,7 @@
 				{:else}
 					<a
 						href="/login"
-						class="rounded-full px-4 py-2 text-xs font-bold transition {dark
+						class="rounded-full px-4 py-2 text-sm font-semibold transition {dark
 							? 'bg-white text-black hover:bg-neutral-200'
 							: 'bg-neutral-950 text-white hover:bg-neutral-800'}"
 					>
@@ -236,7 +236,7 @@
 				<div class="mb-4">
 					<label
 						for="mobile-branch-select"
-						class="block text-[11px] font-semibold uppercase {dark
+						class="block text-sm font-semibold uppercase {dark
 							? 'text-neutral-400'
 							: 'text-neutral-500'}"
 					>

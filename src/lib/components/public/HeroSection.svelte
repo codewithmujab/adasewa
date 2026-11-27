@@ -52,12 +52,12 @@
 				</span>
 
 				<h1
-					class="mt-7 text-4xl font-extrabold tracking-tight text-white sm:text-6xl sm:leading-[1.05]"
+					class="mt-6 text-3xl font-bold tracking-tight text-white sm:text-4xl sm:leading-tight"
 				>
 					{settings.tagline}
 				</h1>
 
-				<p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-neutral-300 sm:text-lg">
+				<p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-neutral-300">
 					{settings.aboutShort}
 				</p>
 
@@ -97,7 +97,7 @@
 
 				<!-- Popular Search Chips -->
 				<div class="mt-5 flex flex-wrap items-center justify-center gap-2">
-					<span class="mr-1 text-xs font-medium text-neutral-500">Populer:</span>
+					<span class="mr-1 text-xs font-medium text-neutral-400">Populer:</span>
 					{#each popularSearches as term (term)}
 						<a
 							href={`/katalog?q=${encodeURIComponent(term)}`}
@@ -108,10 +108,10 @@
 					{/each}
 				</div>
 
-				<div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+				<div class="mt-9 flex flex-wrap items-center justify-center gap-3">
 					<a
 						href="/katalog"
-						class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-black transition hover:bg-neutral-200"
+						class="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition hover:bg-neutral-200"
 					>
 						Jelajahi {totalItems > 0 ? `${totalItems}+` : 'Semua'} Katalog Barang
 						<svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -124,11 +124,11 @@
 					</a>
 					<a
 						href="/keranjang"
-						class="inline-flex items-center gap-2 rounded-full border-2 border-white/20 bg-black px-8 py-4 text-sm font-bold text-white transition hover:border-white hover:bg-white/10"
+						class="inline-flex items-center gap-2 rounded-full border-2 border-white/20 bg-black px-7 py-3.5 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
 					>
 						Lihat Keranjang Sewa
 						{#if rentalCart.totalUnits > 0}
-							<span class="rounded-full bg-emerald-400 px-2.5 py-0.5 text-xs font-extrabold text-black">
+							<span class="rounded-full bg-emerald-400 px-2.5 py-0.5 text-xs font-bold text-black">
 								{rentalCart.totalUnits}
 							</span>
 						{/if}
@@ -142,13 +142,13 @@
 			<div
 				class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6 transition hover:border-white/35"
 			>
-				<p class="text-[11px] font-bold tracking-widest text-neutral-400 uppercase">
+				<p class="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
 					Pilihan Unit
 				</p>
-				<p class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+				<p class="mt-2.5 text-2xl font-bold tracking-tight text-white">
 					{totalItems > 0 ? `${totalItems}+` : '135+'}
 				</p>
-				<p class="mt-2 text-xs leading-relaxed text-neutral-400">
+				<p class="mt-2 text-sm leading-relaxed text-neutral-400">
 					Sewa 1 atau banyak barang sekaligus dalam satu keranjang.
 				</p>
 			</div>
@@ -156,13 +156,13 @@
 			<div
 				class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6 transition hover:border-white/35"
 			>
-				<p class="text-[11px] font-bold tracking-widest text-neutral-400 uppercase">
+				<p class="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
 					Estimasi Transparan
 				</p>
-				<p class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+				<p class="mt-2.5 text-2xl font-bold tracking-tight text-white">
 					Real-Time
 				</p>
-				<p class="mt-2 text-xs leading-relaxed text-neutral-400">
+				<p class="mt-2 text-sm leading-relaxed text-neutral-400">
 					Tarif per cabang Bogor &amp; Depok langsung terhitung otomatis.
 				</p>
 			</div>
@@ -170,13 +170,13 @@
 			<div
 				class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6 transition hover:border-white/35"
 			>
-				<p class="text-[11px] font-bold tracking-widest text-neutral-400 uppercase">
+				<p class="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
 					Area Delivery
 				</p>
-				<p class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+				<p class="mt-2.5 text-2xl font-bold tracking-tight text-white">
 					4 Provinsi
 				</p>
-				<p class="mt-2 text-xs leading-relaxed text-neutral-400">
+				<p class="mt-2 text-sm leading-relaxed text-neutral-400">
 					Antar-jemput DKI, Jabar, Jateng &amp; DIY atau ambil di kios.
 				</p>
 			</div>
@@ -184,13 +184,13 @@
 			<div
 				class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6 transition hover:border-white/35"
 			>
-				<p class="text-[11px] font-bold tracking-widest text-neutral-400 uppercase">
+				<p class="text-xs font-semibold tracking-wide text-neutral-400 uppercase">
 					Loyalitas Sewa
 				</p>
-				<p class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+				<p class="mt-2.5 text-2xl font-bold tracking-tight text-white">
 					{totalCategories > 0 ? `${totalCategories}` : '10'} Kategori
 				</p>
-				<p class="mt-2 text-xs leading-relaxed text-neutral-400">
+				<p class="mt-2 text-sm leading-relaxed text-neutral-400">
 					Bonus Rekening Poin otomatis tiap pengembalian + voucher promo.
 				</p>
 			</div>
