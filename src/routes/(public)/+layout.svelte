@@ -25,15 +25,13 @@
 </script>
 
 <div class="flex min-h-screen flex-col bg-black text-white">
-	<div class="print:hidden">
-		<Navbar
-			settings={data.settings}
-			branches={data.branches}
-			isAuthenticated={data.isAuthenticated}
-			currentUser={data.currentUser}
-			dark={true}
-		/>
-	</div>
+	<Navbar
+		settings={data.settings}
+		branches={data.branches}
+		isAuthenticated={data.isAuthenticated}
+		currentUser={data.currentUser}
+		dark={true}
+	/>
 	<main class="flex-1">
 		{@render children()}
 	</main>

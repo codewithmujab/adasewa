@@ -45,9 +45,7 @@
 		promos = data.promos;
 	});
 
-	let branchNameById = $derived(
-		new Map<string, string>(data.branches.map((b) => [b.id, b.name]))
-	);
+	let branchNameById = $derived(new Map<string, string>(data.branches.map((b) => [b.id, b.name])));
 
 	function canManagePromo(promo: PromoCode): boolean {
 		if (data.isSuperAdmin) return true;
@@ -134,7 +132,7 @@
 			usageLimitInput.trim().length > 0 ? Math.max(1, Math.trunc(Number(usageLimitInput))) : null;
 
 		const payload = {
-			branchId: data.isSuperAdmin ? (branchIdInput || null) : (data.user.branchId ?? null),
+			branchId: data.isSuperAdmin ? branchIdInput || null : (data.user.branchId ?? null),
 			code: normalizePromoCode(code),
 			title: title.trim(),
 			description: description.trim(),
@@ -197,9 +195,7 @@
 			const updated = result.data;
 			promos = promos.map((p) => (p.id === updated.id ? updated : p));
 			showToast(
-				updated.isActive
-					? `Promo ${updated.code} diaktifkan.`
-					: `Promo ${updated.code} dinonaktifkan.`
+				updated.isActive ? `Promo ${updated.code} diaktifkan.` : `Promo ${updated.code} dinonaktifkan.`
 			);
 		} catch {
 			showToast('Gangguan jaringan saat mengubah status promo.', 'error');
@@ -237,9 +233,13 @@
 <div class="space-y-6">
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
-			<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">Pemasaran</p>
-			<h1 class="mt-1 text-3xl font-semibold tracking-tight text-neutral-950">Promo &amp; Diskon</h1>
-			<p class="mt-1 text-sm text-neutral-500">
+			<span
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+			>
+				Pemasaran
+			</span>
+			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white">Promo &amp; Diskon</h1>
+			<p class="mt-1 text-sm text-neutral-400">
 				Buat dan kelola voucher diskon persentase (%) atau potongan rupiah (Rp) untuk checkout &amp;
 				landing page.
 			</p>
@@ -248,86 +248,90 @@
 		<button
 			type="button"
 			onclick={openCreate}
-			class="inline-flex items-center justify-center rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+			class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200"
 		>
 			+ Buat Kode Promo
 		</button>
 	</header>
 
 	<div class="grid gap-4 sm:grid-cols-3">
-		<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-			<p class="text-xs font-medium text-neutral-400">Total Kode Promo</p>
-			<p class="mt-2 text-3xl font-bold text-neutral-950">{stats.total}</p>
+		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+			<p class="text-xs font-semibold text-neutral-400">Total Kode Promo</p>
+			<p class="mt-2 text-3xl font-extrabold text-white">{stats.total}</p>
 		</div>
-		<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-			<p class="text-xs font-medium text-neutral-400">Sedang Aktif</p>
-			<p class="mt-2 text-3xl font-bold text-emerald-600">{stats.active}</p>
+		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+			<p class="text-xs font-semibold text-neutral-400">Sedang Aktif</p>
+			<p class="mt-2 text-3xl font-extrabold text-emerald-400">{stats.active}</p>
 		</div>
-		<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-			<p class="text-xs font-medium text-neutral-400">Total Pemakaian</p>
-			<p class="mt-2 text-3xl font-bold text-rose-600">{stats.totalUsed}×</p>
+		<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+			<p class="text-xs font-semibold text-neutral-400">Total Pemakaian</p>
+			<p class="mt-2 text-3xl font-extrabold text-rose-400">{stats.totalUsed}×</p>
 		</div>
 	</div>
 
-	<div class="rounded-3xl border border-neutral-200/80 bg-white p-4">
+	<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-4">
 		<input
 			type="search"
 			bind:value={search}
 			placeholder="Cari kode atau judul promo..."
-			class="w-full rounded-full border border-neutral-200 bg-surface px-4 py-2 text-sm focus:border-neutral-950 focus:bg-white focus:outline-none sm:max-w-xs"
+			class="w-full rounded-full border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none sm:max-w-xs"
 		/>
 	</div>
 
 	{#if filteredPromos.length > 0}
-		<div class="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white">
+		<div class="overflow-hidden rounded-[2rem] border border-white/15 bg-[#0c0c0f]">
 			<div class="overflow-x-auto">
 				<table class="w-full text-left text-sm">
-					<thead class="border-b border-neutral-100 bg-neutral-50/70 text-xs text-neutral-500">
+					<thead class="border-b border-white/10 bg-black/60 text-xs text-neutral-400">
 						<tr>
-							<th class="px-5 py-3.5 font-medium">Kode &amp; Judul</th>
-							<th class="px-4 py-3.5 font-medium">Potongan &amp; Syarat</th>
-							<th class="px-4 py-3.5 font-medium">Kuota &amp; Masa Berlaku</th>
-							<th class="px-4 py-3.5 font-medium">Status</th>
-							<th class="px-5 py-3.5 text-right font-medium">Aksi</th>
+							<th class="px-5 py-3.5 font-semibold">Kode &amp; Judul</th>
+							<th class="px-4 py-3.5 font-semibold">Potongan &amp; Syarat</th>
+							<th class="px-4 py-3.5 font-semibold">Kuota &amp; Masa Berlaku</th>
+							<th class="px-4 py-3.5 font-semibold">Status</th>
+							<th class="px-5 py-3.5 text-right font-semibold">Aksi</th>
 						</tr>
 					</thead>
-					<tbody class="divide-y divide-neutral-100">
+					<tbody class="divide-y divide-white/10">
 						{#each filteredPromos as promo (promo.id)}
 							{@const editable = canManagePromo(promo)}
-							<tr class="transition hover:bg-neutral-50/60">
+							<tr class="transition hover:bg-white/[0.03]">
 								<td class="px-5 py-4">
 									<div class="flex flex-wrap items-center gap-1.5">
-										<span class="rounded-lg bg-rose-50 px-2.5 py-1 font-mono text-xs font-bold text-rose-700">
+										<span
+											class="rounded-full bg-white px-3 py-0.5 font-mono text-xs font-extrabold text-black"
+										>
 											{promo.code}
 										</span>
 										<span
-											class="rounded-full px-2 py-0.5 text-[10px] font-semibold {promo.branchId
-												? 'bg-emerald-50 text-emerald-700'
-												: 'bg-neutral-100 text-neutral-600'}"
+											class="rounded-full px-2.5 py-0.5 text-[10px] font-bold {promo.branchId
+												? 'border border-emerald-400/30 bg-emerald-400/15 text-emerald-300'
+												: 'border border-white/15 bg-white/10 text-neutral-300'}"
 										>
 											{promo.branchId
 												? `📍 ${branchNameById.get(promo.branchId) ?? 'Cabang'}`
 												: 'Semua Cabang'}
 										</span>
 										{#if promo.showOnLanding}
-											<span class="rounded-full bg-surface px-2 py-0.5 text-[10px] font-medium text-neutral-500">
+											<span
+												class="rounded-full border border-white/15 bg-black px-2 py-0.5 text-[10px] font-medium text-neutral-400"
+											>
 												Landing
 											</span>
 										{/if}
 									</div>
-									<p class="mt-1 font-medium text-neutral-950">{promo.title}</p>
+									<p class="mt-1.5 font-bold text-white">{promo.title}</p>
 								</td>
-								<td class="px-4 py-4 text-xs text-neutral-700">
-									<p class="font-semibold text-neutral-950">{formatPromoBadge(promo)}</p>
+								<td class="px-4 py-4 text-xs text-neutral-300">
+									<p class="font-extrabold text-white">{formatPromoBadge(promo)}</p>
 									{#if promo.maxDiscountAmount}
-										<p class="text-neutral-500">Maks. {formatRupiah(promo.maxDiscountAmount)}</p>
+										<p class="text-neutral-400">Maks. {formatRupiah(promo.maxDiscountAmount)}</p>
 									{/if}
-									<p class="text-neutral-400">
+									<p class="text-neutral-500">
 										Min. sewa {promo.minOrderAmount > 0 ? formatRupiah(promo.minOrderAmount) : 'Rp 0'}
 									</p>
 								</td>
-								<td class="px-4 py-4 text-xs text-neutral-600">
-									<p class="font-medium text-neutral-900">
+								<td class="px-4 py-4 text-xs text-neutral-300">
+									<p class="font-bold text-white">
 										Dipakai {promo.usedCount} / {promo.usageLimit ?? '∞'}
 									</p>
 									<p class="text-neutral-400">
@@ -341,9 +345,9 @@
 										type="button"
 										disabled={!editable || busyId === promo.id}
 										onclick={() => toggleActive(promo)}
-										class="rounded-full px-3 py-1 text-xs font-medium transition disabled:cursor-default disabled:opacity-70 {promo.isActive
-											? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-											: 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}"
+										class="rounded-full px-3 py-1 text-xs font-bold transition disabled:cursor-default disabled:opacity-60 {promo.isActive
+											? 'border border-emerald-400/30 bg-emerald-400/15 text-emerald-300 hover:bg-emerald-400/25'
+											: 'border border-white/15 bg-white/10 text-neutral-400 hover:bg-white/20'}"
 									>
 										{promo.isActive ? 'Aktif' : 'Nonaktif'}
 									</button>
@@ -354,20 +358,20 @@
 											<button
 												type="button"
 												onclick={() => openEdit(promo)}
-												class="rounded-full border border-neutral-200 px-3.5 py-1.5 text-xs font-medium text-neutral-700 hover:border-neutral-950 hover:text-neutral-950"
+												class="rounded-full border border-white/20 bg-black px-3.5 py-1.5 text-xs font-bold text-neutral-200 hover:border-white hover:text-white"
 											>
 												Edit
 											</button>
 											<button
 												type="button"
 												onclick={() => (deletingPromo = promo)}
-												class="rounded-full border border-red-200 px-3.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+												class="rounded-full border border-red-400/30 bg-red-500/10 px-3.5 py-1.5 text-xs font-bold text-red-300 hover:bg-red-500/20"
 											>
 												Hapus
 											</button>
 										</div>
 									{:else}
-										<span class="text-[11px] font-medium text-neutral-400">Promo Pusat</span>
+										<span class="text-[11px] font-semibold text-neutral-500">Promo Pusat</span>
 									{/if}
 								</td>
 							</tr>
@@ -377,8 +381,8 @@
 			</div>
 		</div>
 	{:else}
-		<div class="rounded-3xl border border-neutral-200/80 bg-white p-14 text-center">
-			<p class="text-sm text-neutral-500">Belum ada kode promo diskon.</p>
+		<div class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-14 text-center">
+			<p class="text-sm text-neutral-400">Belum ada kode promo diskon.</p>
 		</div>
 	{/if}
 </div>
@@ -394,29 +398,31 @@
 >
 	<form onsubmit={handleSavePromo} class="space-y-4">
 		{#if formError}
-			<div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-800">
+			<div class="rounded-2xl border border-red-400/30 bg-red-500/15 px-4 py-3 text-xs text-red-200">
 				{formError}
 			</div>
 		{/if}
 
 		<div>
 			{#if data.isSuperAdmin}
-				<label for="pr-branch" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-branch" class="block text-xs font-semibold text-neutral-300">
 					Berlaku Untuk Cabang
 				</label>
 				<select
 					id="pr-branch"
 					bind:value={branchIdInput}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 				>
-					<option value="">Semua Cabang (Promo Global)</option>
+					<option value="" class="bg-neutral-950">Semua Cabang (Promo Global)</option>
 					{#each data.branches as br (br.id)}
-						<option value={br.id}>{br.name} ({br.code})</option>
+						<option value={br.id} class="bg-neutral-950">{br.name} ({br.code})</option>
 					{/each}
 				</select>
 			{:else}
-				<p class="block text-xs font-semibold text-neutral-700">Berlaku Untuk Cabang</p>
-				<p class="mt-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-xs font-semibold text-emerald-800">
+				<p class="block text-xs font-semibold text-neutral-300">Berlaku Untuk Cabang</p>
+				<p
+					class="mt-1.5 rounded-2xl border border-emerald-400/30 bg-emerald-400/15 px-4 py-2.5 text-xs font-bold text-emerald-300"
+				>
 					📍 Khusus {data.assignedBranch?.name ?? 'Cabang Anda'}
 				</p>
 			{/if}
@@ -424,57 +430,59 @@
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div>
-				<label for="pr-code" class="block text-xs font-semibold text-neutral-700">Kode Promo *</label>
+				<label for="pr-code" class="block text-xs font-semibold text-neutral-300">Kode Promo *</label>
 				<input
 					id="pr-code"
 					type="text"
 					required
 					bind:value={code}
 					placeholder="SEWABARU10"
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 font-mono text-sm font-bold uppercase focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 font-mono text-sm font-bold text-white uppercase focus:border-white focus:outline-none"
 				/>
 			</div>
 
 			<div>
-				<label for="pr-title" class="block text-xs font-semibold text-neutral-700">Judul Promo *</label>
+				<label for="pr-title" class="block text-xs font-semibold text-neutral-300">Judul Promo *</label>
 				<input
 					id="pr-title"
 					type="text"
 					required
 					bind:value={title}
 					placeholder="Diskon 10% Semua Barang"
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white focus:border-white focus:outline-none"
 				/>
 			</div>
 		</div>
 
 		<div>
-			<label for="pr-desc" class="block text-xs font-semibold text-neutral-700">Deskripsi Singkat *</label>
+			<label for="pr-desc" class="block text-xs font-semibold text-neutral-300">
+				Deskripsi Singkat *
+			</label>
 			<textarea
 				id="pr-desc"
 				rows="2"
 				required
 				bind:value={description}
 				placeholder="Penjelasan syarat & ketentuan singkat promo..."
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 			></textarea>
 		</div>
 
 		<div class="grid gap-4 sm:grid-cols-3">
 			<div>
-				<label for="pr-type" class="block text-xs font-semibold text-neutral-700">Jenis Diskon</label>
+				<label for="pr-type" class="block text-xs font-semibold text-neutral-300">Jenis Diskon</label>
 				<select
 					id="pr-type"
 					bind:value={discountType}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 				>
-					<option value="percentage">Persentase (%)</option>
-					<option value="fixed">Nominal Tetap (Rp)</option>
+					<option value="percentage" class="bg-neutral-950">Persentase (%)</option>
+					<option value="fixed" class="bg-neutral-950">Nominal Tetap (Rp)</option>
 				</select>
 			</div>
 
 			<div>
-				<label for="pr-val" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-val" class="block text-xs font-semibold text-neutral-300">
 					{discountType === 'percentage' ? 'Persentase (%)' : 'Potongan (Rp)'} *
 				</label>
 				<input
@@ -484,12 +492,12 @@
 					max={discountType === 'percentage' ? 90 : 100000000}
 					required
 					bind:value={discountValue}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm font-semibold focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm font-bold text-white focus:border-white focus:outline-none"
 				/>
 			</div>
 
 			<div>
-				<label for="pr-max" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-max" class="block text-xs font-semibold text-neutral-300">
 					Maks. Potongan (Rp)
 				</label>
 				<input
@@ -500,14 +508,14 @@
 					disabled={discountType === 'fixed'}
 					bind:value={maxDiscountInput}
 					placeholder={discountType === 'fixed' ? 'Tidak perlu' : 'Kosong = tanpa batas'}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none disabled:bg-neutral-100"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none disabled:opacity-40"
 				/>
 			</div>
 		</div>
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div>
-				<label for="pr-min" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-min" class="block text-xs font-semibold text-neutral-300">
 					Minimal Subtotal Sewa (Rp)
 				</label>
 				<input
@@ -516,12 +524,12 @@
 					min="0"
 					step="10000"
 					bind:value={minOrderAmount}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white focus:border-white focus:outline-none"
 				/>
 			</div>
 
 			<div>
-				<label for="pr-limit" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-limit" class="block text-xs font-semibold text-neutral-300">
 					Batas Kuota Pemakaian
 				</label>
 				<input
@@ -530,63 +538,63 @@
 					min="1"
 					bind:value={usageLimitInput}
 					placeholder="Kosong = tak terbatas"
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 				/>
 			</div>
 		</div>
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div>
-				<label for="pr-start" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-start" class="block text-xs font-semibold text-neutral-300">
 					Berlaku Mulai (Opsional)
 				</label>
 				<input
 					id="pr-start"
 					type="date"
 					bind:value={startsAtInput}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 				/>
 			</div>
 
 			<div>
-				<label for="pr-end" class="block text-xs font-semibold text-neutral-700">
+				<label for="pr-end" class="block text-xs font-semibold text-neutral-300">
 					Berakhir Tanggal (Opsional)
 				</label>
 				<input
 					id="pr-end"
 					type="date"
 					bind:value={expiresAtInput}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 				/>
 			</div>
 		</div>
 
-		<div class="flex flex-wrap gap-6 rounded-2xl bg-surface px-4 py-3 text-xs">
-			<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-				<input type="checkbox" bind:checked={isActive} class="h-4 w-4 accent-neutral-950" />
+		<div class="flex flex-wrap gap-6 rounded-2xl border border-white/10 bg-black px-4 py-3 text-xs">
+			<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+				<input type="checkbox" bind:checked={isActive} class="h-4 w-4 accent-white" />
 				<span>Promo Aktif</span>
 			</label>
-			<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-				<input type="checkbox" bind:checked={showOnLanding} class="h-4 w-4 accent-neutral-950" />
+			<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+				<input type="checkbox" bind:checked={showOnLanding} class="h-4 w-4 accent-white" />
 				<span>Tampilkan Voucher di Landing Page</span>
 			</label>
 		</div>
 
-		<div class="flex justify-end gap-2.5 border-t border-neutral-100 pt-4">
+		<div class="flex justify-end gap-2.5 border-t border-white/10 pt-4">
 			<button
 				type="button"
 				onclick={() => {
 					modalOpen = false;
 					editingPromo = null;
 				}}
-				class="rounded-full border border-neutral-200 px-5 py-2 text-xs font-semibold text-neutral-700"
+				class="rounded-full border border-white/20 bg-black px-5 py-2 text-xs font-bold text-neutral-300"
 			>
 				Batal
 			</button>
 			<button
 				type="submit"
 				disabled={saving}
-				class="rounded-full bg-neutral-950 px-6 py-2.5 text-xs font-semibold text-white hover:bg-neutral-800 disabled:opacity-60"
+				class="rounded-full bg-white px-6 py-2.5 text-xs font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
 			>
 				{saving ? 'Menyimpan...' : editingPromo ? 'Simpan Perubahan' : 'Buat Promo'}
 			</button>
@@ -601,15 +609,15 @@
 	onClose={() => (deletingPromo = null)}
 >
 	{#if deletingPromo}
-		<p class="text-sm text-neutral-600">
+		<p class="text-sm text-neutral-300">
 			Anda yakin ingin menghapus kode promo
-			<strong class="font-mono text-neutral-950">{deletingPromo.code}</strong>?
+			<strong class="font-mono text-white">{deletingPromo.code}</strong>?
 		</p>
 		<div class="mt-6 flex justify-end gap-2">
 			<button
 				type="button"
 				onclick={() => (deletingPromo = null)}
-				class="rounded-full border border-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-700"
+				class="rounded-full border border-white/20 bg-black px-4 py-2 text-xs font-bold text-neutral-300"
 			>
 				Batal
 			</button>
@@ -617,7 +625,7 @@
 				type="button"
 				disabled={busyId === deletingPromo.id}
 				onclick={confirmDelete}
-				class="rounded-full bg-red-600 px-5 py-2 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+				class="rounded-full bg-red-500 px-5 py-2 text-xs font-extrabold text-white hover:bg-red-600 disabled:opacity-60"
 			>
 				{busyId === deletingPromo.id ? 'Menghapus...' : 'Ya, Hapus'}
 			</button>

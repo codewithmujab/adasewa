@@ -51,8 +51,8 @@
 
 <header
 	class={dark
-		? 'sticky top-0 z-40 bg-black/80 px-4 pt-3.5 pb-2 backdrop-blur-xl sm:px-6'
-		: 'sticky top-0 z-40 border-b border-neutral-200/70 bg-white/85 backdrop-blur-xl'}
+		? 'sticky top-0 z-40 bg-black/80 px-4 pt-3.5 pb-2 backdrop-blur-xl sm:px-6 print:hidden'
+		: 'sticky top-0 z-40 border-b border-neutral-200/70 bg-white/85 backdrop-blur-xl print:hidden'}
 >
 	<div
 		class={dark

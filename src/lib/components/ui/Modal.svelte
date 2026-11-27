@@ -30,7 +30,7 @@
 
 {#if open}
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/45 p-4 backdrop-blur-sm sm:p-6"
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md sm:p-6"
 		role="dialog"
 		aria-modal="true"
 		aria-label={title}
@@ -44,20 +44,20 @@
 		></button>
 
 		<div
-			class="relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-2xl {maxWidthClass}"
+			class="relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-[2rem] border border-white/15 bg-[#0c0c0f] text-white shadow-2xl {maxWidthClass}"
 		>
-			<header class="flex items-start justify-between gap-4 border-b border-neutral-100 px-6 py-5">
+			<header class="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5">
 				<div>
-					<h2 class="text-lg font-semibold tracking-tight text-neutral-950">{title}</h2>
+					<h2 class="text-lg font-extrabold tracking-tight text-white">{title}</h2>
 					{#if subtitle}
-						<p class="mt-0.5 text-sm text-neutral-500">{subtitle}</p>
+						<p class="mt-0.5 text-sm text-neutral-400">{subtitle}</p>
 					{/if}
 				</div>
 				<button
 					type="button"
 					onclick={onClose}
 					aria-label="Tutup"
-					class="rounded-full p-2 text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-900"
+					class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-neutral-300 transition hover:border-white hover:bg-white hover:text-black"
 				>
 					<svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 						<path

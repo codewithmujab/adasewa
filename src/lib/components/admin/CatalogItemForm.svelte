@@ -170,14 +170,14 @@
 
 <form onsubmit={handleSubmit} class="space-y-5">
 	{#if errorMessage}
-		<div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+		<div class="rounded-2xl border border-red-400/30 bg-red-500/15 px-4 py-3 text-sm text-red-200">
 			{errorMessage}
 		</div>
 	{/if}
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="cat-name" class="block text-xs font-medium text-neutral-700">Nama Barang *</label>
+			<label for="cat-name" class="block text-xs font-semibold text-neutral-300">Nama Barang *</label>
 			<input
 				id="cat-name"
 				type="text"
@@ -185,23 +185,23 @@
 				value={name}
 				oninput={(e) => handleNameInput(e.currentTarget.value)}
 				placeholder="Proyektor 3500 Lumens"
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 			/>
 			{#if fieldErrors.name?.[0]}
-				<p class="mt-1 text-xs text-red-600">{fieldErrors.name[0]}</p>
+				<p class="mt-1 text-xs text-red-400">{fieldErrors.name[0]}</p>
 			{/if}
 		</div>
 
 		<div>
-			<label for="cat-category" class="block text-xs font-medium text-neutral-700">Kategori *</label>
+			<label for="cat-category" class="block text-xs font-semibold text-neutral-300">Kategori *</label>
 			<select
 				id="cat-category"
 				required
 				bind:value={categoryId}
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 			>
 				{#each categories as cat (cat.id)}
-					<option value={cat.id}>{cat.name}</option>
+					<option value={cat.id} class="bg-neutral-950">{cat.name}</option>
 				{/each}
 			</select>
 		</div>
@@ -209,8 +209,8 @@
 
 	<div class="grid gap-4 sm:grid-cols-3">
 		<div>
-			<label for="cat-price" class="block text-xs font-medium text-neutral-700">
-				Harga Sewa (Rp)
+			<label for="cat-price" class="block text-xs font-semibold text-neutral-300">
+				Harga Sewa Dasar (Rp)
 			</label>
 			<input
 				id="cat-price"
@@ -219,36 +219,36 @@
 				step="1000"
 				bind:value={priceInput}
 				placeholder="Kosongkan = Tanya CS"
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 			/>
 		</div>
 
 		<div>
-			<label for="cat-unit" class="block text-xs font-medium text-neutral-700">Satuan Tarif</label>
+			<label for="cat-unit" class="block text-xs font-semibold text-neutral-300">Satuan Tarif</label>
 			<input
 				id="cat-unit"
 				type="text"
 				bind:value={unitLabel}
 				placeholder="hari / event / set"
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 			/>
 		</div>
 
 		<div>
-			<label for="cat-stock" class="block text-xs font-medium text-neutral-700">Stok Unit</label>
+			<label for="cat-stock" class="block text-xs font-semibold text-neutral-300">Stok Unit Dasar</label>
 			<input
 				id="cat-stock"
 				type="number"
 				min="0"
 				bind:value={stockQty}
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white focus:border-white focus:outline-none"
 			/>
 		</div>
 	</div>
 
 	<div class="grid gap-4 sm:grid-cols-3">
 		<div class="sm:col-span-2">
-			<label for="cat-slug" class="block text-xs font-medium text-neutral-700">Slug URL</label>
+			<label for="cat-slug" class="block text-xs font-semibold text-neutral-300">Slug URL</label>
 			<input
 				id="cat-slug"
 				type="text"
@@ -257,24 +257,24 @@
 					slugTouched = true;
 					slug = e.currentTarget.value;
 				}}
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 font-mono text-xs focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 font-mono text-xs text-white focus:border-white focus:outline-none"
 			/>
 		</div>
 		<div>
-			<label for="cat-order" class="block text-xs font-medium text-neutral-700">Urutan</label>
+			<label for="cat-order" class="block text-xs font-semibold text-neutral-300">Urutan</label>
 			<input
 				id="cat-order"
 				type="number"
 				min="0"
 				max="9999"
 				bind:value={sortOrder}
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white focus:border-white focus:outline-none"
 			/>
 		</div>
 	</div>
 
 	<div>
-		<label for="cat-short" class="block text-xs font-medium text-neutral-700">
+		<label for="cat-short" class="block text-xs font-semibold text-neutral-300">
 			Deskripsi Singkat (Kartu Katalog) *
 		</label>
 		<textarea
@@ -282,12 +282,12 @@
 			rows="2"
 			required
 			bind:value={shortDescription}
-			class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+			class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white focus:border-white focus:outline-none"
 		></textarea>
 	</div>
 
 	<div>
-		<label for="cat-desc" class="block text-xs font-medium text-neutral-700">
+		<label for="cat-desc" class="block text-xs font-semibold text-neutral-300">
 			Detail &amp; Rekomendasi Penggunaan *
 		</label>
 		<textarea
@@ -295,13 +295,13 @@
 			rows="4"
 			required
 			bind:value={description}
-			class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+			class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white focus:border-white focus:outline-none"
 		></textarea>
 	</div>
 
 	<div class="grid gap-4 sm:grid-cols-2">
 		<div>
-			<label for="cat-specs" class="block text-xs font-medium text-neutral-700">
+			<label for="cat-specs" class="block text-xs font-semibold text-neutral-300">
 				Spesifikasi (1 baris = Label: Nilai)
 			</label>
 			<textarea
@@ -309,12 +309,12 @@
 				rows="4"
 				bind:value={specsText}
 				placeholder="Kecerahan: 3500 ANSI Lumens&#10;Konektivitas: HDMI & VGA"
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 font-mono text-xs focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 font-mono text-xs text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 			></textarea>
 		</div>
 
 		<div>
-			<label for="cat-includes" class="block text-xs font-medium text-neutral-700">
+			<label for="cat-includes" class="block text-xs font-semibold text-neutral-300">
 				Kelengkapan Didapat (1 item per baris)
 			</label>
 			<textarea
@@ -322,13 +322,13 @@
 				rows="4"
 				bind:value={includesText}
 				placeholder="Unit Proyektor&#10;Kabel HDMI&#10;Remote Control"
-				class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-xs focus:border-neutral-950 focus:outline-none"
+				class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-xs text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 			></textarea>
 		</div>
 	</div>
 
 	<div>
-		<label for="cat-variants" class="block text-xs font-medium text-neutral-700">
+		<label for="cat-variants" class="block text-xs font-semibold text-neutral-300">
 			Pilihan Varian / Ukuran (pisahkan dengan koma, opsional)
 		</label>
 		<input
@@ -336,7 +336,7 @@
 			type="text"
 			bind:value={variantsText}
 			placeholder="Size S, Size M, Size L, Size XL"
-			class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+			class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 		/>
 	</div>
 
@@ -351,41 +351,41 @@
 		}}
 	/>
 
-	<div class="flex flex-wrap gap-x-6 gap-y-3 rounded-2xl bg-surface px-4 py-3.5 text-xs">
-		<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-			<input type="checkbox" bind:checked={isPublished} class="h-4 w-4 accent-neutral-950" />
+	<div class="flex flex-wrap gap-x-6 gap-y-3 rounded-2xl border border-white/10 bg-black px-4 py-3.5 text-xs">
+		<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+			<input type="checkbox" bind:checked={isPublished} class="h-4 w-4 accent-white" />
 			<span>Publikasikan di Katalog</span>
 		</label>
-		<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-			<input type="checkbox" bind:checked={isFeatured} class="h-4 w-4 accent-neutral-950" />
+		<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+			<input type="checkbox" bind:checked={isFeatured} class="h-4 w-4 accent-white" />
 			<span>Tandai Populer / Unggulan</span>
 		</label>
-		<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-			<input type="checkbox" bind:checked={requiresDeposit} class="h-4 w-4 accent-neutral-950" />
+		<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+			<input type="checkbox" bind:checked={requiresDeposit} class="h-4 w-4 accent-white" />
 			<span>Perlu Verifikasi / DP Khusus</span>
 		</label>
-		<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-			<input type="checkbox" bind:checked={deliveryAvailable} class="h-4 w-4 accent-neutral-950" />
+		<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+			<input type="checkbox" bind:checked={deliveryAvailable} class="h-4 w-4 accent-white" />
 			<span>Bisa Delivery</span>
 		</label>
-		<label class="flex cursor-pointer items-center gap-2 text-neutral-800">
-			<input type="checkbox" bind:checked={pickupAvailable} class="h-4 w-4 accent-neutral-950" />
+		<label class="flex cursor-pointer items-center gap-2 text-neutral-200">
+			<input type="checkbox" bind:checked={pickupAvailable} class="h-4 w-4 accent-white" />
 			<span>Bisa Ambil di Kios</span>
 		</label>
 	</div>
 
-	<div class="flex items-center justify-end gap-3 border-t border-neutral-100 pt-5">
+	<div class="flex items-center justify-end gap-3 border-t border-white/10 pt-5">
 		<button
 			type="button"
 			onclick={onCancel}
-			class="rounded-full border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+			class="rounded-full border border-white/20 bg-black px-5 py-2.5 text-sm font-bold text-neutral-300 hover:border-white hover:text-white"
 		>
 			Batal
 		</button>
 		<button
 			type="submit"
 			disabled={submitting}
-			class="rounded-full bg-neutral-950 px-6 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-60"
+			class="rounded-full bg-white px-6 py-2.5 text-sm font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
 		>
 			{submitting ? 'Menyimpan...' : item ? 'Simpan Perubahan' : 'Tambah Barang'}
 		</button>

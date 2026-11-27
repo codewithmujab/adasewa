@@ -172,7 +172,9 @@
 			}
 			const updated = result.data;
 			items = items.map((row) => (row.id === updated.id ? updated : row));
-			showToast(updated.isPublished ? 'Barang diterbitkan ke katalog.' : 'Barang dipindah ke draft.');
+			showToast(
+				updated.isPublished ? 'Barang diterbitkan ke katalog.' : 'Barang dipindah ke draft.'
+			);
 		} catch {
 			showToast('Gangguan jaringan saat mengubah status barang.', 'error');
 		} finally {
@@ -211,19 +213,25 @@
 <div class="space-y-6">
 	<header class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 		<div>
-			<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
+			<span
+				class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+			>
 				{data.isSuperAdmin
 					? 'Inventaris & Tarif Multi-Cabang'
 					: `Tarif & Stok ${data.assignedBranch?.name ?? 'Cabang'}`}
-			</p>
-			<h1 class="mt-1 text-3xl font-semibold tracking-tight text-neutral-950">
-				{data.isSuperAdmin ? `Katalog & Harga Cabang (${items.length})` : `Harga & Stok ${data.assignedBranch?.name ?? ''}`}
+			</span>
+			<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white">
+				{data.isSuperAdmin
+					? `Katalog & Harga Cabang (${items.length})`
+					: `Harga & Stok ${data.assignedBranch?.name ?? ''}`}
 			</h1>
-			<p class="mt-1 text-sm text-neutral-500">
+			<p class="mt-1 text-sm text-neutral-400">
 				{#if data.isSuperAdmin}
-					Atur katalog master serta harga &amp; ketersediaan stok berbeda untuk setiap cabang (Bogor &amp; Depok).
+					Atur katalog master serta harga &amp; ketersediaan stok berbeda untuk setiap cabang
+					(Bogor &amp; Depok).
 				{:else}
-					Sesuaikan harga sewa harian, jumlah stok, dan ketersediaan barang khusus {data.assignedBranch?.name ?? 'cabang Anda'}.
+					Sesuaikan harga sewa harian, jumlah stok, dan ketersediaan barang khusus
+					{data.assignedBranch?.name ?? 'cabang Anda'}.
 				{/if}
 			</p>
 		</div>
@@ -232,7 +240,7 @@
 			<button
 				type="button"
 				onclick={openCreate}
-				class="inline-flex items-center justify-center rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+				class="inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-black transition hover:bg-neutral-200"
 			>
 				+ Tambah Barang Master
 			</button>
@@ -242,14 +250,15 @@
 	<!-- Pemilih Cabang untuk Harga & Stok -->
 	{#if data.branches.length > 0}
 		<div
-			class="flex flex-col justify-between gap-3 rounded-3xl border border-emerald-200/80 bg-emerald-50/50 p-4 sm:flex-row sm:items-center"
+			class="flex flex-col justify-between gap-3 rounded-[2rem] border border-emerald-400/30 bg-emerald-400/10 p-5 sm:flex-row sm:items-center"
 		>
 			<div>
-				<p class="text-[11px] font-bold tracking-wider text-emerald-800 uppercase">
+				<p class="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
 					📍 Menampilkan Harga &amp; Stok: {activeBranch?.name ?? '-'}
 				</p>
-				<p class="mt-0.5 text-xs text-neutral-600">
-					Klik tombol <strong>Harga &amp; Stok</strong> pada tiap barang untuk mengubah tarif khusus cabang ini.
+				<p class="mt-0.5 text-xs text-neutral-300">
+					Klik tombol <strong class="text-white">Harga &amp; Stok</strong> pada tiap barang untuk
+					mengubah tarif khusus cabang ini.
 				</p>
 			</div>
 
@@ -259,17 +268,17 @@
 						<button
 							type="button"
 							onclick={() => (selectedBranchId = br.id)}
-							class="rounded-full px-4 py-1.5 text-xs font-semibold transition {activeBranch?.id ===
+							class="rounded-full px-4 py-1.5 text-xs font-bold transition {activeBranch?.id ===
 							br.id
-								? 'bg-neutral-950 text-white'
-								: 'border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950'}"
+								? 'bg-white text-black'
+								: 'border border-white/20 bg-black/60 text-neutral-200 hover:border-white hover:text-white'}"
 						>
 							{br.name} ({br.code})
 						</button>
 					{/each}
 				</div>
 			{:else if activeBranch}
-				<span class="rounded-full bg-emerald-700 px-3.5 py-1.5 text-xs font-semibold text-white">
+				<span class="rounded-full bg-emerald-400 px-4 py-1.5 text-xs font-extrabold text-black">
 					{activeBranch.name} ({activeBranch.code})
 				</span>
 			{/if}
@@ -277,35 +286,39 @@
 	{/if}
 
 	<div
-		class="flex flex-col gap-3 rounded-3xl border border-neutral-200/80 bg-white p-4 lg:flex-row lg:items-center lg:justify-between"
+		class="flex flex-col gap-3 rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-4 lg:flex-row lg:items-center lg:justify-between"
 	>
 		<div class="flex flex-1 flex-col gap-2.5 sm:flex-row">
 			<input
 				type="search"
 				bind:value={search}
 				placeholder="Cari nama barang atau slug..."
-				class="w-full rounded-full border border-neutral-200 bg-surface px-4 py-2 text-sm focus:border-neutral-950 focus:bg-white focus:outline-none sm:max-w-xs"
+				class="w-full rounded-full border border-white/20 bg-black px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none sm:max-w-xs"
 			/>
 
 			<select
 				bind:value={categoryFilter}
-				class="rounded-full border border-neutral-200 bg-surface px-4 py-2 text-xs font-medium text-neutral-700 focus:border-neutral-950 focus:bg-white focus:outline-none"
+				class="rounded-full border border-white/20 bg-black px-4 py-2.5 text-xs font-bold text-white [color-scheme:dark] focus:border-white focus:outline-none"
 			>
-				<option value="all">Semua Kategori ({data.categories.length})</option>
+				<option value="all" class="bg-neutral-950">Semua Kategori ({data.categories.length})</option>
 				{#each data.categories as cat (cat.id)}
-					<option value={cat.id}>{cat.name}</option>
+					<option value={cat.id} class="bg-neutral-950">{cat.name}</option>
 				{/each}
 			</select>
 		</div>
 
 		<div class="flex items-center gap-1.5">
-			{#each [{ id: 'all', label: 'Semua' }, { id: 'published', label: 'Terbit' }, { id: 'draft', label: 'Draft' }] as tab (tab.id)}
+			{#each [
+				{ id: 'all', label: 'Semua' },
+				{ id: 'published', label: 'Terbit' },
+				{ id: 'draft', label: 'Draft' }
+			] as tab (tab.id)}
 				<button
 					type="button"
 					onclick={() => (statusFilter = tab.id as 'all' | 'published' | 'draft')}
-					class="rounded-full px-3.5 py-1.5 text-xs font-medium transition {statusFilter === tab.id
-						? 'bg-neutral-950 text-white'
-						: 'bg-surface text-neutral-600 hover:text-neutral-950'}"
+					class="rounded-full px-4 py-1.5 text-xs font-bold transition {statusFilter === tab.id
+						? 'bg-white text-black'
+						: 'border border-white/15 bg-black text-neutral-300 hover:border-white/40 hover:text-white'}"
 				>
 					{tab.label}
 				</button>
@@ -313,48 +326,50 @@
 		</div>
 	</div>
 
-	<p class="text-xs text-neutral-500">
-		Menampilkan <strong class="text-neutral-950">{filteredItems.length}</strong> barang
+	<p class="text-xs text-neutral-400">
+		Menampilkan <strong class="text-white">{filteredItems.length}</strong> barang
 	</p>
 
 	{#if filteredItems.length > 0}
-		<div class="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white">
+		<div class="overflow-hidden rounded-[2rem] border border-white/15 bg-[#0c0c0f]">
 			<div class="overflow-x-auto">
 				<table class="w-full text-left text-sm">
-					<thead class="border-b border-neutral-100 bg-neutral-50/70 text-xs text-neutral-500">
+					<thead class="border-b border-white/10 bg-black/60 text-xs text-neutral-400">
 						<tr>
-							<th class="px-5 py-3.5 font-medium">Barang</th>
-							<th class="px-4 py-3.5 font-medium">Kategori</th>
-							<th class="px-4 py-3.5 font-medium">Tarif &amp; Stok ({activeBranch?.code ?? 'Cabang'})</th>
-							<th class="px-4 py-3.5 font-medium">Status</th>
-							<th class="px-5 py-3.5 text-right font-medium">Aksi</th>
+							<th class="px-5 py-3.5 font-semibold">Barang</th>
+							<th class="px-4 py-3.5 font-semibold">Kategori</th>
+							<th class="px-4 py-3.5 font-semibold">
+								Tarif &amp; Stok ({activeBranch?.code ?? 'Cabang'})
+							</th>
+							<th class="px-4 py-3.5 font-semibold">Status</th>
+							<th class="px-5 py-3.5 text-right font-semibold">Aksi</th>
 						</tr>
 					</thead>
-					<tbody class="divide-y divide-neutral-100">
+					<tbody class="divide-y divide-white/10">
 						{#each filteredItems as item (item.id)}
 							{@const bStock = getBranchStock(item)}
-							<tr class="transition hover:bg-neutral-50/60">
+							<tr class="transition hover:bg-white/[0.03]">
 								<td class="px-5 py-3.5">
 									<div class="flex items-center gap-3">
 										{#if item.imageUrl}
 											<img
 												src={item.imageUrl}
 												alt={item.name}
-												class="h-10 w-12 shrink-0 rounded-xl object-cover"
+												class="h-10 w-12 shrink-0 rounded-xl border border-white/10 object-cover"
 											/>
 										{:else}
 											<div
-												class="flex h-10 w-12 shrink-0 items-center justify-center rounded-xl bg-surface text-[10px] font-semibold text-neutral-400"
+												class="flex h-10 w-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black text-[10px] font-bold text-neutral-500"
 											>
 												UNIT
 											</div>
 										{/if}
 										<div class="min-w-0">
 											<div class="flex items-center gap-2">
-												<p class="truncate font-medium text-neutral-950">{item.name}</p>
+												<p class="truncate font-bold text-white">{item.name}</p>
 												{#if item.isFeatured}
 													<span
-														class="rounded-full bg-neutral-950 px-2 py-0.5 text-[10px] font-medium text-white"
+														class="rounded-full bg-white px-2 py-0.5 text-[10px] font-extrabold text-black"
 													>
 														Populer
 													</span>
@@ -364,22 +379,26 @@
 												href={`/katalog/${item.slug}`}
 												target="_blank"
 												rel="noopener noreferrer"
-												class="truncate font-mono text-[11px] text-neutral-400 hover:text-neutral-800"
+												class="truncate font-mono text-[11px] text-neutral-400 hover:text-white"
 											>
 												/katalog/{item.slug} ↗
 											</a>
 										</div>
 									</div>
 								</td>
-								<td class="px-4 py-3.5 text-xs text-neutral-600">
+								<td class="px-4 py-3.5 text-xs text-neutral-300">
 									{categoryNameById.get(item.categoryId) ?? '-'}
 								</td>
 								<td class="px-4 py-3.5 text-xs">
-									<p class="font-bold text-neutral-950">
+									<p class="font-extrabold text-white">
 										{formatRupiah(bStock.pricePerDay)}
 										<span class="font-normal text-neutral-400">/ {item.unitLabel}</span>
 									</p>
-									<p class="mt-0.5 text-[11px] {bStock.isAvailable && bStock.stockQty > 0 ? 'text-emerald-700' : 'text-red-600'}">
+									<p
+										class="mt-0.5 text-[11px] font-semibold {bStock.isAvailable && bStock.stockQty > 0
+											? 'text-emerald-400'
+											: 'text-red-400'}"
+									>
 										{bStock.isAvailable && bStock.stockQty > 0
 											? `Stok: ${bStock.stockQty} unit`
 											: 'Tidak tersedia / Habis'}
@@ -391,17 +410,18 @@
 											type="button"
 											disabled={busyId === item.id}
 											onclick={() => togglePublish(item)}
-											class="rounded-full px-3 py-1 text-xs font-medium transition {item.isPublished
-												? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-												: 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}"
+											class="rounded-full px-3 py-1 text-xs font-bold transition {item.isPublished
+												? 'border border-emerald-400/30 bg-emerald-400/15 text-emerald-300 hover:bg-emerald-400/25'
+												: 'border border-white/15 bg-white/10 text-neutral-300 hover:bg-white/20'}"
 										>
 											{item.isPublished ? 'Terbit' : 'Draft'}
 										</button>
 									{:else}
 										<span
-											class="rounded-full px-3 py-1 text-xs font-medium {bStock.isAvailable && bStock.stockQty > 0
-												? 'bg-emerald-50 text-emerald-700'
-												: 'bg-red-50 text-red-700'}"
+											class="rounded-full px-3 py-1 text-xs font-bold {bStock.isAvailable &&
+											bStock.stockQty > 0
+												? 'border border-emerald-400/30 bg-emerald-400/15 text-emerald-300'
+												: 'border border-red-400/30 bg-red-500/15 text-red-300'}"
 										>
 											{bStock.isAvailable && bStock.stockQty > 0 ? 'Tersedia' : 'Nonaktif'}
 										</span>
@@ -412,7 +432,7 @@
 										<button
 											type="button"
 											onclick={() => openBranchStockModal(item)}
-											class="rounded-full bg-neutral-950 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-neutral-800"
+											class="rounded-full bg-white px-3.5 py-1.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
 										>
 											Harga &amp; Stok
 										</button>
@@ -420,14 +440,14 @@
 											<button
 												type="button"
 												onclick={() => openEdit(item)}
-												class="rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:border-neutral-950 hover:text-neutral-950"
+												class="rounded-full border border-white/20 bg-black px-3 py-1.5 text-xs font-bold text-neutral-200 transition hover:border-white hover:text-white"
 											>
 												Master
 											</button>
 											<button
 												type="button"
 												onclick={() => (deletingItem = item)}
-												class="rounded-full border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
+												class="rounded-full border border-red-400/30 bg-red-500/10 px-3 py-1.5 text-xs font-bold text-red-300 transition hover:bg-red-500/20"
 											>
 												Hapus
 											</button>
@@ -441,8 +461,8 @@
 			</div>
 		</div>
 	{:else}
-		<div class="rounded-3xl border border-neutral-200/80 bg-white p-14 text-center">
-			<p class="text-sm text-neutral-500">Tidak ada barang katalog yang sesuai filter.</p>
+		<div class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-14 text-center">
+			<p class="text-sm text-neutral-400">Tidak ada barang katalog yang sesuai filter.</p>
 		</div>
 	{/if}
 </div>
@@ -474,15 +494,15 @@
 	onClose={() => (deletingItem = null)}
 >
 	{#if deletingItem}
-		<p class="text-sm leading-relaxed text-neutral-600">
-			Anda yakin ingin menghapus <strong class="text-neutral-950">{deletingItem.name}</strong> dari
+		<p class="text-sm leading-relaxed text-neutral-300">
+			Anda yakin ingin menghapus <strong class="text-white">{deletingItem.name}</strong> dari
 			katalog?
 		</p>
 		<div class="mt-6 flex justify-end gap-2.5">
 			<button
 				type="button"
 				onclick={() => (deletingItem = null)}
-				class="rounded-full border border-neutral-200 px-4 py-2 text-xs font-medium text-neutral-700"
+				class="rounded-full border border-white/20 bg-black px-4 py-2 text-xs font-bold text-neutral-300"
 			>
 				Batal
 			</button>
@@ -490,7 +510,7 @@
 				type="button"
 				disabled={busyId === deletingItem.id}
 				onclick={confirmDelete}
-				class="rounded-full bg-red-600 px-5 py-2 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-60"
+				class="rounded-full bg-red-500 px-5 py-2 text-xs font-extrabold text-white hover:bg-red-600 disabled:opacity-60"
 			>
 				{busyId === deletingItem.id ? 'Menghapus...' : 'Ya, Hapus'}
 			</button>
@@ -508,7 +528,7 @@
 	{#if stockModalItem && activeBranch}
 		<form onsubmit={handleSaveBranchStock} class="space-y-4">
 			<div>
-				<label for="bs-price" class="block text-xs font-semibold text-neutral-700">
+				<label for="bs-price" class="block text-xs font-semibold text-neutral-300">
 					Tarif Sewa per {stockModalItem.unitLabel} di {activeBranch.name} (Rp) *
 				</label>
 				<input
@@ -518,15 +538,17 @@
 					step="5000"
 					required
 					bind:value={editBranchPrice}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm font-bold text-neutral-950 focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm font-extrabold text-white focus:border-white focus:outline-none"
 				/>
-				<p class="mt-1 text-[11px] text-neutral-500">
-					Preview: <strong>{formatRupiah(Number(editBranchPrice) || 0)}</strong> / {stockModalItem.unitLabel}
+				<p class="mt-1 text-[11px] text-neutral-400">
+					Preview:
+					<strong class="text-emerald-300">{formatRupiah(Number(editBranchPrice) || 0)}</strong> /
+					{stockModalItem.unitLabel}
 				</p>
 			</div>
 
 			<div>
-				<label for="bs-stock" class="block text-xs font-semibold text-neutral-700">
+				<label for="bs-stock" class="block text-xs font-semibold text-neutral-300">
 					Jumlah Stok Tersedia di {activeBranch.name} *
 				</label>
 				<input
@@ -536,27 +558,29 @@
 					max="10000"
 					required
 					bind:value={editBranchStockQty}
-					class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm font-semibold text-neutral-950 focus:border-neutral-950 focus:outline-none"
+					class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-2.5 text-sm font-bold text-white focus:border-white focus:outline-none"
 				/>
 			</div>
 
-			<label class="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-surface px-4 py-3 text-xs text-neutral-800">
-				<input type="checkbox" bind:checked={editBranchAvailable} class="h-4 w-4 accent-neutral-950" />
+			<label
+				class="flex cursor-pointer items-center gap-2.5 rounded-2xl border border-white/10 bg-black px-4 py-3 text-xs text-neutral-200"
+			>
+				<input type="checkbox" bind:checked={editBranchAvailable} class="h-4 w-4 accent-white" />
 				<span>Barang tersedia untuk disewa di {activeBranch.name}</span>
 			</label>
 
-			<div class="flex justify-end gap-2 border-t border-neutral-100 pt-4">
+			<div class="flex justify-end gap-2 border-t border-white/10 pt-4">
 				<button
 					type="button"
 					onclick={() => (stockModalItem = null)}
-					class="rounded-full border border-neutral-200 px-4 py-2 text-xs font-semibold text-neutral-700"
+					class="rounded-full border border-white/20 bg-black px-4 py-2 text-xs font-bold text-neutral-300"
 				>
 					Batal
 				</button>
 				<button
 					type="submit"
 					disabled={savingBranchStock}
-					class="rounded-full bg-neutral-950 px-5 py-2 text-xs font-semibold text-white hover:bg-neutral-800 disabled:opacity-60"
+					class="rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black hover:bg-neutral-200 disabled:opacity-60"
 				>
 					{savingBranchStock ? 'Menyimpan...' : 'Simpan Harga Cabang'}
 				</button>
