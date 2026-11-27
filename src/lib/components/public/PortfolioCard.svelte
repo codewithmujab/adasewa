@@ -6,7 +6,7 @@
 		variant?: 'light' | 'dark';
 	}
 
-	let { portfolio, variant = 'light' }: Props = $props();
+	let { portfolio, variant = 'dark' }: Props = $props();
 	let isDark = $derived(variant === 'dark');
 
 	let completedYear = $derived(

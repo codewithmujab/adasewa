@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
-	import { page } from '$app/state';
 	import CartDrawer from '#lib/components/public/CartDrawer.svelte';
 	import Footer from '#lib/components/public/Footer.svelte';
 	import Navbar from '#lib/components/public/Navbar.svelte';
@@ -14,8 +13,6 @@
 
 	let { data, children }: Props = $props();
 
-	let isLandingPage = $derived(page.url.pathname === '/');
-
 	onMount(() => {
 		rentalCart.hydrate(data.branches);
 	});
@@ -27,25 +24,21 @@
 	});
 </script>
 
-<div
-	class="flex min-h-screen flex-col {isLandingPage
-		? 'bg-black text-white'
-		: 'bg-white text-neutral-950'}"
->
+<div class="flex min-h-screen flex-col bg-black text-white">
 	<div class="print:hidden">
 		<Navbar
 			settings={data.settings}
 			branches={data.branches}
 			isAuthenticated={data.isAuthenticated}
 			currentUser={data.currentUser}
-			dark={isLandingPage}
+			dark={true}
 		/>
 	</div>
 	<main class="flex-1">
 		{@render children()}
 	</main>
 	<div class="print:hidden">
-		<Footer settings={data.settings} dark={isLandingPage} />
+		<Footer settings={data.settings} dark={true} />
 		<CartDrawer />
 	</div>
 </div>

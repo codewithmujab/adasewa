@@ -116,178 +116,187 @@
 	/>
 </svelte:head>
 
-<section class="border-b border-neutral-100 bg-white pt-14 pb-10 sm:pt-20">
+<section class="border-b border-white/10 bg-black pt-10 pb-10 sm:pt-14">
 	<div class="mx-auto max-w-6xl px-6">
-		<div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-			<div class="max-w-2xl">
-				<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
-					Katalog Resmi {data.settings.companyName}
-				</p>
-				<h1 class="mt-2.5 text-3xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
-					{activeCategoryObj ? activeCategoryObj.name : 'Katalog Barang Sewa'}
-				</h1>
-				<p class="mt-3 text-sm leading-relaxed text-neutral-500 sm:text-base">
-					{activeCategoryObj
-						? activeCategoryObj.description
-						: `Telusuri ${data.items.length} jenis unit dari ${data.categories.length} kategori. Klik tiap barang untuk melihat detail spesifikasi, kelengkapan, dan pilihan varian.`}
-				</p>
-			</div>
-
-			<div class="flex flex-wrap gap-2.5">
-				<button
-					type="button"
-					onclick={() => rentalCart.openDrawer()}
-					class="inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-neutral-800"
-				>
-					Keranjang Sewa ({rentalCart.totalUnits})
-				</button>
-				<a
-					href={whatsappAskUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-xs font-semibold text-neutral-800 transition hover:border-neutral-950"
-				>
-					Tanya CS via WA
-				</a>
-			</div>
-		</div>
-
-		<!-- Cabang Penyewaan Switcher -->
-		{#if data.branches.length > 0}
-			<div
-				class="mt-6 flex flex-col justify-between gap-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-4 sm:flex-row sm:items-center"
-			>
-				<div class="min-w-0">
-					<p class="text-[11px] font-bold tracking-wider text-emerald-800 uppercase">
-						📍 Tarif &amp; Stok Aktif: {activeBranch?.name ?? 'Semua Cabang'}
+		<div
+			class="rounded-[2.5rem] border border-white/15 bg-[#0b0b0e] p-6 sm:p-10"
+		>
+			<div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+				<div class="max-w-2xl">
+					<span
+						class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+					>
+						Katalog Resmi {data.settings.companyName}
+					</span>
+					<h1 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+						{activeCategoryObj ? activeCategoryObj.name : 'Katalog Barang Sewa'}
+					</h1>
+					<p class="mt-3 text-sm leading-relaxed text-neutral-400 sm:text-base">
+						{activeCategoryObj
+							? activeCategoryObj.description
+							: `Telusuri ${data.items.length} jenis unit dari ${data.categories.length} kategori. Klik tiap barang untuk melihat detail spesifikasi, kelengkapan, dan pilihan varian.`}
 					</p>
-					{#if activeBranch}
-						<p class="mt-0.5 text-xs text-neutral-600">
-							Kios: {activeBranch.address} · WA CS: <strong>{activeBranch.phone}</strong>
-						</p>
-					{/if}
 				</div>
-				<div class="flex flex-wrap items-center gap-2">
-					{#each data.branches as branch (branch.id)}
+
+				<div class="flex flex-wrap gap-2.5">
+					<button
+						type="button"
+						onclick={() => rentalCart.openDrawer()}
+						class="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-black transition hover:bg-neutral-200"
+					>
+						Keranjang Sewa ({rentalCart.totalUnits})
+					</button>
+					<a
+						href={whatsappAskUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white transition hover:border-white hover:bg-white/15"
+					>
+						Tanya CS via WA
+					</a>
+				</div>
+			</div>
+
+			<!-- Cabang Penyewaan Switcher -->
+			{#if data.branches.length > 0}
+				<div
+					class="mt-7 flex flex-col justify-between gap-4 rounded-[1.75rem] border border-emerald-400/25 bg-emerald-400/10 p-4 sm:flex-row sm:items-center sm:px-5"
+				>
+					<div class="min-w-0">
+						<p class="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+							📍 Tarif &amp; Stok Aktif: {activeBranch?.name ?? 'Semua Cabang'}
+						</p>
+						{#if activeBranch}
+							<p class="mt-0.5 text-xs text-neutral-300">
+								Kios: {activeBranch.address} · WA CS:
+								<strong class="text-white">{activeBranch.phone}</strong>
+							</p>
+						{/if}
+					</div>
+					<div class="flex flex-wrap items-center gap-2">
+						{#each data.branches as branch (branch.id)}
+							<button
+								type="button"
+								onclick={() => rentalCart.selectBranch(branch)}
+								class="rounded-full px-4 py-1.5 text-xs font-bold transition {activeBranch?.id ===
+								branch.id
+									? 'bg-white text-black'
+									: 'border border-white/20 bg-black/60 text-neutral-200 hover:border-white hover:text-white'}"
+							>
+								{branch.name}
+							</button>
+						{/each}
+					</div>
+				</div>
+			{/if}
+
+			<!-- Search & Filter Controls -->
+			<div class="mt-6 space-y-4">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+					<div class="relative flex-1">
+						<svg
+							class="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-neutral-400"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							aria-hidden="true"
+						>
+							<circle cx="11" cy="11" r="7" />
+							<path stroke-linecap="round" d="M20 20l-3.5-3.5" />
+						</svg>
+						<label for="catalog-search-input" class="sr-only">Cari barang sewa</label>
+						<input
+							id="catalog-search-input"
+							type="search"
+							bind:value={searchQuery}
+							oninput={() => (visibleLimit = 24)}
+							placeholder="Cari nama barang, lumens, watt, merek (mis. iPhone, ROG, Vespa, Stroller, Toga)..."
+							class="w-full rounded-full border border-white/20 bg-black py-3 pr-4 pl-11 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
+						/>
+					</div>
+
+					<div class="flex flex-wrap items-center gap-2">
 						<button
 							type="button"
-							onclick={() => rentalCart.selectBranch(branch)}
-							class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition {activeBranch?.id ===
-							branch.id
-								? 'bg-neutral-950 text-white'
-								: 'border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-950'}"
+							onclick={() => {
+								onlyFeatured = !onlyFeatured;
+								visibleLimit = 24;
+							}}
+							class="rounded-full border px-4 py-3 text-xs font-bold transition {onlyFeatured
+								? 'border-white bg-white text-black'
+								: 'border-white/20 bg-black text-neutral-200 hover:border-white'}"
 						>
-							{branch.name}
+							Populer Saja
+						</button>
+
+						<label for="catalog-sort" class="sr-only">Urutkan katalog</label>
+						<select
+							id="catalog-sort"
+							bind:value={sortBy}
+							class="rounded-full border border-white/20 bg-black px-4 py-3 text-xs font-bold text-white [color-scheme:dark] focus:border-white focus:outline-none"
+						>
+							<option value="default" class="bg-neutral-950">Urutan Rekomendasi</option>
+							<option value="name-asc" class="bg-neutral-950">Nama A → Z</option>
+							<option value="name-desc" class="bg-neutral-950">Nama Z → A</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- Category Pills -->
+				<div class="flex flex-wrap gap-2">
+					<button
+						type="button"
+						onclick={() => selectCategory('all')}
+						class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition {selectedCategory ===
+						'all'
+							? 'bg-white text-black'
+							: 'border border-white/15 bg-black text-neutral-300 hover:border-white/40 hover:text-white'}"
+					>
+						<span>Semua Kategori</span>
+						<span
+							class="text-[10px] {selectedCategory === 'all'
+								? 'text-neutral-600'
+								: 'text-neutral-500'}"
+						>
+							{data.items.length}
+						</span>
+					</button>
+
+					{#each data.categories as cat (cat.id)}
+						<button
+							type="button"
+							onclick={() => selectCategory(cat.slug)}
+							class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition {selectedCategory ===
+							cat.slug
+								? 'bg-white text-black'
+								: 'border border-white/15 bg-black text-neutral-300 hover:border-white/40 hover:text-white'}"
+						>
+							<CategoryIcon icon={cat.icon} class="h-3.5 w-3.5" />
+							<span>{cat.name}</span>
+							<span
+								class="text-[10px] {selectedCategory === cat.slug
+									? 'text-neutral-600'
+									: 'text-neutral-500'}"
+							>
+								{cat.itemCount}
+							</span>
 						</button>
 					{/each}
 				</div>
-			</div>
-		{/if}
-
-		<!-- Search & Filter Controls -->
-		<div class="mt-8 space-y-4">
-			<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-				<div class="relative flex-1">
-					<svg
-						class="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-neutral-400"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						aria-hidden="true"
-					>
-						<circle cx="11" cy="11" r="7" />
-						<path stroke-linecap="round" d="M20 20l-3.5-3.5" />
-					</svg>
-					<label for="catalog-search-input" class="sr-only">Cari barang sewa</label>
-					<input
-						id="catalog-search-input"
-						type="search"
-						bind:value={searchQuery}
-						oninput={() => (visibleLimit = 24)}
-						placeholder="Cari nama barang, lumens, watt, merek (mis. iPhone, ROG, Vespa, Stroller, Toga)..."
-						class="w-full rounded-2xl border border-neutral-200 bg-surface py-3 pr-4 pl-11 text-sm text-neutral-950 placeholder:text-neutral-400 focus:border-neutral-950 focus:bg-white focus:outline-none"
-					/>
-				</div>
-
-				<div class="flex flex-wrap items-center gap-2">
-					<button
-						type="button"
-						onclick={() => {
-							onlyFeatured = !onlyFeatured;
-							visibleLimit = 24;
-						}}
-						class="rounded-2xl border px-4 py-3 text-xs font-semibold transition {onlyFeatured
-							? 'border-neutral-950 bg-neutral-950 text-white'
-							: 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400'}"
-					>
-						Populer Saja
-					</button>
-
-					<label for="catalog-sort" class="sr-only">Urutkan katalog</label>
-					<select
-						id="catalog-sort"
-						bind:value={sortBy}
-						class="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-xs font-semibold text-neutral-700 focus:border-neutral-950 focus:outline-none"
-					>
-						<option value="default">Urutan Rekomendasi</option>
-						<option value="name-asc">Nama A → Z</option>
-						<option value="name-desc">Nama Z → A</option>
-					</select>
-				</div>
-			</div>
-
-			<!-- Category Pills -->
-			<div class="flex flex-wrap gap-2">
-				<button
-					type="button"
-					onclick={() => selectCategory('all')}
-					class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition {selectedCategory ===
-					'all'
-						? 'bg-neutral-950 text-white'
-						: 'border border-neutral-200 bg-white text-neutral-600 hover:border-neutral-400 hover:text-neutral-950'}"
-				>
-					<span>Semua Kategori</span>
-					<span
-						class="text-[10px] {selectedCategory === 'all' ? 'text-neutral-300' : 'text-neutral-400'}"
-					>
-						{data.items.length}
-					</span>
-				</button>
-
-				{#each data.categories as cat (cat.id)}
-					<button
-						type="button"
-						onclick={() => selectCategory(cat.slug)}
-						class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition {selectedCategory ===
-						cat.slug
-							? 'bg-neutral-950 text-white'
-							: 'border border-neutral-200 bg-white text-neutral-600 hover:border-neutral-400 hover:text-neutral-950'}"
-					>
-						<CategoryIcon icon={cat.icon} class="h-3.5 w-3.5" />
-						<span>{cat.name}</span>
-						<span
-							class="text-[10px] {selectedCategory === cat.slug
-								? 'text-neutral-300'
-								: 'text-neutral-400'}"
-						>
-							{cat.itemCount}
-						</span>
-					</button>
-				{/each}
 			</div>
 		</div>
 	</div>
 </section>
 
-<section class="bg-surface/60 py-12 pb-24">
+<section class="bg-black py-12 pb-24">
 	<div class="mx-auto max-w-6xl px-6">
 		<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-			<p class="text-xs font-medium text-neutral-500">
-				Menampilkan <strong class="text-neutral-950">{displayedItems.length}</strong> dari
-				<strong class="text-neutral-950">{filteredItems.length}</strong> barang
+			<p class="text-xs font-medium text-neutral-400">
+				Menampilkan <strong class="text-white">{displayedItems.length}</strong> dari
+				<strong class="text-white">{filteredItems.length}</strong> barang
 				{#if activeCategoryObj}
-					di kategori <strong class="text-neutral-950">{activeCategoryObj.name}</strong>
+					di kategori <strong class="text-white">{activeCategoryObj.name}</strong>
 				{/if}
 			</p>
 
@@ -295,7 +304,7 @@
 				<button
 					type="button"
 					onclick={resetFilters}
-					class="text-xs font-semibold text-neutral-700 underline underline-offset-4 hover:text-neutral-950"
+					class="rounded-full border border-white/20 px-3.5 py-1 text-xs font-bold text-neutral-200 transition hover:border-white hover:text-white"
 				>
 					Reset semua filter
 				</button>
@@ -305,7 +314,7 @@
 		{#if displayedItems.length > 0}
 			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 				{#each displayedItems as item (item.id)}
-					<RentalItemCard {item} />
+					<RentalItemCard {item} variant="dark" />
 				{/each}
 			</div>
 
@@ -314,23 +323,23 @@
 					<button
 						type="button"
 						onclick={() => (visibleLimit += 24)}
-						class="rounded-full bg-neutral-950 px-7 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+						class="rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black transition hover:bg-neutral-200"
 					>
 						Muat Lebih Banyak ({filteredItems.length - displayedItems.length} tersisa)
 					</button>
 					<button
 						type="button"
 						onclick={() => (visibleLimit = filteredItems.length)}
-						class="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-800 transition hover:border-neutral-950"
+						class="rounded-full border border-white/20 bg-white/[0.06] px-6 py-3.5 text-sm font-bold text-white transition hover:border-white hover:bg-white/15"
 					>
 						Tampilkan Semua
 					</button>
 				</div>
 			{/if}
 		{:else}
-			<div class="rounded-3xl border border-neutral-200 bg-white p-14 text-center">
-				<p class="text-base font-semibold text-neutral-950">Barang tidak ditemukan</p>
-				<p class="mt-2 text-sm text-neutral-500">
+			<div class="rounded-[2.5rem] border border-white/15 bg-[#0c0c0f] p-14 text-center">
+				<p class="text-lg font-bold text-white">Barang tidak ditemukan</p>
+				<p class="mx-auto mt-2 max-w-md text-sm text-neutral-400">
 					Tidak ada unit yang cocok dengan kata kunci "{searchQuery}". Anda bisa reset filter atau
 					tanyakan langsung ke CS kami — kami mungkin punya unitnya di gudang.
 				</p>
@@ -338,7 +347,7 @@
 					<button
 						type="button"
 						onclick={resetFilters}
-						class="rounded-full border border-neutral-200 bg-white px-5 py-2.5 text-xs font-semibold text-neutral-800 hover:border-neutral-950"
+						class="rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white hover:border-white"
 					>
 						Reset Filter
 					</button>
@@ -346,7 +355,7 @@
 						href={whatsappAskUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="rounded-full bg-emerald-600 px-5 py-2.5 text-xs font-semibold text-white hover:bg-emerald-500"
+						class="rounded-full bg-emerald-400 px-5 py-2.5 text-xs font-extrabold text-black hover:bg-emerald-300"
 					>
 						Tanya Ketersediaan via WA
 					</a>

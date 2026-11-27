@@ -292,35 +292,40 @@
 	<title>Checkout &amp; Pembayaran — {data.settings.companyName}</title>
 </svelte:head>
 
-<section class="bg-surface/60 py-12 pb-24 sm:py-16">
+<section class="bg-black py-10 pb-24 sm:py-14">
 	<div class="mx-auto max-w-6xl px-6">
 		<div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 			<div>
-				<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
+				<span
+					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				>
 					Langkah 2 dari 2
-				</p>
-				<h1 class="mt-2 text-3xl font-bold tracking-tight text-neutral-950 sm:text-4xl">
+				</span>
+				<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
 					Checkout &amp; Pembayaran
 				</h1>
-				<p class="mt-1.5 text-sm text-neutral-500">
+				<p class="mt-2 text-sm text-neutral-400">
 					Lengkapi akun pemesan, alamat pengiriman, dan metode pembayaran untuk mencatat transaksi.
 				</p>
 			</div>
 
-			<a href="/keranjang" class="text-sm font-semibold text-neutral-600 hover:text-neutral-950">
+			<a
+				href="/keranjang"
+				class="inline-flex items-center rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-xs font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
+			>
 				← Ubah Isi Keranjang
 			</a>
 		</div>
 
 		{#if rentalCart.items.length === 0}
-			<div class="mt-10 rounded-3xl border border-neutral-200 bg-white p-14 text-center">
-				<h2 class="text-lg font-bold text-neutral-950">Belum ada barang di keranjang</h2>
-				<p class="mt-2 text-sm text-neutral-500">
+			<div class="mt-10 rounded-[2.5rem] border border-white/15 bg-[#0c0c0f] p-14 text-center">
+				<h2 class="text-xl font-extrabold text-white">Belum ada barang di keranjang</h2>
+				<p class="mt-2 text-sm text-neutral-400">
 					Pilih barang di katalog terlebih dahulu sebelum masuk ke halaman checkout.
 				</p>
 				<a
 					href="/katalog"
-					class="mt-6 inline-flex rounded-full bg-neutral-950 px-7 py-3 text-sm font-semibold text-white"
+					class="mt-6 inline-flex rounded-full bg-white px-8 py-3.5 text-sm font-bold text-black transition hover:bg-neutral-200"
 				>
 					Buka Katalog Barang
 				</a>
@@ -331,21 +336,22 @@
 				<div class="space-y-6 lg:col-span-7">
 					<!-- Cabang Penyewaan Aktif -->
 					{#if data.branches.length > 0}
-						<div class="rounded-3xl border border-emerald-200/80 bg-white p-5">
+						<div class="rounded-[2rem] border border-emerald-400/25 bg-emerald-400/10 p-5 sm:p-6">
 							<div class="flex flex-wrap items-start justify-between gap-3">
 								<div>
-									<p class="text-[11px] font-bold tracking-wider text-emerald-700 uppercase">
+									<p class="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
 										📍 Cabang Penyewaan Dipilih
 									</p>
-									<p class="mt-0.5 text-base font-bold text-neutral-950">
+									<p class="mt-0.5 text-base font-extrabold text-white">
 										{activeBranch?.name ?? 'Belum dipilih'}
 									</p>
 									{#if activeBranch}
-										<p class="mt-0.5 text-xs text-neutral-500">
+										<p class="mt-0.5 text-xs text-neutral-300">
 											Kios: {activeBranch.address}
 										</p>
-										<p class="mt-0.5 text-xs text-neutral-500">
-											WA CS Cabang: <strong>{activeBranch.phone}</strong> · Jam: {activeBranch.operatingHours}
+										<p class="mt-0.5 text-xs text-neutral-300">
+											WA CS Cabang: <strong class="text-white">{activeBranch.phone}</strong> · Jam:
+											{activeBranch.operatingHours}
 										</p>
 									{/if}
 								</div>
@@ -354,10 +360,10 @@
 										<button
 											type="button"
 											onclick={() => handleBranchSwitch(branch)}
-											class="rounded-full px-3 py-1.5 text-xs font-semibold transition {activeBranch?.id ===
+											class="rounded-full px-3.5 py-1.5 text-xs font-bold transition {activeBranch?.id ===
 											branch.id
-												? 'bg-neutral-950 text-white'
-												: 'border border-neutral-200 bg-surface text-neutral-700 hover:border-neutral-950'}"
+												? 'bg-white text-black'
+												: 'border border-white/20 bg-black/60 text-neutral-200 hover:border-white'}"
 										>
 											{branch.name}
 										</button>
@@ -368,25 +374,23 @@
 					{/if}
 
 					{#if !data.isAuthenticated || !data.currentUser}
-						<div class="rounded-3xl border border-neutral-200/90 bg-white p-6 sm:p-8">
-							<div class="flex items-start justify-between gap-4">
-								<div>
-									<span
-										class="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[11px] font-semibold text-amber-800"
-									>
-										Akun Pemesan Diperlukan
-									</span>
-									<h2 class="mt-3 text-xl font-bold tracking-tight text-neutral-950">
-										Daftar atau Masuk untuk Melanjutkan Pembayaran
-									</h2>
-									<p class="mt-1.5 text-sm text-neutral-500">
-										Dengan akun pemesan, riwayat transaksi, invoice, status pembayaran, dan jadwal
-										pengembalian barang Anda tersimpan rapi di Dashboard Pemesan.
-									</p>
-								</div>
+						<div class="rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6 sm:p-8">
+							<div>
+								<span
+									class="inline-flex rounded-full border border-amber-400/30 bg-amber-400/15 px-3.5 py-1 text-[11px] font-bold text-amber-300"
+								>
+									Akun Pemesan Diperlukan
+								</span>
+								<h2 class="mt-3 text-xl font-extrabold tracking-tight text-white">
+									Daftar atau Masuk untuk Melanjutkan Pembayaran
+								</h2>
+								<p class="mt-1.5 text-sm text-neutral-400">
+									Dengan akun pemesan, riwayat transaksi, invoice, status pembayaran, dan jadwal
+									pengembalian barang Anda tersimpan rapi di Dashboard Pemesan.
+								</p>
 							</div>
 
-							<div class="mt-6 grid grid-cols-2 rounded-full bg-surface p-1 text-xs font-semibold">
+							<div class="mt-6 grid grid-cols-2 rounded-full border border-white/15 bg-black p-1 text-xs font-bold">
 								<button
 									type="button"
 									onclick={() => {
@@ -394,8 +398,8 @@
 										authError = null;
 									}}
 									class="rounded-full py-2.5 transition {authMode === 'signup'
-										? 'bg-white text-neutral-950 shadow-xs'
-										: 'text-neutral-500 hover:text-neutral-900'}"
+										? 'bg-white text-black'
+										: 'text-neutral-400 hover:text-white'}"
 								>
 									Daftar Pemesan Baru
 								</button>
@@ -406,8 +410,8 @@
 										authError = null;
 									}}
 									class="rounded-full py-2.5 transition {authMode === 'signin'
-										? 'bg-white text-neutral-950 shadow-xs'
-										: 'text-neutral-500 hover:text-neutral-900'}"
+										? 'bg-white text-black'
+										: 'text-neutral-400 hover:text-white'}"
 								>
 									Sudah Punya Akun? Masuk
 								</button>
@@ -416,7 +420,7 @@
 							{#if authError}
 								<div
 									role="alert"
-									class="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+									class="mt-5 rounded-2xl border border-red-400/30 bg-red-500/15 px-4 py-3 text-sm text-red-200"
 								>
 									{authError}
 								</div>
@@ -425,7 +429,7 @@
 							<form onsubmit={handleInlineAuth} class="mt-5 space-y-4">
 								{#if authMode === 'signup'}
 									<div>
-										<label for="co-auth-name" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-auth-name" class="block text-xs font-semibold text-neutral-300">
 											Nama Lengkap *
 										</label>
 										<input
@@ -435,13 +439,13 @@
 											minlength="2"
 											bind:value={authName}
 											placeholder="Nama lengkap sesuai identitas"
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-4 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 										/>
 									</div>
 								{/if}
 
 								<div>
-									<label for="co-auth-email" class="block text-xs font-semibold text-neutral-700">
+									<label for="co-auth-email" class="block text-xs font-semibold text-neutral-300">
 										Email *
 									</label>
 									<input
@@ -450,12 +454,12 @@
 										required
 										bind:value={authEmail}
 										placeholder="email@anda.com"
-										class="mt-1.5 w-full rounded-xl border border-neutral-200 px-4 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+										class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 									/>
 								</div>
 
 								<div>
-									<label for="co-auth-pass" class="block text-xs font-semibold text-neutral-700">
+									<label for="co-auth-pass" class="block text-xs font-semibold text-neutral-300">
 										Kata Sandi *
 									</label>
 									<input
@@ -465,14 +469,14 @@
 										minlength="8"
 										bind:value={authPassword}
 										placeholder="Minimal 8 karakter"
-										class="mt-1.5 w-full rounded-xl border border-neutral-200 px-4 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+										class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 									/>
 								</div>
 
 								<button
 									type="submit"
 									disabled={authBusy}
-									class="w-full rounded-full bg-neutral-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+									class="w-full rounded-full bg-white px-6 py-4 text-sm font-extrabold text-black transition hover:bg-neutral-200 disabled:opacity-60"
 								>
 									{#if authBusy}
 										Memproses...
@@ -487,13 +491,13 @@
 					{:else}
 						<!-- Banner User Sudah Login -->
 						<div
-							class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-200/80 bg-emerald-50/70 px-5 py-3.5"
+							class="flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-white/15 bg-[#0e0e12] px-5 py-3.5"
 						>
-							<div class="text-xs text-emerald-900">
-								<span class="font-semibold">Masuk sebagai {data.currentUser.name}</span>
-								<span class="text-emerald-700"> ({data.currentUser.email})</span>
+							<div class="text-xs text-neutral-300">
+								<span class="font-bold text-white">Masuk sebagai {data.currentUser.name}</span>
+								<span class="text-neutral-400"> ({data.currentUser.email})</span>
 							</div>
-							<a href="/akun" class="text-xs font-semibold text-emerald-800 underline">
+							<a href="/akun" class="text-xs font-bold text-emerald-300 underline">
 								Dashboard Pemesan
 							</a>
 						</div>
@@ -502,18 +506,18 @@
 							{#if submitError}
 								<div
 									role="alert"
-									class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+									class="rounded-2xl border border-red-400/30 bg-red-500/15 px-4 py-3 text-sm text-red-200"
 								>
 									{submitError}
 								</div>
 							{/if}
 
 							<!-- 1. Data Pemesan -->
-							<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
-								<h2 class="text-base font-bold text-neutral-950">1. Data Pemesan &amp; Kontak</h2>
+							<section class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
+								<h2 class="text-base font-extrabold text-white">1. Data Pemesan &amp; Kontak</h2>
 								<div class="mt-4 grid gap-4 sm:grid-cols-2">
 									<div class="sm:col-span-2">
-										<label for="co-name" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-name" class="block text-xs font-semibold text-neutral-300">
 											Nama Lengkap Pemesan *
 										</label>
 										<input
@@ -521,15 +525,15 @@
 											type="text"
 											required
 											bind:value={customerName}
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white focus:border-white focus:outline-none"
 										/>
 										{#if fieldErrors.customerName?.[0]}
-											<p class="mt-1 text-xs text-red-600">{fieldErrors.customerName[0]}</p>
+											<p class="mt-1 text-xs text-red-400">{fieldErrors.customerName[0]}</p>
 										{/if}
 									</div>
 
 									<div>
-										<label for="co-phone" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-phone" class="block text-xs font-semibold text-neutral-300">
 											Nomor HP / WhatsApp Aktif *
 										</label>
 										<input
@@ -538,15 +542,15 @@
 											required
 											bind:value={customerPhone}
 											placeholder="0812xxxxxxxx"
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 										/>
 										{#if fieldErrors.customerPhone?.[0]}
-											<p class="mt-1 text-xs text-red-600">{fieldErrors.customerPhone[0]}</p>
+											<p class="mt-1 text-xs text-red-400">{fieldErrors.customerPhone[0]}</p>
 										{/if}
 									</div>
 
 									<div>
-										<label for="co-emg" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-emg" class="block text-xs font-semibold text-neutral-300">
 											Nomor HP Darurat (Keluarga/Rekan)
 										</label>
 										<input
@@ -554,25 +558,25 @@
 											type="tel"
 											bind:value={emergencyPhone}
 											placeholder="08xxxxxxxxxx (disarankan)"
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 										/>
 									</div>
 								</div>
 							</section>
 
 							<!-- 2. Jadwal Sewa & Pengembalian -->
-							<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
+							<section class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
 								<div class="flex items-center justify-between gap-2">
-									<h2 class="text-base font-bold text-neutral-950">
+									<h2 class="text-base font-extrabold text-white">
 										2. Tanggal Pemakaian &amp; Pengembalian
 									</h2>
-									<span class="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-neutral-800">
+									<span class="rounded-full bg-white px-3.5 py-1 text-xs font-extrabold text-black">
 										{rentalCart.durationDays} hari
 									</span>
 								</div>
 								<div class="mt-4 grid gap-4 sm:grid-cols-2">
 									<div>
-										<label for="co-start" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-start" class="block text-xs font-semibold text-neutral-300">
 											Mulai Tanggal Pemakaian *
 										</label>
 										<input
@@ -582,11 +586,11 @@
 											min={today}
 											value={rentalCart.startDate}
 											onchange={(e) => rentalCart.setDates(e.currentTarget.value, rentalCart.endDate)}
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm font-semibold text-white [color-scheme:dark] focus:border-white focus:outline-none"
 										/>
 									</div>
 									<div>
-										<label for="co-end" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-end" class="block text-xs font-semibold text-neutral-300">
 											Sampai Tanggal (Batas Pengembalian) *
 										</label>
 										<input
@@ -596,29 +600,29 @@
 											min={rentalCart.startDate || today}
 											value={rentalCart.endDate}
 											onchange={(e) => rentalCart.setDates(rentalCart.startDate, e.currentTarget.value)}
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm font-semibold text-white [color-scheme:dark] focus:border-white focus:outline-none"
 										/>
 									</div>
 								</div>
 							</section>
 
 							<!-- 3. Pengiriman & Alamat -->
-							<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
-								<h2 class="text-base font-bold text-neutral-950">3. Metode Pengiriman &amp; Alamat</h2>
+							<section class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
+								<h2 class="text-base font-extrabold text-white">3. Metode Pengiriman &amp; Alamat</h2>
 
 								<div class="mt-4 grid gap-3 sm:grid-cols-2">
 									<button
 										type="button"
 										onclick={() => (deliveryMethod = 'delivery')}
-										class="rounded-2xl border p-4 text-left transition {deliveryMethod === 'delivery'
-											? 'border-neutral-950 bg-neutral-950 text-white'
-											: 'border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400'}"
+										class="rounded-[1.5rem] border p-4 text-left transition {deliveryMethod === 'delivery'
+											? 'border-white bg-white text-black'
+											: 'border-white/15 bg-black text-white hover:border-white/40'}"
 									>
-										<p class="text-sm font-semibold">Antar ke Lokasi (Delivery)</p>
+										<p class="text-sm font-bold">Antar ke Lokasi (Delivery)</p>
 										<p
 											class="mt-1 text-xs {deliveryMethod === 'delivery'
-												? 'text-neutral-300'
-												: 'text-neutral-500'}"
+												? 'text-neutral-700'
+												: 'text-neutral-400'}"
 										>
 											Tarif dasar {activeBranch?.name ?? 'cabang'}: {formatRupiah(
 												activeBranch?.deliveryFeeDefault ?? 25000
@@ -629,17 +633,17 @@
 									<button
 										type="button"
 										onclick={() => (deliveryMethod = 'pickup')}
-										class="rounded-2xl border p-4 text-left transition {deliveryMethod === 'pickup'
-											? 'border-neutral-950 bg-neutral-950 text-white'
-											: 'border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400'}"
+										class="rounded-[1.5rem] border p-4 text-left transition {deliveryMethod === 'pickup'
+											? 'border-white bg-white text-black'
+											: 'border-white/15 bg-black text-white hover:border-white/40'}"
 									>
-										<p class="text-sm font-semibold">
+										<p class="text-sm font-bold">
 											Ambil di Kios {activeBranch?.name ?? ''}
 										</p>
 										<p
 											class="mt-1 text-xs {deliveryMethod === 'pickup'
-												? 'text-neutral-300'
-												: 'text-neutral-500'}"
+												? 'text-neutral-700'
+												: 'text-neutral-400'}"
 										>
 											Gratis ongkir (Rp 0) · {activeBranch?.address ?? 'Ambil & kembali di kios'}
 										</p>
@@ -649,24 +653,24 @@
 								{#if deliveryMethod === 'delivery'}
 									<div class="mt-5 space-y-4">
 										<div>
-											<label for="co-region" class="block text-xs font-semibold text-neutral-700">
+											<label for="co-region" class="block text-xs font-semibold text-neutral-300">
 												Wilayah Delivery *
 											</label>
 											<select
 												id="co-region"
 												bind:value={deliveryRegion}
-												class="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+												class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 											>
 												{#each DELIVERY_REGIONS as reg (reg.value)}
-													<option value={reg.value}>
-														{reg.label} (Estimasi Ongkir {formatRupiah(reg.fee)}) — {reg.areas}
+													<option value={reg.value} class="bg-neutral-950">
+														{reg.label} — {reg.areas}
 													</option>
 												{/each}
 											</select>
 										</div>
 
 										<div>
-											<label for="co-address" class="block text-xs font-semibold text-neutral-700">
+											<label for="co-address" class="block text-xs font-semibold text-neutral-300">
 												Alamat Pengiriman Lengkap *
 											</label>
 											<textarea
@@ -675,10 +679,10 @@
 												required
 												bind:value={deliveryAddress}
 												placeholder="Nama jalan, nomor rumah/gedung, patokan, kecamatan & kota..."
-												class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+												class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 											></textarea>
 											{#if fieldErrors.deliveryAddress?.[0]}
-												<p class="mt-1 text-xs text-red-600">{fieldErrors.deliveryAddress[0]}</p>
+												<p class="mt-1 text-xs text-red-400">{fieldErrors.deliveryAddress[0]}</p>
 											{/if}
 										</div>
 									</div>
@@ -686,16 +690,18 @@
 							</section>
 
 							<!-- 4. Metode Pembayaran -->
-							<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
+							<section class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
 								<div class="flex flex-wrap items-center justify-between gap-2">
 									<div>
-										<h2 class="text-base font-bold text-neutral-950">4. Metode Pembayaran</h2>
-										<p class="mt-0.5 text-xs text-neutral-500">
-											Pembayaran seluruh cabang menggunakan <strong>Rekening Terpusat Adasewa.id</strong>.
+										<h2 class="text-base font-extrabold text-white">4. Metode Pembayaran</h2>
+										<p class="mt-0.5 text-xs text-neutral-400">
+											Pembayaran seluruh cabang menggunakan <strong class="text-white"
+												>Rekening Terpusat Adasewa.id</strong
+											>.
 										</p>
 									</div>
 									<span
-										class="rounded-full bg-sky-50 px-2.5 py-0.5 text-[11px] font-semibold text-sky-700"
+										class="rounded-full border border-sky-400/30 bg-sky-400/15 px-3 py-1 text-[11px] font-bold text-sky-300"
 									>
 										Rekening Terpusat · Siap PG
 									</span>
@@ -704,47 +710,49 @@
 								<div class="mt-4 space-y-2.5">
 									{#each availablePaymentMethods as method (method.id)}
 										<label
-											class="flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition {paymentMethod ===
+											class="flex cursor-pointer items-start gap-3 rounded-[1.5rem] border p-4 transition {paymentMethod ===
 											method.id
-												? 'border-neutral-950 bg-surface/70'
-												: 'border-neutral-200 bg-white hover:border-neutral-400'}"
+												? 'border-white bg-white/[0.08]'
+												: 'border-white/15 bg-black hover:border-white/40'}"
 										>
 											<input
 												type="radio"
 												name="paymentMethod"
 												value={method.id}
 												bind:group={paymentMethod}
-												class="mt-1 h-4 w-4 accent-neutral-950"
+												class="mt-1 h-4 w-4 accent-white"
 											/>
 											<div>
-												<p class="text-sm font-semibold text-neutral-950">{method.label}</p>
-												<p class="mt-0.5 text-xs text-neutral-500">{method.subtitle}</p>
+												<p class="text-sm font-bold text-white">{method.label}</p>
+												<p class="mt-0.5 text-xs text-neutral-400">{method.subtitle}</p>
 											</div>
 										</label>
 									{/each}
 								</div>
 
 								<!-- Kode Promo & Voucher Diskon -->
-								<div class="mt-5 rounded-2xl border border-rose-200/80 bg-rose-50/50 p-4">
-									<p class="text-xs font-bold text-rose-950">Kode Promo / Voucher Diskon</p>
-									<p class="mt-0.5 text-[11px] text-rose-800">
+								<div class="mt-5 rounded-[1.5rem] border border-rose-400/25 bg-rose-500/10 p-4">
+									<p class="text-xs font-bold text-rose-200">Kode Promo / Voucher Diskon</p>
+									<p class="mt-0.5 text-[11px] text-rose-300/80">
 										Masukkan kode voucher atau klik promo yang tersedia di bawah.
 									</p>
 
 									{#if appliedPromo && promoDiscount > 0}
-										<div class="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-xs text-emerald-900">
+										<div
+											class="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-400/15 px-4 py-3 text-xs text-emerald-200"
+										>
 											<div>
-												<p class="font-bold">
+												<p class="font-bold text-white">
 													✓ Kode <span class="font-mono">{appliedPromo.code}</span> diterapkan
 												</p>
-												<p class="text-[11px] text-emerald-700">
+												<p class="text-[11px] text-emerald-300">
 													{appliedPromo.title} · Hemat {formatRupiah(promoDiscount)}
 												</p>
 											</div>
 											<button
 												type="button"
 												onclick={removePromo}
-												class="rounded-full border border-emerald-300 bg-white px-3 py-1 text-[11px] font-semibold text-emerald-800 hover:border-red-300 hover:text-red-600"
+												class="rounded-full border border-white/25 bg-black px-3.5 py-1 text-[11px] font-bold text-white hover:border-red-400 hover:text-red-300"
 											>
 												Hapus
 											</button>
@@ -755,20 +763,20 @@
 												type="text"
 												bind:value={promoCodeInput}
 												placeholder="Contoh: SEWABARU10"
-												class="flex-1 rounded-xl border border-rose-200 bg-white px-3.5 py-2 font-mono text-xs font-semibold uppercase focus:border-neutral-950 focus:outline-none"
+												class="flex-1 rounded-full border border-white/20 bg-black px-4 py-2.5 font-mono text-xs font-bold text-white uppercase placeholder:text-neutral-500 focus:border-white focus:outline-none"
 											/>
 											<button
 												type="button"
 												disabled={promoBusy}
 												onclick={() => applyPromoCode()}
-												class="shrink-0 rounded-xl bg-neutral-950 px-4 py-2 text-xs font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+												class="shrink-0 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-black transition hover:bg-neutral-200 disabled:opacity-60"
 											>
 												{promoBusy ? 'Cek...' : 'Terapkan'}
 											</button>
 										</div>
 
 										{#if promoError}
-											<p class="mt-2 text-xs font-medium text-red-600">{promoError}</p>
+											<p class="mt-2 text-xs font-semibold text-red-400">{promoError}</p>
 										{/if}
 
 										{#if branchEligiblePromos.length > 0}
@@ -778,10 +786,10 @@
 														type="button"
 														onclick={() => applyPromoCode(p.code)}
 														title={formatPromoDetail(p)}
-														class="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-white px-3 py-1 text-[11px] font-semibold text-rose-900 transition hover:border-rose-500 hover:bg-rose-50"
+														class="inline-flex items-center gap-1.5 rounded-full border border-rose-400/30 bg-black px-3.5 py-1 text-[11px] font-bold text-rose-200 transition hover:border-white hover:bg-white hover:text-black"
 													>
 														<span class="font-mono">{p.code}</span>
-														<span class="text-rose-500">· {formatPromoBadge(p)}</span>
+														<span class="opacity-75">· {formatPromoBadge(p)}</span>
 													</button>
 												{/each}
 											</div>
@@ -790,19 +798,21 @@
 								</div>
 
 								<!-- Rekening Poin Sewa (Redeem Poin) -->
-								<div class="mt-5 rounded-2xl border border-amber-200/80 bg-amber-50/60 p-4">
+								<div class="mt-5 rounded-[1.5rem] border border-amber-400/25 bg-amber-400/10 p-4">
 									<div class="flex flex-wrap items-center justify-between gap-2">
 										<div>
-											<p class="text-xs font-bold text-amber-950">
+											<p class="text-xs font-bold text-amber-200">
 												★ Rekening Poin Anda: {availablePoints} Poin
 											</p>
-											<p class="text-[11px] text-amber-800">
+											<p class="text-[11px] text-amber-300/80">
 												1 Poin = {formatRupiah(POINT_VALUE_IDR)} (maks. 50% subtotal sewa)
 											</p>
 										</div>
 
 										{#if maxRedeemablePoints > 0}
-											<label class="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-amber-950">
+											<label
+												class="inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-white"
+											>
 												<input
 													type="checkbox"
 													checked={usePoints}
@@ -810,7 +820,7 @@
 														usePoints = e.currentTarget.checked;
 														pointsToRedeem = usePoints ? maxRedeemablePoints : 0;
 													}}
-													class="h-4 w-4 accent-neutral-950"
+													class="h-4 w-4 accent-white"
 												/>
 												<span>Gunakan Poin</span>
 											</label>
@@ -818,55 +828,58 @@
 									</div>
 
 									{#if usePoints && maxRedeemablePoints > 0}
-										<div class="mt-3 flex flex-wrap items-center gap-2.5 border-t border-amber-200/70 pt-3">
+										<div
+											class="mt-3 flex flex-wrap items-center gap-2.5 border-t border-amber-400/20 pt-3"
+										>
 											<input
 												type="number"
 												min="0"
 												max={maxRedeemablePoints}
 												bind:value={pointsToRedeem}
-												class="w-28 rounded-xl border border-amber-300 bg-white px-3 py-1.5 text-sm font-semibold text-neutral-950 focus:border-neutral-950 focus:outline-none"
+												class="w-28 rounded-full border border-amber-400/35 bg-black px-3.5 py-1.5 text-sm font-bold text-white focus:border-white focus:outline-none"
 											/>
 											<button
 												type="button"
 												onclick={() => (pointsToRedeem = maxRedeemablePoints)}
-												class="rounded-full bg-amber-900 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-amber-800"
+												class="rounded-full bg-amber-400 px-3.5 py-1.5 text-[11px] font-extrabold text-black hover:bg-amber-300"
 											>
 												Pakai Maksimal ({maxRedeemablePoints})
 											</button>
-											<span class="text-xs font-semibold text-emerald-700">
+											<span class="text-xs font-bold text-emerald-300">
 												Potongan −{formatRupiah(pointsDiscount)}
 											</span>
 										</div>
 									{:else if availablePoints === 0}
-										<p class="mt-2 text-[11px] text-amber-800">
+										<p class="mt-2 text-[11px] text-amber-200/80">
 											Setelah barang dikembalikan, Anda akan memperoleh
-											<strong>+{estimatedEarnedPoints} Poin</strong> ke Rekening Poin Anda!
+											<strong class="text-white">+{estimatedEarnedPoints} Poin</strong> ke Rekening
+											Poin Anda!
 										</p>
 									{/if}
 								</div>
 							</section>
 
 							<!-- 5. Informasi Tambahan -->
-							<section class="rounded-3xl border border-neutral-200/80 bg-white p-6">
-								<h2 class="text-base font-bold text-neutral-950">5. Informasi Tambahan (Opsional)</h2>
+							<section class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-6">
+								<h2 class="text-base font-extrabold text-white">5. Informasi Tambahan (Opsional)</h2>
 								<div class="mt-4 grid gap-4 sm:grid-cols-2">
 									<div>
-										<label for="co-source" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-source" class="block text-xs font-semibold text-neutral-300">
 											Tahu {data.settings.companyName} dari mana?
 										</label>
 										<select
 											id="co-source"
 											bind:value={infoSource}
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white [color-scheme:dark] focus:border-white focus:outline-none"
 										>
 											{#each INFO_SOURCES as src (src)}
-												<option value={src}>{src}</option>
+												<option value={src} class="bg-neutral-950">{src}</option>
 											{/each}
 										</select>
 									</div>
 
 									<div class="sm:col-span-2">
-										<label for="co-notes" class="block text-xs font-semibold text-neutral-700">
+										<label for="co-notes" class="block text-xs font-semibold text-neutral-300">
 											Catatan Acara / Permintaan Khusus
 										</label>
 										<textarea
@@ -874,7 +887,7 @@
 											rows="2"
 											bind:value={notes}
 											placeholder="Mis. jam pengiriman yang diinginkan, butuh teknisi, atau catatan lain..."
-											class="mt-1.5 w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm focus:border-neutral-950 focus:outline-none"
+											class="mt-1.5 w-full rounded-2xl border border-white/20 bg-black px-4 py-3 text-sm text-white placeholder:text-neutral-500 focus:border-white focus:outline-none"
 										></textarea>
 									</div>
 								</div>
@@ -883,7 +896,7 @@
 							<button
 								type="submit"
 								disabled={submitting}
-								class="flex w-full items-center justify-center rounded-full bg-neutral-950 px-7 py-4 text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+								class="flex w-full items-center justify-center rounded-full bg-white px-7 py-4 text-sm font-extrabold text-black transition hover:bg-neutral-200 disabled:opacity-60"
 							>
 								{submitting
 									? 'Mencatat Transaksi Pesanan...'
@@ -895,83 +908,87 @@
 
 				<!-- Kanan: Ringkasan Pesanan -->
 				<aside class="lg:col-span-5">
-					<div class="sticky top-24 rounded-3xl border border-neutral-200/90 bg-white p-6 shadow-sm">
-						<h2 class="text-base font-bold text-neutral-950">
+					<div
+						class="sticky top-24 rounded-[2.25rem] border-2 border-white/20 bg-[#0d0d11] p-6 shadow-2xl"
+					>
+						<h2 class="text-base font-extrabold text-white">
 							Ringkasan Pesanan ({rentalCart.totalUnits} unit)
 						</h2>
 						{#if activeBranch}
-							<p class="mt-1 text-xs font-semibold text-emerald-700">
+							<p class="mt-1 text-xs font-bold text-emerald-300">
 								📍 {activeBranch.name} ({activeBranch.code})
 							</p>
 						{/if}
-						<p class="mt-0.5 text-xs text-neutral-500">
+						<p class="mt-0.5 text-xs text-neutral-400">
 							Jadwal: {formatDateId(rentalCart.startDate)} – {formatDateId(rentalCart.endDate)} ({rentalCart.durationDays}
 							hari)
 						</p>
 
-						<ul class="mt-5 divide-y divide-neutral-100">
+						<ul class="mt-5 divide-y divide-white/10">
 							{#each rentalCart.items as item (item.key)}
 								<li class="flex items-start justify-between gap-3 py-3 text-sm">
 									<div class="min-w-0">
-										<p class="font-semibold text-neutral-950">{item.name}</p>
+										<p class="font-bold text-white">{item.name}</p>
 										{#if item.variant}
-											<p class="text-xs text-neutral-500">Varian: {item.variant}</p>
+											<p class="text-xs text-neutral-400">Varian: {item.variant}</p>
 										{/if}
-										<p class="mt-0.5 text-xs text-neutral-400">
+										<p class="mt-0.5 text-xs text-neutral-500">
 											{item.quantity} unit × {formatRupiah(item.pricePerDay)} × {rentalCart.durationDays}
 											hari
 										</p>
 									</div>
-									<p class="shrink-0 font-semibold text-neutral-950">
+									<p class="shrink-0 font-bold text-white">
 										{formatRupiah(item.pricePerDay * item.quantity * rentalCart.durationDays)}
 									</p>
 								</li>
 							{/each}
 						</ul>
 
-						<dl class="mt-4 space-y-2.5 border-t border-neutral-100 pt-4 text-sm">
-							<div class="flex justify-between text-neutral-600">
+						<dl class="mt-4 space-y-2.5 border-t border-white/15 pt-4 text-sm">
+							<div class="flex justify-between text-neutral-400">
 								<dt>Subtotal Sewa</dt>
-								<dd class="font-medium text-neutral-950">
+								<dd class="font-semibold text-white">
 									{formatRupiah(rentalCart.estimatedSubtotal)}
 								</dd>
 							</div>
-							<div class="flex justify-between text-neutral-600">
+							<div class="flex justify-between text-neutral-400">
 								<dt>
 									{deliveryMethod === 'delivery'
 										? `Ongkir Delivery (${activeBranch?.name ?? deliveryRegion})`
 										: `Ambil di Kios (${activeBranch?.name ?? 'Kios'})`}
 								</dt>
-								<dd class="font-medium text-neutral-950">
+								<dd class="font-semibold text-white">
 									{deliveryFee > 0 ? formatRupiah(deliveryFee) : 'Gratis (Rp 0)'}
 								</dd>
 							</div>
 							{#if promoDiscount > 0 && appliedPromo}
-								<div class="flex justify-between text-rose-700">
+								<div class="flex justify-between text-rose-300">
 									<dt>Promo Diskon ({appliedPromo.code})</dt>
-									<dd class="font-semibold">−{formatRupiah(promoDiscount)}</dd>
+									<dd class="font-bold">−{formatRupiah(promoDiscount)}</dd>
 								</div>
 							{/if}
 							{#if pointsDiscount > 0}
-								<div class="flex justify-between text-emerald-700">
+								<div class="flex justify-between text-emerald-300">
 									<dt>Potongan Poin ({effectivePointsToRedeem} Poin)</dt>
-									<dd class="font-semibold">−{formatRupiah(pointsDiscount)}</dd>
+									<dd class="font-bold">−{formatRupiah(pointsDiscount)}</dd>
 								</div>
 							{/if}
 						</dl>
 
-						<div class="mt-4 flex items-baseline justify-between border-t border-neutral-200 pt-4">
-							<span class="text-sm font-bold text-neutral-950">Total Tagihan</span>
-							<span class="text-2xl font-bold text-neutral-950">{formatRupiah(grandTotal)}</span>
+						<div class="mt-4 flex items-baseline justify-between border-t border-white/20 pt-4">
+							<span class="text-sm font-extrabold text-white">Total Tagihan</span>
+							<span class="text-2xl font-extrabold text-white">{formatRupiah(grandTotal)}</span>
 						</div>
 
-						<div class="mt-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/70 p-3.5 text-xs text-emerald-900">
-							<p class="font-semibold">
+						<div
+							class="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-400/10 p-4 text-xs text-emerald-200"
+						>
+							<p class="font-bold text-emerald-300">
 								★ Estimasi Bonus: +{estimatedEarnedPoints} Poin Sewa
 							</p>
-							<p class="mt-0.5 text-[11px] text-emerald-800">
-								Otomatis masuk ke <strong>Rekening Poin</strong> Anda setelah seluruh barang
-								dikembalikan dalam kondisi baik.
+							<p class="mt-0.5 text-[11px] text-neutral-300">
+								Otomatis masuk ke <strong class="text-white">Rekening Poin</strong> Anda setelah
+								seluruh barang dikembalikan dalam kondisi baik.
 							</p>
 						</div>
 					</div>

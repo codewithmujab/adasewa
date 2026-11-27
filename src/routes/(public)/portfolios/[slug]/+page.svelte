@@ -1,214 +1,180 @@
 <script lang="ts">
-  import type { PortfolioMediaItem } from "#lib/server/db/schema";
-  import type { PageData } from "./$types";
+	import type { PortfolioMediaItem } from '#lib/server/db/schema';
+	import type { PageData } from './$types';
 
-  interface Props {
-    data: PageData;
-  }
+	interface Props {
+		data: PageData;
+	}
 
-  let { data }: Props = $props();
-  let activeLightbox = $state<PortfolioMediaItem | null>(null);
+	let { data }: Props = $props();
+	let activeLightbox = $state<PortfolioMediaItem | null>(null);
 
-  let formattedDate = $derived(
-    data.portfolio.completedAt
-      ? new Intl.DateTimeFormat("id-ID", {
-          month: "long",
-          year: "numeric",
-        }).format(new Date(data.portfolio.completedAt))
-      : null,
-  );
+	let formattedDate = $derived(
+		data.portfolio.completedAt
+			? new Intl.DateTimeFormat('id-ID', {
+					month: 'long',
+					year: 'numeric'
+				}).format(new Date(data.portfolio.completedAt))
+			: null
+	);
 
-  let paragraphs = $derived(
-    data.portfolio.content
-      .split(/\n{2,}/)
-      .map((p) => p.trim())
-      .filter((p) => p.length > 0),
-  );
+	let paragraphs = $derived(
+		data.portfolio.content
+			.split(/\n{2,}/)
+			.map((p) => p.trim())
+			.filter((p) => p.length > 0)
+	);
 
-  function handleKeydown(event: KeyboardEvent): void {
-    if (activeLightbox && event.key === "Escape") {
-      activeLightbox = null;
-    }
-  }
+	function handleKeydown(event: KeyboardEvent): void {
+		if (activeLightbox && event.key === 'Escape') {
+			activeLightbox = null;
+		}
+	}
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-  <title>{data.portfolio.title} — {data.settings.companyName}</title>
-  <meta name="description" content={data.portfolio.summary} />
+	<title>{data.portfolio.title} — {data.settings.companyName}</title>
+	<meta name="description" content={data.portfolio.summary} />
 </svelte:head>
 
-<article class="bg-white pt-16 pb-28 sm:pt-24">
-  <div class="mx-auto max-w-4xl px-6">
-    <a
-      href="/portfolios"
-      class="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition hover:text-neutral-950"
-    >
-      <svg
-        class="h-4 w-4"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
-          clip-rule="evenodd"
-        />
-      </svg>
-      Kembali ke Portofolio
-    </a>
+<article class="bg-black pt-10 pb-24 sm:pt-16">
+	<div class="mx-auto max-w-4xl px-6">
+		<a
+			href="/portfolios"
+			class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-xs font-bold text-white transition hover:border-white hover:bg-white hover:text-black"
+		>
+			← Kembali ke Dokumentasi
+		</a>
 
-    <div class="mt-8 flex flex-wrap items-center gap-2.5">
-      <span
-        class="rounded-full bg-surface px-3.5 py-1 text-xs font-medium text-neutral-700"
-      >
-        {data.portfolio.category}
-      </span>
-      {#if data.relatedService}
-        <a
-          href={`/services/${data.relatedService.slug}`}
-          class="rounded-full border border-neutral-200 px-3.5 py-1 text-xs font-medium text-neutral-600 transition hover:border-neutral-950 hover:text-neutral-950"
-        >
-          Layanan: {data.relatedService.title}
-        </a>
-      {/if}
-    </div>
+		<div class="mt-8 rounded-[2.5rem] border border-white/15 bg-[#0c0c0f] p-7 sm:p-12">
+			<div class="flex flex-wrap items-center gap-2.5">
+				<span class="rounded-full bg-white px-3.5 py-1 text-xs font-extrabold text-black">
+					{data.portfolio.category}
+				</span>
+				{#if data.relatedService}
+					<a
+						href={`/services/${data.relatedService.slug}`}
+						class="rounded-full border border-white/20 bg-black px-3.5 py-1 text-xs font-bold text-neutral-200 transition hover:border-white hover:text-white"
+					>
+						Layanan: {data.relatedService.title}
+					</a>
+				{/if}
+			</div>
 
-    <h1
-      class="mt-5 text-4xl font-semibold tracking-tight text-neutral-950 sm:text-5xl"
-    >
-      {data.portfolio.title}
-    </h1>
-    <p class="mt-5 text-lg leading-relaxed text-neutral-500">
-      {data.portfolio.summary}
-    </p>
+			<h1 class="mt-5 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+				{data.portfolio.title}
+			</h1>
+			<p class="mt-5 text-lg leading-relaxed text-neutral-300">
+				{data.portfolio.summary}
+			</p>
 
-    <dl
-      class="mt-10 grid grid-cols-2 gap-6 border-y border-neutral-200/80 py-6 sm:grid-cols-3"
-    >
-      <div>
-        <dt
-          class="text-xs font-medium tracking-wider text-neutral-400 uppercase"
-        >
-          Klien
-        </dt>
-        <dd class="mt-1.5 text-sm font-medium text-neutral-950">
-          {data.portfolio.clientName}
-        </dd>
-      </div>
-      {#if formattedDate}
-        <div>
-          <dt
-            class="text-xs font-medium tracking-wider text-neutral-400 uppercase"
-          >
-            Selesai
-          </dt>
-          <dd class="mt-1.5 text-sm font-medium text-neutral-950">
-            {formattedDate}
-          </dd>
-        </div>
-      {/if}
-      {#if data.portfolio.projectUrl}
-        <div>
-          <dt
-            class="text-xs font-medium tracking-wider text-neutral-400 uppercase"
-          >
-            Tautan
-          </dt>
-          <dd class="mt-1.5">
-            <a
-              href={data.portfolio.projectUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1 text-sm font-medium text-neutral-950 underline decoration-neutral-300 underline-offset-4 hover:decoration-neutral-950"
-            >
-              Kunjungi Proyek
-            </a>
-          </dd>
-        </div>
-      {/if}
-    </dl>
+			<dl class="mt-8 grid grid-cols-2 gap-6 border-y border-white/10 py-6 sm:grid-cols-3">
+				<div>
+					<dt class="text-xs font-bold tracking-wider text-neutral-400 uppercase">Klien</dt>
+					<dd class="mt-1.5 text-sm font-bold text-white">
+						{data.portfolio.clientName}
+					</dd>
+				</div>
+				{#if formattedDate}
+					<div>
+						<dt class="text-xs font-bold tracking-wider text-neutral-400 uppercase">Selesai</dt>
+						<dd class="mt-1.5 text-sm font-bold text-white">
+							{formattedDate}
+						</dd>
+					</div>
+				{/if}
+				{#if data.portfolio.projectUrl}
+					<div>
+						<dt class="text-xs font-bold tracking-wider text-neutral-400 uppercase">Tautan</dt>
+						<dd class="mt-1.5">
+							<a
+								href={data.portfolio.projectUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex items-center gap-1 text-sm font-bold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+							>
+								Kunjungi Proyek
+							</a>
+						</dd>
+					</div>
+				{/if}
+			</dl>
 
-    {#if data.portfolio.imageUrl}
-      <div
-        class="mt-10 overflow-hidden rounded-3xl border border-neutral-200/80 bg-surface"
-      >
-        <img
-          src={data.portfolio.imageUrl}
-          alt={data.portfolio.title}
-          class="aspect-video w-full object-cover"
-        />
-      </div>
-    {/if}
+			{#if data.portfolio.imageUrl}
+				<div class="mt-8 overflow-hidden rounded-[2rem] border border-white/15 bg-black p-2">
+					<img
+						src={data.portfolio.imageUrl}
+						alt={data.portfolio.title}
+						class="aspect-video w-full rounded-[1.5rem] object-cover"
+					/>
+				</div>
+			{/if}
 
-    <div class="mt-12 space-y-6 text-base leading-8 text-neutral-600">
-      {#each paragraphs as paragraph, idx (idx)}
-        <p class="whitespace-pre-line">{paragraph}</p>
-      {/each}
-    </div>
+			<div class="mt-10 space-y-6 text-base leading-8 text-neutral-300">
+				{#each paragraphs as paragraph, idx (idx)}
+					<p class="whitespace-pre-line">{paragraph}</p>
+				{/each}
+			</div>
 
-    {#if data.portfolio.gallery.length > 0}
-      <div class="mt-16">
-        <h2 class="text-xl font-semibold tracking-tight text-neutral-950">
-          Galeri Proyek
-        </h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2">
-          {#each data.portfolio.gallery as item (item.imageKey)}
-            <button
-              type="button"
-              onclick={() => (activeLightbox = item)}
-              class="group overflow-hidden rounded-2xl border border-neutral-200/80 bg-surface text-left"
-            >
-              <img
-                src={item.imageUrl}
-                alt={item.alt || data.portfolio.title}
-                loading="lazy"
-                class="aspect-16/10 w-full object-cover transition duration-500 group-hover:scale-105"
-              />
-              {#if item.alt}
-                <p class="px-4 py-2.5 text-xs text-neutral-500">{item.alt}</p>
-              {/if}
-            </button>
-          {/each}
-        </div>
-      </div>
-    {/if}
-  </div>
+			{#if data.portfolio.gallery.length > 0}
+				<div class="mt-14 border-t border-white/10 pt-10">
+					<h2 class="text-xl font-extrabold tracking-tight text-white">Galeri Proyek</h2>
+					<div class="mt-6 grid gap-4 sm:grid-cols-2">
+						{#each data.portfolio.gallery as item (item.imageKey)}
+							<button
+								type="button"
+								onclick={() => (activeLightbox = item)}
+								class="group overflow-hidden rounded-[1.5rem] border border-white/15 bg-black p-2 text-left transition hover:border-white/40"
+							>
+								<img
+									src={item.imageUrl}
+									alt={item.alt || data.portfolio.title}
+									loading="lazy"
+									class="aspect-16/10 w-full rounded-[1.15rem] object-cover transition duration-500 group-hover:scale-105"
+								/>
+								{#if item.alt}
+									<p class="px-2 pt-2.5 pb-1 text-xs text-neutral-400">{item.alt}</p>
+								{/if}
+							</button>
+						{/each}
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
 </article>
 
 {#if activeLightbox}
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/85 p-6 backdrop-blur-sm"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Pratinjau gambar galeri"
-  >
-    <button
-      type="button"
-      aria-label="Tutup pratinjau"
-      onclick={() => (activeLightbox = null)}
-      class="fixed inset-0 cursor-default"
-    ></button>
-    <div class="relative z-10 max-h-[90vh] max-w-5xl">
-      <img
-        src={activeLightbox.imageUrl}
-        alt={activeLightbox.alt || data.portfolio.title}
-        class="max-h-[82vh] rounded-2xl object-contain"
-      />
-      <div
-        class="mt-3 flex items-center justify-between text-sm text-neutral-300"
-      >
-        <span>{activeLightbox.alt || data.portfolio.title}</span>
-        <button
-          type="button"
-          onclick={() => (activeLightbox = null)}
-          class="rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium text-white hover:bg-white/25"
-        >
-          Tutup
-        </button>
-      </div>
-    </div>
-  </div>
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-6 backdrop-blur-md"
+		role="dialog"
+		aria-modal="true"
+		aria-label="Pratinjau gambar galeri"
+	>
+		<button
+			type="button"
+			aria-label="Tutup pratinjau"
+			onclick={() => (activeLightbox = null)}
+			class="fixed inset-0 cursor-default"
+		></button>
+		<div class="relative z-10 max-h-[90vh] max-w-5xl">
+			<img
+				src={activeLightbox.imageUrl}
+				alt={activeLightbox.alt || data.portfolio.title}
+				class="max-h-[82vh] rounded-[1.75rem] border border-white/20 object-contain"
+			/>
+			<div class="mt-4 flex items-center justify-between text-sm text-neutral-300">
+				<span>{activeLightbox.alt || data.portfolio.title}</span>
+				<button
+					type="button"
+					onclick={() => (activeLightbox = null)}
+					class="rounded-full bg-white px-5 py-1.5 text-xs font-extrabold text-black hover:bg-neutral-200"
+				>
+					Tutup
+				</button>
+			</div>
+		</div>
+	</div>
 {/if}

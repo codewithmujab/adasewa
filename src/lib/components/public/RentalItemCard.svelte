@@ -13,7 +13,7 @@
 		variant?: 'light' | 'dark';
 	}
 
-	let { item, variant = 'light' }: Props = $props();
+	let { item, variant = 'dark' }: Props = $props();
 
 	let isDark = $derived(variant === 'dark');
 	let theme = $derived(getCategoryTheme(item.category.accent));

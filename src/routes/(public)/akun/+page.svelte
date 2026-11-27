@@ -73,18 +73,22 @@
 	<title>Dashboard Pemesan — {data.settings.companyName}</title>
 </svelte:head>
 
-<section class="bg-surface/60 py-12 pb-24 sm:py-16">
+<section class="bg-black py-10 pb-24 sm:py-14">
 	<div class="mx-auto max-w-6xl px-6">
 		<!-- Header Profil Pemesan -->
-		<header class="flex flex-col justify-between gap-5 rounded-3xl border border-neutral-200/80 bg-white p-6 sm:flex-row sm:items-center sm:p-8">
+		<header
+			class="flex flex-col justify-between gap-5 rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6 sm:flex-row sm:items-center sm:p-8"
+		>
 			<div>
-				<p class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
+				<span
+					class="inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-bold tracking-widest text-neutral-300 uppercase"
+				>
 					Dashboard Pemesan
-				</p>
-				<h1 class="mt-1.5 text-2xl font-bold tracking-tight text-neutral-950 sm:text-3xl">
+				</span>
+				<h1 class="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
 					Halo, {data.user.name}
 				</h1>
-				<p class="mt-1 text-sm text-neutral-500">
+				<p class="mt-1.5 text-sm text-neutral-400">
 					{data.user.email} · Pantau Rekening Poin, transaksi sewa &amp; pengembalian barang Anda.
 				</p>
 			</div>
@@ -92,14 +96,14 @@
 			<div class="flex flex-wrap items-center gap-2.5">
 				<a
 					href="/katalog"
-					class="rounded-full bg-neutral-950 px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-neutral-800"
+					class="rounded-full bg-white px-5 py-2.5 text-xs font-extrabold text-black transition hover:bg-neutral-200"
 				>
 					+ Sewa Barang Baru
 				</a>
 				{#if data.user.role === 'admin' || data.user.role === 'branch_admin'}
 					<a
 						href="/admin/orders"
-						class="rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-800 transition hover:border-neutral-950"
+						class="rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-xs font-bold text-white transition hover:border-white"
 					>
 						Admin Transaksi
 					</a>
@@ -108,7 +112,7 @@
 					type="button"
 					disabled={signingOut}
 					onclick={handleSignOut}
-					class="rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-xs font-semibold text-neutral-600 transition hover:border-red-300 hover:text-red-600 disabled:opacity-60"
+					class="rounded-full border border-white/20 bg-black px-4 py-2.5 text-xs font-bold text-neutral-300 transition hover:border-red-400 hover:text-red-300 disabled:opacity-60"
 				>
 					{signingOut ? 'Keluar...' : 'Keluar'}
 				</button>
@@ -118,64 +122,75 @@
 		<!-- Kartu Rekening Poin Sewa + Mutasi -->
 		<section id="rekening-poin" class="mt-6 scroll-mt-24 grid gap-6 lg:grid-cols-12">
 			<!-- Digital Point Account Card -->
-			<div class="flex flex-col justify-between rounded-3xl bg-neutral-950 p-6 text-white sm:p-7 lg:col-span-5">
+			<div
+				class="flex flex-col justify-between rounded-[2.25rem] border-2 border-amber-400/35 bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.16),#0d0d11_60%)] p-6 text-white sm:p-7 lg:col-span-5"
+			>
 				<div>
 					<div class="flex items-center justify-between gap-2">
-						<span class="text-[11px] font-semibold tracking-widest text-amber-400 uppercase">
+						<span class="text-[11px] font-extrabold tracking-widest text-amber-300 uppercase">
 							★ Rekening Poin Sewa
 						</span>
-						<span class="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] text-neutral-300">
+						<span
+							class="rounded-full border border-white/20 bg-black/60 px-3 py-0.5 font-mono text-[10px] font-bold text-neutral-200"
+						>
 							{pointAccountNo}
 						</span>
 					</div>
 
 					<p class="mt-5 text-xs text-neutral-400">Saldo Poin Aktif</p>
 					<div class="mt-1 flex items-baseline gap-2.5">
-						<p class="text-4xl font-bold tracking-tight text-white">
+						<p class="text-4xl font-extrabold tracking-tight text-white">
 							{data.points.balance.toLocaleString('id-ID')}
 						</p>
-						<span class="text-sm font-semibold text-amber-400">Poin</span>
+						<span class="text-sm font-bold text-amber-300">Poin</span>
 					</div>
-					<p class="mt-1 text-xs text-neutral-300">
+					<p class="mt-1.5 text-xs text-neutral-300">
 						Setara potongan <strong class="text-white">{formatRupiah(pointWorthIdr)}</strong> untuk
 						transaksi sewa berikutnya
 					</p>
 				</div>
 
-				<div class="mt-6 space-y-3 border-t border-white/10 pt-4">
+				<div class="mt-6 space-y-3 border-t border-white/15 pt-4">
 					<div class="grid grid-cols-2 gap-3 text-xs">
-						<div class="rounded-2xl bg-white/5 p-3">
-							<p class="text-[10px] text-neutral-400 uppercase">Total Poin Masuk</p>
-							<p class="mt-1 text-base font-bold text-emerald-400">+{data.points.totalEarned}</p>
+						<div class="rounded-2xl border border-white/10 bg-black/60 p-3.5">
+							<p class="text-[10px] font-bold text-neutral-400 uppercase">Total Poin Masuk</p>
+							<p class="mt-1 text-base font-extrabold text-emerald-400">+{data.points.totalEarned}</p>
 						</div>
-						<div class="rounded-2xl bg-white/5 p-3">
-							<p class="text-[10px] text-neutral-400 uppercase">Total Poin Dipakai</p>
-							<p class="mt-1 text-base font-bold text-amber-300">−{data.points.totalRedeemed}</p>
+						<div class="rounded-2xl border border-white/10 bg-black/60 p-3.5">
+							<p class="text-[10px] font-bold text-neutral-400 uppercase">Total Poin Dipakai</p>
+							<p class="mt-1 text-base font-extrabold text-amber-300">
+								−{data.points.totalRedeemed}
+							</p>
 						</div>
 					</div>
 					<p class="text-[11px] leading-relaxed text-neutral-400">
-						Dapatkan <strong class="text-neutral-200">+1 Poin setiap {formatRupiah(POINT_EARN_UNIT_IDR)}</strong>
-						nilai sewa secara otomatis setelah barang selesai dikembalikan dalam kondisi baik.
-						1 Poin = {formatRupiah(POINT_VALUE_IDR)}.
+						Dapatkan
+						<strong class="text-neutral-200"
+							>+1 Poin setiap {formatRupiah(POINT_EARN_UNIT_IDR)}</strong
+						>
+						nilai sewa secara otomatis setelah barang selesai dikembalikan dalam kondisi baik. 1
+						Poin = {formatRupiah(POINT_VALUE_IDR)}.
 					</p>
 				</div>
 			</div>
 
 			<!-- Buku Mutasi Rekening Poin -->
-			<div class="flex flex-col rounded-3xl border border-neutral-200/80 bg-white p-6 lg:col-span-7">
+			<div
+				class="flex flex-col rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-6 lg:col-span-7"
+			>
 				<div class="flex flex-wrap items-center justify-between gap-2">
 					<div>
-						<h2 class="text-base font-bold tracking-tight text-neutral-950">
+						<h2 class="text-base font-extrabold tracking-tight text-white">
 							Mutasi Rekening Poin
 						</h2>
-						<p class="text-xs text-neutral-500">
+						<p class="text-xs text-neutral-400">
 							Riwayat poin masuk dari pengembalian barang &amp; pemakaian potongan checkout.
 						</p>
 					</div>
 					{#if data.points.balance > 0}
 						<a
 							href="/katalog"
-							class="rounded-full bg-amber-50 px-3.5 py-1.5 text-xs font-semibold text-amber-900 transition hover:bg-amber-100"
+							class="rounded-full bg-amber-400 px-4 py-1.5 text-xs font-extrabold text-black transition hover:bg-amber-300"
 						>
 							Pakai Poin di Sewa Berikutnya →
 						</a>
@@ -185,27 +200,27 @@
 				{#if visiblePointHistory.length > 0}
 					<div class="mt-4 flex-1 overflow-x-auto">
 						<table class="w-full text-left text-xs">
-							<thead class="border-b border-neutral-100 text-[11px] text-neutral-400">
+							<thead class="border-b border-white/10 text-[11px] text-neutral-400">
 								<tr>
-									<th class="py-2 pr-3 font-medium">Waktu &amp; Keterangan</th>
-									<th class="px-2 py-2 font-medium">Jenis</th>
-									<th class="px-2 py-2 text-right font-medium">Mutasi</th>
-									<th class="py-2 pl-2 text-right font-medium">Saldo</th>
+									<th class="py-2.5 pr-3 font-semibold">Waktu &amp; Keterangan</th>
+									<th class="px-2 py-2.5 font-semibold">Jenis</th>
+									<th class="px-2 py-2.5 text-right font-semibold">Mutasi</th>
+									<th class="py-2.5 pl-2 text-right font-semibold">Saldo</th>
 								</tr>
 							</thead>
-							<tbody class="divide-y divide-neutral-100">
+							<tbody class="divide-y divide-white/10">
 								{#each visiblePointHistory as tx (tx.id)}
 									{@const meta = getPointTxMeta(tx.type)}
 									<tr>
 										<td class="py-3 pr-3">
-											<p class="font-medium text-neutral-900">{tx.description}</p>
+											<p class="font-semibold text-white">{tx.description}</p>
 											<p class="mt-0.5 text-[11px] text-neutral-400">
 												{formatDateTimeId(tx.createdAt)}
 												{#if tx.orderCode}
 													·
 													<a
 														href={`/akun/pesanan/${tx.orderCode}`}
-														class="font-mono text-neutral-600 underline"
+														class="font-mono text-neutral-200 underline"
 													>
 														{tx.orderCode}
 													</a>
@@ -214,19 +229,19 @@
 										</td>
 										<td class="px-2 py-3">
 											<span
-												class="inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold {meta.badgeClass}"
+												class="inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold {meta.badgeClass}"
 											>
 												{meta.label}
 											</span>
 										</td>
 										<td
-											class="px-2 py-3 text-right font-mono font-bold {tx.points >= 0
-												? 'text-emerald-600'
-												: 'text-amber-700'}"
+											class="px-2 py-3 text-right font-mono font-extrabold {tx.points >= 0
+												? 'text-emerald-400'
+												: 'text-amber-300'}"
 										>
 											{tx.points >= 0 ? `+${tx.points}` : tx.points}
 										</td>
-										<td class="py-3 pl-2 text-right font-mono font-semibold text-neutral-700">
+										<td class="py-3 pl-2 text-right font-mono font-bold text-neutral-200">
 											{tx.balanceAfter}
 										</td>
 									</tr>
@@ -236,11 +251,11 @@
 					</div>
 
 					{#if data.points.history.length > 5}
-						<div class="mt-3 border-t border-neutral-100 pt-3 text-center">
+						<div class="mt-3 border-t border-white/10 pt-3 text-center">
 							<button
 								type="button"
 								onclick={() => (showAllMutations = !showAllMutations)}
-								class="text-xs font-semibold text-neutral-600 hover:text-neutral-950"
+								class="text-xs font-bold text-neutral-300 hover:text-white"
 							>
 								{showAllMutations
 									? 'Tampilkan lebih ringkas'
@@ -249,9 +264,11 @@
 						</div>
 					{/if}
 				{:else}
-					<div class="mt-4 flex flex-1 flex-col items-center justify-center rounded-2xl bg-surface p-8 text-center">
-						<p class="text-sm font-semibold text-neutral-800">Belum ada mutasi Rekening Poin</p>
-						<p class="mt-1 max-w-sm text-xs text-neutral-500">
+					<div
+						class="mt-4 flex flex-1 flex-col items-center justify-center rounded-[1.5rem] border border-white/10 bg-black/60 p-8 text-center"
+					>
+						<p class="text-sm font-bold text-white">Belum ada mutasi Rekening Poin</p>
+						<p class="mt-1 max-w-sm text-xs text-neutral-400">
 							Selesaikan penyewaan dan kembalikan barang dalam kondisi baik untuk langsung mendapat
 							poin pertama Anda!
 						</p>
@@ -262,25 +279,25 @@
 
 		<!-- KPI Cards Transaksi -->
 		<div class="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-			<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-				<p class="text-xs font-medium text-neutral-400">Total Transaksi</p>
-				<p class="mt-2 text-3xl font-bold tracking-tight text-neutral-950">
+			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+				<p class="text-xs font-semibold text-neutral-400">Total Transaksi</p>
+				<p class="mt-2 text-3xl font-extrabold tracking-tight text-white">
 					{data.stats.totalOrders}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">Riwayat seluruh pesanan sewa</p>
 			</div>
 
-			<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-				<p class="text-xs font-medium text-neutral-400">Menunggu Bayar</p>
-				<p class="mt-2 text-3xl font-bold tracking-tight text-amber-600">
+			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+				<p class="text-xs font-semibold text-neutral-400">Menunggu Bayar</p>
+				<p class="mt-2 text-3xl font-extrabold tracking-tight text-amber-300">
 					{data.stats.pendingPayment}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">Perlu konfirmasi pembayaran</p>
 			</div>
 
-			<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-				<p class="text-xs font-medium text-neutral-400">Sedang Disewa</p>
-				<p class="mt-2 text-3xl font-bold tracking-tight text-indigo-600">
+			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+				<p class="text-xs font-semibold text-neutral-400">Sedang Disewa</p>
+				<p class="mt-2 text-3xl font-extrabold tracking-tight text-sky-300">
 					{data.stats.activeRentals + data.stats.returnInProgress}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">
@@ -290,9 +307,9 @@
 				</p>
 			</div>
 
-			<div class="rounded-3xl border border-neutral-200/80 bg-white p-5">
-				<p class="text-xs font-medium text-neutral-400">Selesai Dikembalikan</p>
-				<p class="mt-2 text-3xl font-bold tracking-tight text-emerald-600">
+			<div class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5">
+				<p class="text-xs font-semibold text-neutral-400">Selesai Dikembalikan</p>
+				<p class="mt-2 text-3xl font-extrabold tracking-tight text-emerald-400">
 					{data.stats.completedReturned}
 				</p>
 				<p class="mt-1 text-xs text-neutral-500">Barang kembali &amp; poin masuk</p>
@@ -301,38 +318,40 @@
 
 		<!-- Alert Jadwal Pengembalian Aktif -->
 		{#if activeReturnReminders.length > 0}
-			<div class="mt-6 rounded-3xl border border-indigo-200/80 bg-indigo-50/70 p-5 sm:p-6">
-				<p class="text-xs font-semibold tracking-wider text-indigo-800 uppercase">
+			<div class="mt-6 rounded-[2rem] border border-indigo-400/30 bg-indigo-500/15 p-5 sm:p-6">
+				<p class="text-xs font-bold tracking-wider text-indigo-300 uppercase">
 					Jadwal Pengembalian Barang Aktif
 				</p>
 				<div class="mt-3 space-y-2.5">
 					{#each activeReturnReminders as activeOrder (activeOrder.id)}
-						<div class="flex flex-col justify-between gap-3 rounded-2xl bg-white p-4 sm:flex-row sm:items-center">
+						<div
+							class="flex flex-col justify-between gap-3 rounded-[1.5rem] border border-white/15 bg-black/80 p-4 sm:flex-row sm:items-center"
+						>
 							<div>
-								<p class="text-sm font-bold text-neutral-950">
+								<p class="text-sm font-extrabold text-white">
 									{activeOrder.orderCode}
 									{#if activeOrder.branchName}
 										<span
-											class="ml-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700"
+											class="ml-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300"
 										>
 											📍 {activeOrder.branchName}
 										</span>
 									{/if}
-									<span class="ml-1.5 font-normal text-neutral-500">
+									<span class="ml-1.5 font-normal text-neutral-400">
 										({activeOrder.items.length} jenis barang)
 									</span>
 								</p>
-								<p class="mt-0.5 text-xs text-neutral-600">
+								<p class="mt-1 text-xs text-neutral-300">
 									Batas pengembalian:
-									<strong class="text-indigo-700">{formatDateId(activeOrder.endDate)}</strong>
+									<strong class="text-indigo-300">{formatDateId(activeOrder.endDate)}</strong>
 									{#if activeOrder.orderStatus === 'return_requested'}
-										· <span class="font-semibold text-violet-700">Pengembalian sudah diajukan</span>
+										· <span class="font-bold text-violet-300">Pengembalian sudah diajukan</span>
 									{/if}
 								</p>
 							</div>
 							<a
 								href={`/akun/pesanan/${activeOrder.orderCode}`}
-								class="inline-flex shrink-0 items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
+								class="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black transition hover:bg-neutral-200"
 							>
 								{activeOrder.orderStatus === 'return_requested'
 									? 'Pantau Pengembalian →'
@@ -345,9 +364,9 @@
 		{/if}
 
 		<!-- Filter & Daftar Transaksi -->
-		<div class="mt-8">
+		<div class="mt-10">
 			<div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-				<h2 class="text-lg font-bold tracking-tight text-neutral-950">
+				<h2 class="text-xl font-extrabold tracking-tight text-white">
 					Riwayat Transaksi &amp; Pengembalian
 				</h2>
 
@@ -363,10 +382,10 @@
 							type="button"
 							onclick={() =>
 								(statusFilter = tab.id as 'all' | 'pending' | 'active' | 'return' | 'done')}
-							class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition {statusFilter ===
+							class="rounded-full px-4 py-1.5 text-xs font-bold transition {statusFilter ===
 							tab.id
-								? 'bg-neutral-950 text-white'
-								: 'border border-neutral-200 bg-white text-neutral-600 hover:border-neutral-400'}"
+								? 'bg-white text-black'
+								: 'border border-white/15 bg-[#0c0c0f] text-neutral-300 hover:border-white/40 hover:text-white'}"
 						>
 							{tab.label}
 						</button>
@@ -381,42 +400,44 @@
 						{@const payMeta = getPaymentStatusMeta(order.paymentStatus)}
 						{@const payMethod = getPaymentMethodInfo(order.paymentMethod)}
 						<div
-							class="rounded-3xl border border-neutral-200/80 bg-white p-5 transition hover:border-neutral-300 sm:p-6"
+							class="rounded-[2rem] border border-white/15 bg-[#0c0c0f] p-5 transition hover:border-white/35 sm:p-6"
 						>
-							<div class="flex flex-wrap items-start justify-between gap-3 border-b border-neutral-100 pb-4">
+							<div
+								class="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 pb-4"
+							>
 								<div>
 									<div class="flex flex-wrap items-center gap-2">
-										<span class="font-mono text-sm font-bold text-neutral-950">
+										<span class="font-mono text-sm font-extrabold text-white">
 											{order.orderCode}
 										</span>
 										{#if order.branchName}
 											<span
-												class="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800"
+												class="rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300"
 											>
 												📍 {order.branchName}
 											</span>
 										{/if}
 										<span
-											class="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold {orderMeta.badgeClass}"
+											class="rounded-full border px-2.5 py-0.5 text-[11px] font-bold {orderMeta.badgeClass}"
 										>
 											{orderMeta.label}
 										</span>
 										<span
-											class="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold {payMeta.badgeClass}"
+											class="rounded-full border px-2.5 py-0.5 text-[11px] font-bold {payMeta.badgeClass}"
 										>
 											Bayar: {payMeta.label}
 										</span>
 										{#if order.pointsEarned > 0}
 											<span
-												class="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800"
+												class="rounded-full border border-amber-400/30 bg-amber-400/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-300"
 											>
 												★ +{order.pointsEarned} Poin
 											</span>
 										{/if}
 									</div>
-									<p class="mt-1 text-xs text-neutral-500">
+									<p class="mt-1.5 text-xs text-neutral-400">
 										Jadwal sewa:
-										<strong class="text-neutral-800">
+										<strong class="text-white">
 											{formatDateId(order.startDate)} – {formatDateId(order.endDate)}
 										</strong>
 										({order.durationDays} hari) · {payMethod.label}
@@ -425,7 +446,9 @@
 
 								<div class="text-left sm:text-right">
 									<p class="text-[11px] text-neutral-400">Total Transaksi</p>
-									<p class="text-lg font-bold text-neutral-950">{formatRupiah(order.totalAmount)}</p>
+									<p class="text-lg font-extrabold text-white">
+										{formatRupiah(order.totalAmount)}
+									</p>
 								</div>
 							</div>
 
@@ -433,35 +456,37 @@
 								{#each order.items.slice(0, 3) as line (line.id)}
 									<div class="flex items-center justify-between gap-3 text-sm">
 										<div class="min-w-0">
-											<span class="font-medium text-neutral-900">{line.itemName}</span>
+											<span class="font-semibold text-white">{line.itemName}</span>
 											{#if line.variant}
-												<span class="ml-1.5 text-xs text-neutral-500">({line.variant})</span>
+												<span class="ml-1.5 text-xs text-neutral-400">({line.variant})</span>
 											{/if}
-											<span class="ml-1.5 text-xs text-neutral-400">× {line.quantity} unit</span>
+											<span class="ml-1.5 text-xs text-neutral-500">× {line.quantity} unit</span>
 										</div>
-										<span class="shrink-0 text-xs font-semibold text-neutral-700">
+										<span class="shrink-0 text-xs font-bold text-neutral-200">
 											{formatRupiah(line.lineTotal)}
 										</span>
 									</div>
 								{/each}
 								{#if order.items.length > 3}
-									<p class="text-xs text-neutral-400">
+									<p class="text-xs text-neutral-500">
 										+ {order.items.length - 3} barang lainnya dalam pesanan ini
 									</p>
 								{/if}
 							</div>
 
-							<div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-4">
-								<div class="text-xs text-neutral-500">
+							<div
+								class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4"
+							>
+								<div class="text-xs text-neutral-400">
 									{#if order.orderStatus === 'returned'}
-										<span class="font-semibold text-emerald-700">
+										<span class="font-bold text-emerald-400">
 											✓ Dikembalikan {formatDateId(order.returnedAt)}
 											{#if order.pointsEarned > 0}
 												· +{order.pointsEarned} Poin masuk rekening
 											{/if}
 										</span>
 									{:else if order.orderStatus === 'return_requested'}
-										<span class="font-semibold text-violet-700">
+										<span class="font-bold text-violet-300">
 											⏳ Pengembalian diajukan ({order.returnMethod === 'pickup_courier'
 												? 'Dijemput Kurir'
 												: 'Antar ke Kios'})
@@ -469,14 +494,14 @@
 									{:else if order.orderStatus !== 'cancelled'}
 										<span>
 											Jatuh tempo pengembalian:
-											<strong class="text-neutral-800">{formatDateId(order.endDate)}</strong>
+											<strong class="text-white">{formatDateId(order.endDate)}</strong>
 										</span>
 									{/if}
 								</div>
 
 								<a
 									href={`/akun/pesanan/${order.orderCode}`}
-									class="inline-flex items-center gap-1.5 rounded-full bg-neutral-950 px-4 py-2 text-xs font-semibold text-white transition hover:bg-neutral-800"
+									class="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2 text-xs font-extrabold text-black transition hover:bg-neutral-200"
 								>
 									Detail, Bayar &amp; Pengembalian →
 								</a>
@@ -485,14 +510,15 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="mt-5 rounded-3xl border border-neutral-200/80 bg-white p-14 text-center">
-					<p class="text-base font-semibold text-neutral-950">Belum ada transaksi penyewaan</p>
-					<p class="mt-1.5 text-sm text-neutral-500">
-						Pilih barang di katalog, masukkan ke keranjang, dan lakukan checkout untuk mulai menyewa.
+				<div class="mt-5 rounded-[2.25rem] border border-white/15 bg-[#0c0c0f] p-14 text-center">
+					<p class="text-base font-bold text-white">Belum ada transaksi penyewaan</p>
+					<p class="mt-1.5 text-sm text-neutral-400">
+						Pilih barang di katalog, masukkan ke keranjang, dan lakukan checkout untuk mulai
+						menyewa.
 					</p>
 					<a
 						href="/katalog"
-						class="mt-6 inline-flex rounded-full bg-neutral-950 px-6 py-3 text-xs font-semibold text-white"
+						class="mt-6 inline-flex rounded-full bg-white px-7 py-3 text-xs font-extrabold text-black transition hover:bg-neutral-200"
 					>
 						Jelajahi Katalog Barang
 					</a>
